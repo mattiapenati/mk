@@ -1,0 +1,133 @@
+#!/bin/bash
+# This script install (or update) the LMod package and its dependencies.
+
+. mk/config
+. mk/core
+
+# Remove everythind with the exception of installed module files
+[ ! -d $PREFIX/lmod ] && rm -rfv $PREFIX/lmod
+mkdir -pv $PREFIX/lmod
+
+for DIR in $(ls $PREFIX/lmod); do
+  [ "$DIR" != "modules" ] && rm -rfv $PREFIX/lmod/$DIR
+done
+mkdir -pv $PREFIX/lmod/modules
+
+BASE=$(mktmpdir)
+pushd $BASE
+
+mkdir -pv bin
+mkdir -pv lib
+ln -sv lib lib64
+
+# Temporary tools
+# =============================================================================
+download http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+extract ncurses-5.9.tar.gz
+pushd ncurses-5.9
+  ./configure --prefix=$BASE --without-ada --without-cxx \
+    --without-cxx-binding --enable-widec --enable-static \
+    --disable-shared || exit 1
+  make || exit 1
+  make install || exit 1
+popd
+rm -rf ncurses-5.9
+rm -rf ncurses-5.9.tar.gz
+
+if [ "$OS" = "linux" ]; then
+  download ftp://ftp.cwru.edu/pub/bash/readline-6.3.tar.gz
+  extract readline-6.3.tar.gz
+  pushd readline-6.3
+    ./configure --prefix=$BASE --enable-static --disable-shared || exit 1
+    make || exit 1
+    make install || exit 1
+  popd
+  rm -rf readline-6.3
+  rm -f readline-6.3.tar.gz
+fi
+
+# Lua
+# =============================================================================
+download http://www.lua.org/ftp/lua-5.3.0.tar.gz
+extract lua-5.3.0.tar.gz
+pushd lua-5.3.0
+  sed -i "s:/usr/local:$PREFIX/lmod/lua:" Makefile
+
+  sed -i "/define LUA_VDIR/d" src/luaconf.h
+  sed -i "s:LUA_VDIR::" src/luaconf.h
+  sed -i "s:/usr/local:$PREFIX/lmod/lua:" src/luaconf.h
+
+  if [ "$OS" = "linux" ]; then
+    sed -i "s:MYCFLAGS=:&$CFLAGS -I$BASE/include:" src/Makefile
+    sed -i "s:MYLDFLAGS=:&-L$BASE/lib:" src/Makefile
+    sed -i "s:MYLIBS=:&-lncursesw:" src/Makefile
+    make linux || exit 1
+  else
+    make posix || exit 1
+  fi
+  make install || exit 1
+popd
+rm -rf lua-5.3.0
+rm -rf lua-5.3.0.tar.gz
+
+export PATH=$PREFIX/lmod/lua/bin:$PATH
+
+download https://github.com/luaposix/luaposix/archive/release-v33.3.1.tar.gz
+extract release-v33.3.1.tar.gz
+pushd luaposix-release-v33.3.1
+  LUA=$PREFIX/lmod/lua/bin/lua \
+  LUA_INCLUDE=-I$PREFIX/lmod/lua/include \
+  ./configure --prefix=$PREFIX/lmod/lua || exit 1
+  make clean all || exit 1
+  make install || exit 1
+popd
+rm -rf luaposix-release-v33.3.1
+rm -rf release-v33.3.1.tar.gz
+
+rm -rf $PREFIX/lmod/lua/share/doc/luaposix
+# TODO libtool --finish $PREFIX/lmod/lua/lib/lua/
+
+download https://github.com/keplerproject/luafilesystem/archive/v_1_6_3.tar.gz
+extract v_1_6_3.tar.gz
+pushd luafilesystem-v_1_6_3
+  cat > config << EOF
+PREFIX=$PREFIX/lmod/lua
+LUA_LIBDIR= $PREFIX/lmod/lua/lib/lua
+LUA_INC=$PREFIX/lmod/lua/include
+LIB_OPTION= -shared
+LIBNAME= \$T.so.\$V
+WARN=
+INCS= -I\$(LUA_INC)
+CFLAGS= $CFLAGS \$(WARN) \$(INCS)
+CC= gcc
+EOF
+  make || exit 1
+  make install || exit 1
+popd
+rm -rf luafilesystem-v_1_6_3
+rm -f v_1_6_3.tar.gz
+
+# LMod
+# =============================================================================
+version=5.9.4.2
+download https://github.com/TACC/Lmod/archive/${version}.tar.gz
+extract ${version}.tar.gz
+pushd Lmod-${version}
+  ./configure --prefix=$PREFIX --with-module-root-path=$PREFIX/lmod/modules \
+    --with-tcl=false || exit 1
+  make || exit 1
+  make install || exit 1
+popd
+rm -rf Lmod-${version}
+rm -f ${version}.tar.gz
+rm $PREFIX/lmod/lmod
+mv $PREFIX/lmod/$version $PREFIX/lmod/lmod
+
+popd
+
+# cleaning
+# =============================================================================
+rm -rf $BASE
+rm -rf $PREFIX/lmod/lua/{man,share/doc}
+strip_unneeded $PREFIX/lmod
+compress_manpages $PREFIX/lmod/lmod/share/man
