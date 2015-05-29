@@ -1,0 +1,62 @@
+#!/bin/bash (source)
+
+# Base directory where all the packages are installed and the tools for
+# managing the modules are located.
+PREFIX=/opt
+
+# The vendor component of the triple (second one)
+VENDOR="mox"
+PKGVERSION="MOX"
+
+# Compiler flags
+CFLAGS="-O2 -pipe"
+CXXFLAGS="$CFLAGS"
+
+# Environment variables (advanced user)
+# =============================================================================
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+LD_LIBRARY_PATH=
+
+# Automatically detected variables
+# =============================================================================
+
+# The architecture we're building on is obtained using the command uname.
+# The command `uname -m' write the name of the hardware type on which the
+# system is running to standard output.
+export ARCH=$(uname -m)
+
+# The vendor component of the triple (the second one). It can be customized in
+# the configuration section at the beginning of this file.
+[ -z "$VENDOR" ] && VENDOR="unknown"
+
+MOS=$(uname -s)
+case "$MOS" in
+  "Linux")   OS="linux" ;;
+  "Darwin")  OS="darwin" ;;
+  "FreeBSD") OS="freebsd" ;;
+  *)         OS="unknown" ;;
+esac
+
+if [ -z "$TARGET" ]; then
+  TARGET=$ARCH-$VENDOR-$OS
+fi
+
+BUILD=$(gcc -dumpmachine)
+
+# Fixing the compilers flags (if necessary)
+case "$ARCH" in
+  "x86_64")
+    CFLAGS="$CFLAGS -fPIC"
+    CXXFLAGS="$CXXFLAGS -fPIC"
+    ;;
+  *)
+    echo "Unsupported architecture"
+    exit 1
+esac
+
+# Exporting the variables
+# =============================================================================
+export PATH
+export LD_LIBRARY_PATH
+export CFLAGS
+export CXXFLAGS
