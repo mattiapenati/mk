@@ -8,10 +8,8 @@
 [ ! -d $PREFIX/lmod ] && rm -rfv $PREFIX/lmod
 mkdir -pv $PREFIX/lmod
 
-for DIR in $(ls $PREFIX/lmod); do
-  [ "$DIR" != "modules" ] && rm -rfv $PREFIX/lmod/$DIR
-done
-mkdir -pv $PREFIX/lmod/modules
+rm -rf $PREFIX/lmod/{lua,lmod}
+mkdir -pv $PREFIX/lmod/{init,lua,modules}
 
 BASE=$(mktmpdir)
 pushd $BASE
@@ -125,9 +123,19 @@ mv $PREFIX/lmod/$version $PREFIX/lmod/lmod
 
 popd
 
-# cleaning
+# Cleaning
 # =============================================================================
 rm -rf $BASE
 rm -rf $PREFIX/lmod/lua/{man,share/doc}
 strip_unneeded $PREFIX/lmod
 compress_manpages $PREFIX/lmod/lmod/share/man
+clean_empty_dirs $PREFIX/lmod/lua
+clean_empty_dirs $PREFIX/lmod/lmod
+
+# Initialization script
+# =============================================================================
+for INIT in $(ls init); do
+  if [[ ! -e $PREFIX/lmod/init/$INIT ]]; then
+    sed -e "s:%PREFIX%:$PREFIX:g" init/$INIT > $PREFIX/lmod/init/$INIT
+  fi
+done
