@@ -86,3 +86,8 @@ compress_manpages() {
   done
   popd
 }
+
+# clean_empty_dirs <directory>
+clean_empty_dirs() {
+  find $1 -depth -type d -empty -exec rmdir -v {} \;
+}

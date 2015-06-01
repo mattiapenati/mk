@@ -1,0 +1,48 @@
+#! /bin/bash (source)
+# Initialization script for the bash
+
+# Reset
+# =============================================================================
+export PATH=/usr/bin:/bin
+export LD_LIBRARY_PATH=
+
+export MANPATH=
+export INFOPATH=
+
+export PKG_CONFIG_PATH=
+export ACLOCAL_PATH=
+
+# Modules
+# =============================================================================
+mkPrefix=%PREFIX%
+source $mkPrefix/lmod/lmod/init/bash
+export MANPATH=$mkPrefix/lmod/lmod/share/man:$MANPATH
+export MODULEPATH=$mkPrefix/lmod/modules/toolchains
+
+# Colorize
+# =============================================================================
+if [[ $(tput colors) -ge 8 ]]; then
+  colors='yes'
+else
+  colors='no'
+fi
+
+if [[ $colors == 'yes' ]]; then
+  if [[ $EUID -ne 0 ]]; then
+    export PS1='\[\e[01;32m\]\u@\h\[\e[01;34m\] \W \$\[\e[00m\] '
+  else
+    export PS1='\[\e[01;31m\]\u@\h\[\e[01;34m\] \W \$\[\e[00m\] '
+  fi
+
+  export GREP_COLOR='1;31'
+  alias grep='grep --color=auto'
+  alias ls='ls --color=auto'
+  export LMOD_COLORIZE=YES
+else
+  export PS1='\u@\h \W \$ '
+  export LMOD_COLORIZE=NO
+fi
+
+if [[ "$SHELL" == "/bin/bash" ]]; then
+  shopt -s checkwinsize
+fi
