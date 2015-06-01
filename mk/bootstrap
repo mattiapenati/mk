@@ -1,6 +1,17 @@
 #!/bin/bash
 # This script install (or update) the LMod package and its dependencies.
 
+# The hierarchy of the directories is quite simple
+#   PREFIX/lmod/lmod     the directory where LMod is installed
+#   PREFIX/lmod/lua      the directory where Lua is installed
+#   PREFIX/lmod/modules  the directory containing the user provided modules,
+#                        separated in categories
+#   PREFIX/lmod/init     the initialization scripts for the different shells
+# If you run this script twice without changing the configuration files, then
+# only the PREFIX/lmod/lmod and PREFIX/lmod/lua directories will be
+# overwritten. The modules and the initialization files are leaved untouched,
+# this for making everything updatable without difficulties.
+
 . mk/config
 . mk/core
 
