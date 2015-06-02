@@ -62,8 +62,6 @@ extract lua-5.3.0.tar.gz
 pushd lua-5.3.0
   sed -i "s:/usr/local:$PREFIX/lmod/lua:" Makefile
 
-  sed -i "/define LUA_VDIR/d" src/luaconf.h
-  sed -i "s:LUA_VDIR::" src/luaconf.h
   sed -i "s:/usr/local:$PREFIX/lmod/lua:" src/luaconf.h
 
   if [ "$OS" = "linux" ]; then
@@ -86,7 +84,8 @@ extract release-v33.3.1.tar.gz
 pushd luaposix-release-v33.3.1
   LUA=$PREFIX/lmod/lua/bin/lua \
   LUA_INCLUDE=-I$PREFIX/lmod/lua/include \
-  ./configure --prefix=$PREFIX/lmod/lua || exit 1
+  CURSES_LIB="-L$BASE/lib -lncursesw" \
+  ./configure --prefix=$PREFIX/lmod/lua --with-ncursesw || exit 1
   make clean all || exit 1
   make install || exit 1
 popd
@@ -94,14 +93,13 @@ rm -rf luaposix-release-v33.3.1
 rm -rf release-v33.3.1.tar.gz
 
 rm -rf $PREFIX/lmod/lua/share/doc/luaposix
-# TODO libtool --finish $PREFIX/lmod/lua/lib/lua/
 
 download https://github.com/keplerproject/luafilesystem/archive/v_1_6_3.tar.gz
 extract v_1_6_3.tar.gz
 pushd luafilesystem-v_1_6_3
   cat > config << EOF
 PREFIX=$PREFIX/lmod/lua
-LUA_LIBDIR= $PREFIX/lmod/lua/lib/lua
+LUA_LIBDIR= $PREFIX/lmod/lua/lib/lua/5.3
 LUA_INC=$PREFIX/lmod/lua/include
 LIB_OPTION= -shared
 LIBNAME= \$T.so.\$V
