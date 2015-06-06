@@ -9,7 +9,7 @@ VENDOR="mox"
 PKGVERSION="MOX"
 
 # Compiler flags
-CFLAGS="-O2 -pipe"
+CFLAGS="-O2 -pipe -mtune=generic"
 CXXFLAGS="$CFLAGS"
 
 # Mirros
