@@ -2,7 +2,7 @@
 
 # Base directory where all the packages are installed and the tools for
 # managing the modules are located.
-PREFIX=/opt
+PREFIX=/u/sw
 
 # The vendor component of the triple (second one)
 VENDOR="mox"
@@ -11,6 +11,9 @@ PKGVERSION="MOX"
 # Compiler flags
 CFLAGS="-O2 -pipe"
 CXXFLAGS="$CFLAGS"
+
+# GNU mirror
+GNU_MIRROR=http://mirrors.muzzy.it/gnu
 
 # Environment variables (advanced user)
 # =============================================================================

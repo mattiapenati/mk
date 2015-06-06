@@ -3,4 +3,4 @@ help:
 	@echo "  bootstrap   Install or update the lmod installation"
 
 bootstrap:
-	@bash mk/bootstrap
+	bash mk/bootstrap
