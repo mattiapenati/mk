@@ -12,7 +12,8 @@ PKGVERSION="MOX"
 CFLAGS="-O2 -pipe"
 CXXFLAGS="$CFLAGS"
 
-# GNU mirror
+# Mirros
+# =============================================================================
 GNU_MIRROR=http://mirrors.muzzy.it/gnu
 
 # Environment variables (advanced user)

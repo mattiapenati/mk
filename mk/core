@@ -7,6 +7,15 @@ download() {
   local destination=$2
   local cmd=""
 
+  case $url in
+    http://ftp.gnu.org/gnu/*)
+      if [[ -n "$GNU_MIRROR" ]]; then
+        local prefix=http://ftp.gnu.org/gnu/
+        url="$GNU_MIRROR/${url#$prefix}"
+      fi
+      ;;
+  esac
+
   if [ -n "$(which wget)" ]; then
     cmd="$(which wget) --no-check-certificate $url"
     if [ -z "$destination" ]; then
