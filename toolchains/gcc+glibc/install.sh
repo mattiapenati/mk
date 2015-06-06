@@ -7,7 +7,6 @@
 . ../../mk/core
 
 set +h
-PJ=-j16
 
 # Dectect the selected version
 # =============================================================================
@@ -198,7 +197,7 @@ extract $GlibcArchive
 # =============================================================================
 pushd $M4Dir
   ./configure --prefix=$Buildtools || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf $M4Dir
@@ -207,7 +206,7 @@ rm -rf $M4Dir
 # =============================================================================
 pushd $BisonDir
   ./configure --prefix=$Buildtools || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf $BisonDir
@@ -216,7 +215,7 @@ rm -rf $BisonDir
 # =============================================================================
 pushd $TexinfoDir
   ./configure --prefix=$Buildtools || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf $TexinfoDir
@@ -258,7 +257,7 @@ pushd binutils-build
                              --disable-multilib \
                              --enable-ld \
                              --disable-gold || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf binutils-build
@@ -324,7 +323,7 @@ pushd gcc-build
                        --disable-libvtv \
                        --disable-libstdc__-v3 \
                        --enable-languages=c,c++ || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf gcc-build
@@ -374,7 +373,7 @@ pushd glibc-build
                          --enable-obsolete-rpc \
                          libc_cv_ssp=no \
                          libc_cv_forced_unwind=yes || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf glibc-build
@@ -409,7 +408,7 @@ pushd gcc-build
                                     --disable-nls \
                                     --disable-multilib \
                                     --disable-libstdcxx-pch || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf gcc-build
@@ -444,7 +443,7 @@ pushd binutils-build
                             --enable-gold \
                             --enable-plugins \
                             --disable-werror || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf binutils-build
@@ -479,7 +478,7 @@ pushd gcc-build
                        --disable-libstdcxx-pch \
                        --enable-languages=c,c++ \
                        --disable-bootstrap  || exit 1
-  make $PJ || exit 1
+  make || exit 1
   make install || exit 1
 popd
 rm -rf gcc-build
