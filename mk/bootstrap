@@ -31,7 +31,7 @@ ln -sv lib lib64
 
 # Temporary tools
 # =============================================================================
-download $GNU_MIRROR/ncurses/ncurses-5.9.tar.gz
+download http://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
 extract ncurses-5.9.tar.gz
 pushd ncurses-5.9
   ./configure --prefix=$BASE --without-ada --without-cxx \
