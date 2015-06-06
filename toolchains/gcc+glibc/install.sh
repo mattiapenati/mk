@@ -516,8 +516,8 @@ clean_empty_dirs $ToolchainPrefix
 cat > $Module << EOF
 -- -*- lua -*-
 help([[
-This module load the toolchain based on GCC $V and the GLibC. Moreover it
-contains all the base package for the development, for the details about the
+This module load the toolchain based on GCC $V and GLibC library. Moreover it
+contains all the base packages for the development, for the details about the
 software installed see the main documentation.
 ]])
 
