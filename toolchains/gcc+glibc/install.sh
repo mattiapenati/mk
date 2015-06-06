@@ -85,6 +85,11 @@ case $LinuxVersion in
     LinuxVersion=2.6.32.66
     LinuxUrl=https://www.kernel.org/pub/linux/kernel/v2.6/longterm/v2.6.32
     ;;
+  3.10* | 3.11* )
+    Linux=3.10
+    LinuxVersion=3.10.80
+    LinuxUrl=https://www.kernel.org/pub/linux/kernel/v3.x
+    ;;
   3.12* | 3.13* )
     Linux=3.12
     LinuxVersion=3.12.43
