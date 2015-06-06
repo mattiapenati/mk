@@ -83,7 +83,12 @@ case $LinuxVersion in
   2.*)
     Linux=2.6.32
     LinuxVersion=2.6.32.66
-    LinuxUrl=https://www.kernel.org/pub/linux/kernel/v2.6/longterm/v2.6.32/
+    LinuxUrl=https://www.kernel.org/pub/linux/kernel/v2.6/longterm/v2.6.32
+    ;;
+  3.12* | 3.13* )
+    Linux=3.12
+    LinuxVersion=3.12.43
+    LinuxUrl=https://www.kernel.org/pub/linux/kernel/v3.x
     ;;
   *)
     echo "Unsupported version of kernel"
