@@ -37,17 +37,17 @@ esac
 M4Version=1.4.17
 M4Dir=m4-$M4Version
 M4Archive=$M4Dir.tar.xz
-M4Url=http://gnu.mirrors.linux.ro/m4/$M4Archive
+M4Url=http://ftp.gnu.org/gnu/m4/$M4Archive
 
 BisonVersion=3.0.4
 BisonDir=bison-$BisonVersion
 BisonArchive=$BisonDir.tar.xz
-BisonUrl=http://gnu.mirrors.linux.ro/bison/$BisonArchive
+BisonUrl=http://ftp.gnu.org/gnu/bison/$BisonArchive
 
 TexinfoVersion=5.2
 TexinfoDir=texinfo-$TexinfoVersion
 TexinfoArchive=$TexinfoDir.tar.xz
-TexinfoUrl=http://gnu.mirrors.linux.ro/texinfo/$TexinfoArchive
+TexinfoUrl=http://ftp.gnu.org/gnu/texinfo/$TexinfoArchive
 
 GmpVersion=6.0.0
 GmpDir=gmp-$GmpVersion
@@ -62,7 +62,7 @@ MpfrUrl=http://www.mpfr.org/mpfr-current/$MpfrArchive
 MpcVersion=1.0.3
 MpcDir=mpc-$MpcVersion
 MpcArchive=$MpcDir.tar.gz
-MpcUrl=http://gnu.mirrors.linux.ro/mpc/$MpcArchive
+MpcUrl=http://ftp.gnu.org/gnu/mpc/$MpcArchive
 
 IslDir=isl-$IslVersion
 IslArchive=$IslDir.tar.bz2
@@ -97,16 +97,16 @@ LinuxUrl=$LinuxUrl/$LinuxArchive
 BinutilsVersion=2.25
 BinutilsDir=binutils-$BinutilsVersion
 BinutilsArchive=$BinutilsDir.tar.bz2
-BinutilsUrl=http://gnu.mirrors.linux.ro/binutils/$BinutilsArchive
+BinutilsUrl=http://ftp.gnu.org/gnu/binutils/$BinutilsArchive
 
 GccDir=gcc-$GccVersion
 GccArchive=$GccDir.tar.bz2
-GccUrl=http://gnu.mirrors.linux.ro/gcc/gcc-$GccVersion/$GccArchive
+GccUrl=http://ftp.gnu.org/gnu/gcc/gcc-$GccVersion/$GccArchive
 
 GlibcVersion=2.21
 GlibcDir=glibc-$GlibcVersion
 GlibcArchive=$GlibcDir.tar.xz
-GlibcUrl=http://gnu.mirrors.linux.ro/glibc/$GlibcArchive
+GlibcUrl=http://ftp.gnu.org/gnu/glibc/$GlibcArchive
 
 # Create the directories hyerarchy
 # =============================================================================

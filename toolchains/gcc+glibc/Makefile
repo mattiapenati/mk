@@ -13,7 +13,6 @@ all: gcc48 gcc49 gcc51
 
 clean:
 	find . -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
-	rm -rf /tmp/tmp.*
 
 distclean: clean
 	rm -rfv *.tar.bz2 *.tar.gz *.tar.xz
