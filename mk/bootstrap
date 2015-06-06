@@ -31,7 +31,7 @@ ln -sv lib lib64
 
 # Temporary tools
 # =============================================================================
-download http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+download $GNU_MIRROR/ncurses/ncurses-5.9.tar.gz
 extract ncurses-5.9.tar.gz
 pushd ncurses-5.9
   ./configure --prefix=$BASE --without-ada --without-cxx \
@@ -82,6 +82,7 @@ export PATH=$PREFIX/lmod/lua/bin:$PATH
 download https://github.com/luaposix/luaposix/archive/release-v33.3.1.tar.gz
 extract release-v33.3.1.tar.gz
 pushd luaposix-release-v33.3.1
+  CPPFLAGS="-I$BASE/include -I$BASE/include/ncursesw" \
   LUA=$PREFIX/lmod/lua/bin/lua \
   LUA_INCLUDE=-I$PREFIX/lmod/lua/include \
   CURSES_LIB="-L$BASE/lib -lncursesw" \
