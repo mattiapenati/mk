@@ -120,7 +120,8 @@ GlibcUrl=http://ftp.gnu.org/gnu/glibc/$GlibcArchive
 
 # Create the directories hyerarchy
 # =============================================================================
-install -dv $PREFIX/lmod/modules/toolchains/gcc+glibc
+# Checks also for the permissions
+install -dv $PREFIX/lmod/modules/toolchains/gcc+glibc || exit 1
 Module=$PREFIX/lmod/modules/toolchains/gcc+glibc/$V.lua
 ToolchainPrefix=$PREFIX/toolchains/gcc+glibc/$V/prefix
 ToolchainBase=$PREFIX/toolchains/gcc+glibc/$V/base
@@ -129,7 +130,7 @@ ToolchainModules=$PREFIX/toolchains/gcc+glibc/$V/modules
 Buildtools=$(mktmpdir)
 
 rm -rf $ToolchainPrefix
-install -dv $ToolchainPrefix $ToolchainBase $ToolchainPkgs $ToolchainModules
+install -dv $ToolchainPrefix $ToolchainBase $ToolchainPkgs $ToolchainModules || exit 1
 
 export PATH=$ToolchainPrefix/bin:$Buildtools/bin:/usr/bin:/bin
 
@@ -518,7 +519,7 @@ cat > $Module << EOF
 help([[
 This module load the toolchain based on GCC $V and GLibC library. Moreover it
 contains all the base packages for the development, for the details about the
-software installed see the main documentation.
+installed software see the main documentation.
 ]])
 
 -- commands and libraries
