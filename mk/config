@@ -7,6 +7,7 @@ PREFIX=/u/sw
 # The vendor component of the triple (second one)
 VENDOR="mox"
 PKGVERSION="MOX"
+BUGURL="https://bitbucket.org/mattiapenati/mk/issues"
 
 # Compiler flags
 CFLAGS="-O2 -pipe -mtune=generic"
