@@ -2,7 +2,7 @@
 
 # Base directory where all the packages are installed and the tools for
 # managing the modules are located.
-PREFIX=/u/geo2/sw2
+PREFIX=/u/sw
 
 # The vendor component of the triple (second one)
 VENDOR="mox"
