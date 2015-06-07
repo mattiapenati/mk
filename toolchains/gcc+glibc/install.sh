@@ -96,7 +96,7 @@ case $LinuxVersion in
     LinuxUrl=https://www.kernel.org/pub/linux/kernel/v3.x
     ;;
   *)
-    echo "Unsupported version of kernel"
+    echo "Unsupported version of kernel '$LinuxVersion'"
     exit 1
     ;;
 esac
@@ -213,17 +213,6 @@ popd
 
 download $GlibcUrl
 extract $GlibcArchive
-case $ARCH in
-  x86_64)
-    # point to the correct dynamic linker
-    sed -i "s:lib64:lib:g;s:/lib:$ToolchainPrefix/lib:g" \
-      $GlibcDir/sysdeps/unix/sysv/linux/x86_64/ldconfig.h
-    ;;
-  *)
-    echo "Unsupported architecture '$ARCH'"
-    exit 1
-    ;;
-esac
 
 # M4 (old versions of M4 are buggy, it is used by bison)
 # =============================================================================
@@ -394,12 +383,16 @@ pushd glibc-build
   #   https://sourceware.org/ml/libc-alpha/2012-09/msg00093.html
   # libc_cv_forced_unwind=yes
   #   Seems to be required to bootstrap a cross compiler.
+  echo "slibdir=$ToolchainPrefix/lib" >> configparms
+  echo "rtlddir=$ToolchainPrefix/lib" >> configparms
   ../$GlibcDir/configure --build=$BUILD \
                          --host=$TARGET \
                          --with-binutils=$Buildtools/bin \
                          --with-pkgversion="$PKGVERSION" \
                          --with-bugurl="$BUGURL" \
                          --prefix=$ToolchainPrefix \
+                         --libdir=$ToolchainPrefix/lib \
+                         --libexecdir=$ToolchainPrefix/lib \
                          --with-headers=$ToolchainPrefix/include \
                          --enable-kernel=$Linux \
                          --enable-add-ons \
@@ -412,6 +405,9 @@ pushd glibc-build
 popd
 rm -rf glibc-build
 rm -rf $GlibcDir
+
+# fix ldd scripts
+sed -i "s:lib64:lib:g" $ToolchainPrefix/bin/ldd
 
 # Libstdc++ (used by gold)
 # =============================================================================
@@ -465,6 +461,7 @@ pushd binutils-build
   #   Enables both the standard and Google linker.
   CC="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CXX="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
+  AS="$TARGET-as" \
   AR="$TARGET-ar" \
   RANLIB="$TARGET-ranlib" \
   ../$BinutilsDir/configure --build=$BUILD \
@@ -513,6 +510,8 @@ pushd gcc-build
   #   This switch prevents the installation of precompiled include files.
   # --enable-languages=c,c++
   #   This option ensures that only the C and C++ compilers are built.
+  CC_FOR_TARGET="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
+  CXX_FOR_TARGET="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CC="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CXX="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   ../$GccDir/configure --build=$BUILD \
