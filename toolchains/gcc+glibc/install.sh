@@ -171,7 +171,8 @@ download $BinutilsUrl
 extract $BinutilsArchive
 pushd $BinutilsDir
   # (2.25) https://sourceware.org/bugzilla/show_bug.cgi?id=16992
-  [[ -e binutils-$BinutilsVersion.patch ]] && patch -p1 -i ../binutils-$BinutilsVersion.patch
+  [[ -e ../binutils-$BinutilsVersion.patch ]] && \
+    patch -p1 -i ../binutils-$BinutilsVersion.patch
 popd
 
 download $GccUrl
@@ -184,25 +185,45 @@ extract $GccArchive
 [[ -d $CloogDir ]] && ln -sv ../$CloogDir $GccDir/cloog
 [[ -d $LibelfDir ]] && ln -sv ../$LibelfDir $GccDir/libelf
 # see gcc-4.8.3-pure64_specs-1.patch in LFS
-if [[ $ARCH == "x86_64" ]]; then
-  # installs x86_64 libraries in PREFIX/lib
-  sed -i '/m64=/s/lib64/lib/' $GccDir/gcc/config/i386/t-linux64
-  # point to the correct linker
-  sed -i "s:/lib64:$ToolchainPrefix/lib:g" $GccDir/gcc/config/i386/linux64.h
-  # set the correct prefixes
-  echo "
-#define STANDARD_STARTFILE_PREFIX_1 \"$ToolchainPrefix/lib\"
-#define STANDARD_STARTFILE_PREFIX_2 \"$ToolchainBase/lib\"
-" >> $GccDir/gcc/config/i386/linux64.h
-fi
+case $ARCH in
+  x86_64)
+    # installs x86_64 libraries in PREFIX/lib
+    sed -i '/m64=/s/lib64/lib/' \
+      $GccDir/gcc/config/i386/t-linux64
+    # point to the correct dynamic linker
+    sed -i "s:lib64:lib:g;s:/lib:$ToolchainPrefix/lib:g" \
+      $GccDir/gcc/config/i386/linux64.h
+    # set the correct prefixes
+    echo "#define STANDARD_STARTFILE_PREFIX_1 \"$ToolchainPrefix/lib\"" >> \
+      $GccDir/gcc/config/i386/linux64.h
+    echo "#define STANDARD_STARTFILE_PREFIX_2 \"$ToolchainBase/lib\"" >> \
+      $GccDir/gcc/config/i386/linux64.h
+    ;;
+  *)
+    echo "Unsupported architecture '$ARCH'"
+    exit 1
+    ;;
+esac
 # apply the patch
 pushd $GccDir
   # (4.8) https://gcc.gnu.org/ml/gcc-patches/2013-12/msg01552.html
-  [[ -e gcc-$GccVersion.patch ]] && patch -p0 -i ../gcc-$GccVersion.patch
+  [[ -e ../gcc-$GccVersion.patch ]] && \
+    patch -p1 -i ../gcc-$GccVersion.patch
 popd
 
 download $GlibcUrl
 extract $GlibcArchive
+case $ARCH in
+  x86_64)
+    # point to the correct dynamic linker
+    sed -i "s:lib64:lib:g;s:/lib:$ToolchainPrefix/lib:g" \
+      $GlibcDir/sysdeps/unix/sysv/linux/x86_64/ldconfig.h
+    ;;
+  *)
+    echo "Unsupported architecture '$ARCH'"
+    exit 1
+    ;;
+esac
 
 # M4 (old versions of M4 are buggy, it is used by bison)
 # =============================================================================
@@ -376,6 +397,8 @@ pushd glibc-build
   ../$GlibcDir/configure --build=$BUILD \
                          --host=$TARGET \
                          --with-binutils=$Buildtools/bin \
+                         --with-pkgversion="$PKGVERSION" \
+                         --with-bugurl="$BUGURL" \
                          --prefix=$ToolchainPrefix \
                          --with-headers=$ToolchainPrefix/include \
                          --enable-kernel=$Linux \
@@ -446,7 +469,8 @@ pushd binutils-build
   RANLIB="$TARGET-ranlib" \
   ../$BinutilsDir/configure --build=$BUILD \
                             --host=$TARGET \
-                            --with-pkgversion=$PKGVERSION \
+                            --with-pkgversion="$PKGVERSION" \
+                            --with-bugurl="$BUGURL" \
                             --prefix=$ToolchainPrefix \
                             --with-lib-path="$ToolchainPrefix/lib:$ToolchainBase/lib" \
                             --disable-multilib \
@@ -474,12 +498,29 @@ ln -sv ../../lib/crtn.o $ToolchainPrefix/$TARGET/lib/crtn.o
 # =============================================================================
 mkdir gcc-build
 pushd gcc-build
+  # CC="..." CXX="..." AR="..." RANLIB="..."
+  #   Use the just installed compilers with the new libraries.
+  # --build=$BUILD
+  # --host=$TARGET
+  #   This combination enables the cross compilation.
+  # --prefix=$ToolchainPrefix
+  # --with-local-prefix=$ToolchainBase
+  #   Install GCC programs in $ToolchainPrefix directory and use $ToolchainBase
+  #   as local prefix.
+  # --disable-multilib
+  #   Avoids 32 libraries.
+  # --disable-libstdcxx-pch
+  #   This switch prevents the installation of precompiled include files.
+  # --enable-languages=c,c++
+  #   This option ensures that only the C and C++ compilers are built.
   CC="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CXX="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
-  ../$GccDir/configure --build=$TARGET \
+  ../$GccDir/configure --build=$BUILD \
+                       --host=$TARGET \
+                       --with-pkgversion="$PKGVERSION" \
+                       --with-bugurl="$BUGURL" \
                        --prefix=$ToolchainPrefix \
                        --with-local-prefix=$ToolchainBase \
-                       --with-pkgversion="$PKGVERSION" \
                        --disable-multilib \
                        --enable-shared \
                        --enable-threads=posix \
@@ -496,13 +537,14 @@ rm -rf gcc-build
 rm -rf $GccDir
 rm -rf $LibelfDir $CloogDir $IslDir $MpcDir $MpfrDir $GmpDir
 
-# create cc link (used by cmake)
+# create cc link (used by cmake and others)
 ln -sv gcc $ToolchainPrefix/bin/cc
 ln -sv $TARGET-gcc $ToolchainPrefix/bin/$TARGET-cc
 
-# link time optimization
+# link time optimization plugin
 install -v -dm755 $ToolchainPrefix/lib/bfd-plugins
-ln -sfv ../../libexec/gcc/$TARGET/$GccVersion/liblto_plugin.so $ToolchainPrefix/lib/bfd-plugins/
+ln -sfv ../../libexec/gcc/$TARGET/$GccVersion/liblto_plugin.so \
+  $ToolchainPrefix/lib/bfd-plugins/
 
 # Cleaning
 # =============================================================================

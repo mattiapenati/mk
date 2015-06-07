@@ -61,10 +61,12 @@ extract() {
       exit 1
   esac
 
-  if [ -z "$destination" ]; then
+  if [[ -z "$destination" ]]; then
+    echo "extracting '$file'"
     eval $cmd || exit 1
   else
-    [ -e "$destination" ] || eval $cmd || exit 1
+    echo "extracting '$file' in '$destination'"
+    [[ -e "$destination" ]] || eval $cmd || exit 1
   fi
 }
 
