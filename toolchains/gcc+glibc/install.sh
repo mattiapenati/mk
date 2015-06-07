@@ -464,8 +464,7 @@ pushd binutils-build
   AS="$TARGET-as" \
   AR="$TARGET-ar" \
   RANLIB="$TARGET-ranlib" \
-  ../$BinutilsDir/configure --build=$BUILD \
-                            --host=$TARGET \
+  ../$BinutilsDir/configure --build=$TARGET \
                             --with-pkgversion="$PKGVERSION" \
                             --with-bugurl="$BUGURL" \
                             --prefix=$ToolchainPrefix \
@@ -510,12 +509,9 @@ pushd gcc-build
   #   This switch prevents the installation of precompiled include files.
   # --enable-languages=c,c++
   #   This option ensures that only the C and C++ compilers are built.
-  CC_FOR_TARGET="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
-  CXX_FOR_TARGET="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CC="$TARGET-gcc -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
   CXX="$TARGET-g++ -isystem $ToolchainPrefix/include -B$ToolchainPrefix/lib" \
-  ../$GccDir/configure --build=$BUILD \
-                       --host=$TARGET \
+  ../$GccDir/configure --build=$TARGET \
                        --with-pkgversion="$PKGVERSION" \
                        --with-bugurl="$BUGURL" \
                        --prefix=$ToolchainPrefix \
