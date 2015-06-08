@@ -536,6 +536,10 @@ rm -rf gcc-build
 rm -rf $GccDir
 rm -rf $LibelfDir $CloogDir $IslDir $MpcDir $MpfrDir $GmpDir
 
+# linker cache
+echo "$ToolchainBase/lib" > $ToolchainPrefix/etc/ld.so.conf
+$ToolchainPrefix/sbin/ldconfig
+
 # create cc link (used by cmake and others)
 ln -sv gcc $ToolchainPrefix/bin/cc
 ln -sv $TARGET-gcc $ToolchainPrefix/bin/$TARGET-cc
