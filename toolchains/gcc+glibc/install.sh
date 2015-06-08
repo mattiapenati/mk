@@ -6,7 +6,10 @@
 . ../../mk/config
 . ../../mk/core
 
+# Turn off bash's hash function
 set +h
+# Exit immediately if a command exits with a non-zero status
+set -e
 
 # Dectect the selected version
 # =============================================================================
@@ -121,7 +124,7 @@ GlibcUrl=http://ftp.gnu.org/gnu/glibc/$GlibcArchive
 # Create the directories hyerarchy
 # =============================================================================
 # Checks also for the permissions
-install -dv $PREFIX/lmod/modules/toolchains/gcc+glibc || exit 1
+install -dv $PREFIX/lmod/modules/toolchains/gcc+glibc
 Module=$PREFIX/lmod/modules/toolchains/gcc+glibc/$V.lua
 ToolchainPrefix=$PREFIX/toolchains/gcc+glibc/$V/prefix
 ToolchainBase=$PREFIX/toolchains/gcc+glibc/$V/base
@@ -130,7 +133,7 @@ ToolchainModules=$PREFIX/toolchains/gcc+glibc/$V/modules
 Buildtools=$(mktmpdir)
 
 rm -rf $ToolchainPrefix
-install -dv $ToolchainPrefix $ToolchainBase $ToolchainPkgs $ToolchainModules || exit 1
+install -dv $ToolchainPrefix $ToolchainBase $ToolchainPkgs $ToolchainModules
 
 export PATH=$ToolchainPrefix/bin:$Buildtools/bin:/usr/bin:/bin
 
@@ -217,27 +220,27 @@ extract $GlibcArchive
 # M4 (old versions of M4 are buggy, it is used by bison)
 # =============================================================================
 pushd $M4Dir
-  ./configure --prefix=$Buildtools || exit 1
-  make || exit 1
-  make install || exit 1
+  ./configure --prefix=$Buildtools
+  make
+  make install
 popd
 rm -rf $M4Dir
 
 # Bison (used by gold in binutils)
 # =============================================================================
 pushd $BisonDir
-  ./configure --prefix=$Buildtools || exit 1
-  make || exit 1
-  make install || exit 1
+  ./configure --prefix=$Buildtools
+  make
+  make install
 popd
 rm -rf $BisonDir
 
 # TexInfo (used to build the documentation)
 # =============================================================================
 pushd $TexinfoDir
-  ./configure --prefix=$Buildtools || exit 1
-  make || exit 1
-  make install || exit 1
+  ./configure --prefix=$Buildtools
+  make
+  make install
 popd
 rm -rf $TexinfoDir
 
@@ -277,9 +280,9 @@ pushd binutils-build
                              --disable-nls \
                              --disable-multilib \
                              --enable-ld \
-                             --disable-gold || exit 1
-  make || exit 1
-  make install || exit 1
+                             --disable-gold
+  make
+  make install
 popd
 rm -rf binutils-build
 
@@ -343,9 +346,9 @@ pushd gcc-build
                        --disable-libssp \
                        --disable-libvtv \
                        --disable-libstdc__-v3 \
-                       --enable-languages=c,c++ || exit 1
-  make || exit 1
-  make install || exit 1
+                       --enable-languages=c,c++
+  make
+  make install
 popd
 rm -rf gcc-build
 
@@ -399,9 +402,9 @@ pushd glibc-build
                          --disable-profile \
                          --enable-obsolete-rpc \
                          libc_cv_ssp=no \
-                         libc_cv_forced_unwind=yes || exit 1
-  make || exit 1
-  make install || exit 1
+                         libc_cv_forced_unwind=yes
+  make
+  make install
 popd
 rm -rf glibc-build
 rm -rf $GlibcDir
@@ -437,9 +440,9 @@ pushd gcc-build
                                     --with-gxx-include-dir=$Buildtools/$TARGET/include/c++/$GccVersion \
                                     --disable-nls \
                                     --disable-multilib \
-                                    --disable-libstdcxx-pch || exit 1
-  make || exit 1
-  make install || exit 1
+                                    --disable-libstdcxx-pch
+  make
+  make install
 popd
 rm -rf gcc-build
 
@@ -473,9 +476,9 @@ pushd binutils-build
                             --enable-ld \
                             --enable-gold \
                             --enable-plugins \
-                            --disable-werror || exit 1
-  make || exit 1
-  make install || exit 1
+                            --disable-werror
+  make
+  make install
 popd
 rm -rf binutils-build
 rm -rf $BinutilsDir
@@ -516,6 +519,7 @@ pushd gcc-build
                        --with-bugurl="$BUGURL" \
                        --prefix=$ToolchainPrefix \
                        --with-local-prefix=$ToolchainBase \
+                       --with-native-system-header-dir=$ToolchainPrefix/include \
                        --disable-multilib \
                        --enable-shared \
                        --enable-threads=posix \
@@ -524,9 +528,9 @@ pushd gcc-build
                        --enable-libgomp \
                        --disable-libstdcxx-pch \
                        --enable-languages=c,c++ \
-                       --disable-bootstrap  || exit 1
-  make || exit 1
-  make install || exit 1
+                       --disable-bootstrap
+  make
+  make install
 popd
 rm -rf gcc-build
 rm -rf $GccDir
