@@ -8,8 +8,8 @@
 
 # Turn off bash's hash function
 set +h
-# Exit immediately if a command exits with a non-zero status
-set -e
+# Exit immediately if a command exits with an error code
+trap 'exit 1' ERR
 
 # Dectect the selected version
 # =============================================================================
