@@ -21,7 +21,7 @@ export MODULEPATH=$mkPrefix/lmod/modules/toolchains
 
 # Colorize
 # =============================================================================
-if [[ $(tput colors) -ge 8 ]]; then
+if [[ $(tput colors 2> /dev/null) -ge 8 ]]; then
   colors='yes'
 else
   colors='no'
