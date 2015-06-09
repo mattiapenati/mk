@@ -1,15 +1,10 @@
 #!/bin/bash
-# install.sh <version>
+# PKGBUILD <version>
 # Build the toolchain based on GCC and GlibC it needs approximately 110Mb of
 # disk space for the temporary files and 200Mb for the installation.
 
 . ../../mk/config
 . ../../mk/core
-
-# Turn off bash's hash function
-set +h
-# Exit immediately if a command exits with an error code
-trap 'exit 1' ERR
 
 # Dectect the selected version
 # =============================================================================

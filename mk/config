@@ -17,11 +17,6 @@ CXXFLAGS="$CFLAGS"
 # =============================================================================
 GNU_MIRROR=http://mirrors.muzzy.it/gnu
 
-# Environment variables (advanced user)
-# =============================================================================
-PATH=/usr/bin:/bin:/usr/sbin:/sbin
-LD_LIBRARY_PATH=
-
 # Automatically detected variables
 # =============================================================================
 
@@ -61,7 +56,5 @@ esac
 
 # Exporting the variables
 # =============================================================================
-export PATH
-export LD_LIBRARY_PATH
 export CFLAGS
 export CXXFLAGS
