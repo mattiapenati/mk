@@ -121,3 +121,11 @@ compress_manpages() {
 clean_empty_dirs() {
   find $1 -depth -type d -empty -exec rmdir -v {} \;
 }
+
+# update_linker_cache
+# =============================================================================
+update_linker_cache() {
+  if [[ -e $mkToolchainPrefix/sbin/ldconfig ]]; then
+    $mkToolchainPrefix/sbin/ldconfig 2> /dev/null
+  fi
+}
