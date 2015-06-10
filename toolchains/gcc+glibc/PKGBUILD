@@ -176,12 +176,12 @@ popd
 download $GccUrl
 extract $GccArchive
 # Link the 3rd party librariries
-[[ -d $GmpDir ]] && ln -sv ../$GmpDir $GccDir/gmp
-[[ -d $MpfrDir ]] && ln -sv ../$MpfrDir $GccDir/mpfr
-[[ -d $MpcDir ]] && ln -sv ../$MpcDir $GccDir/mpc
-[[ -d $IslDir ]] && ln -sv ../$IslDir $GccDir/isl
-[[ -d $CloogDir ]] && ln -sv ../$CloogDir $GccDir/cloog
-[[ -d $LibelfDir ]] && ln -sv ../$LibelfDir $GccDir/libelf
+[[ -d $GmpDir ]] && ln -vs ../$GmpDir $GccDir/gmp
+[[ -d $MpfrDir ]] && ln -vs ../$MpfrDir $GccDir/mpfr
+[[ -d $MpcDir ]] && ln -vs ../$MpcDir $GccDir/mpc
+[[ -d $IslDir ]] && ln -vs ../$IslDir $GccDir/isl
+[[ -d $CloogDir ]] && ln -vs ../$CloogDir $GccDir/cloog
+[[ -d $LibelfDir ]] && ln -vs ../$LibelfDir $GccDir/libelf
 # see gcc-4.8.3-pure64_specs-1.patch in LFS
 case $ARCH in
   x86_64)
@@ -371,6 +371,8 @@ pushd glibc-build
   #   Compiles the GLibc using the headers just installed.
   # --enable-add-ons
   #   Compiles the extensions.
+  # --disable-nls
+  #   Disables internationalization.
   # --disable-profile
   #   This builds the libraries without profiling information.
   # --enable-obsolete-rpc
@@ -394,6 +396,7 @@ pushd glibc-build
                          --with-headers=$ToolchainPrefix/include \
                          --enable-kernel=$Linux \
                          --enable-add-ons \
+                         --disable-nls \
                          --disable-profile \
                          --enable-obsolete-rpc \
                          libc_cv_ssp=no \
@@ -452,6 +455,8 @@ pushd binutils-build
   #   This combination enables the cross compilation.
   # --prefix=$ToolchainPrefix
   #   Install binutils programs in $ToolchainPrefix directory.
+  # --disable-nls
+  #   Disables internationalization.
   # --disable-multilib
   #   This option disables the building of a multilib capable Binutils.
   # --enable-ld
@@ -467,6 +472,7 @@ pushd binutils-build
                             --with-bugurl="$BUGURL" \
                             --prefix=$ToolchainPrefix \
                             --with-lib-path="$ToolchainPrefix/lib:$ToolchainBase/lib" \
+                            --disable-nls \
                             --disable-multilib \
                             --enable-ld \
                             --enable-gold \
@@ -478,15 +484,15 @@ popd
 rm -rf binutils-build
 rm -rf $BinutilsDir
 
-# Adjust the linker (to use gold!) and some objects
+# Adjust the linker (not use gold!) and some objects
 # =============================================================================
 rm -v $ToolchainPrefix/bin/ld
-ln -sv ld.bfd $ToolchainPrefix/bin/ld
-# ln -sv ld.gold $ToolchainPrefix/bin/ld
+ln -vs ld.bfd $ToolchainPrefix/bin/ld
+# ln -vs ld.gold $ToolchainPrefix/bin/ld
 # during the GCC compile stage these objects are necessary
-ln -sv ../../lib/crt1.o $ToolchainPrefix/$TARGET/lib/crt1.o
-ln -sv ../../lib/crti.o $ToolchainPrefix/$TARGET/lib/crti.o
-ln -sv ../../lib/crtn.o $ToolchainPrefix/$TARGET/lib/crtn.o
+ln -vs ../../lib/crt1.o $ToolchainPrefix/$TARGET/lib/crt1.o
+ln -vs ../../lib/crti.o $ToolchainPrefix/$TARGET/lib/crti.o
+ln -vs ../../lib/crtn.o $ToolchainPrefix/$TARGET/lib/crtn.o
 
 # Gcc (final)
 # =============================================================================
@@ -501,6 +507,8 @@ pushd gcc-build
   # --with-local-prefix=$ToolchainBase
   #   Install GCC programs in $ToolchainPrefix directory and use $ToolchainBase
   #   as local prefix.
+  # --disable-nls
+  #   Disables internationalization.
   # --disable-multilib
   #   Avoids 32 libraries.
   # --disable-libstdcxx-pch
@@ -515,6 +523,7 @@ pushd gcc-build
                        --prefix=$ToolchainPrefix \
                        --with-local-prefix=$ToolchainBase \
                        --with-native-system-header-dir=$ToolchainPrefix/include \
+                       --disable-nls \
                        --disable-multilib \
                        --enable-shared \
                        --enable-threads=posix \
@@ -522,8 +531,11 @@ pushd gcc-build
                        --enable-lto \
                        --enable-libgomp \
                        --disable-libstdcxx-pch \
-                       --enable-languages=c,c++ \
-                       --disable-bootstrap
+                       --enable-languages=c,c++,fortran \
+                       --enable-bootstrap
+  # LIBRARY_PATH=$ToolchainPrefix/lib
+  #   The path of the libraries used during the bootstrap for the link step.
+  LIBRARY_PATH=$ToolchainPrefix/lib \
   make
   make install
 popd
@@ -531,23 +543,67 @@ rm -rf gcc-build
 rm -rf $GccDir
 rm -rf $LibelfDir $CloogDir $IslDir $MpcDir $MpfrDir $GmpDir
 
+# create cc link (used by cmake and others)
+ln -vs gcc $ToolchainPrefix/bin/cc
+ln -vs $TARGET-gcc $ToolchainPrefix/bin/$TARGET-cc
+
+# POSIX conformance launcher scripts for c89 and c99
+cat > $ToolchainPrefix/bin/c89 <<"EOF"
+#!/bin/sh
+fl="-std=c89"
+for opt; do
+  case "$opt" in
+    -ansi|-std=c89|-std=iso9899:1990)
+      fl=""
+      ;;
+    -std=*)
+      echo "`basename $0` called with non ANSI/ISO C option $opt" >&2
+      exit 1
+      ;;
+  esac
+done
+exec gcc $fl ${1+"$@"}
+EOF
+cat > $ToolchainPrefix/bin/c99 <<"EOF"
+#!/bin/sh
+fl="-std=c99"
+for opt; do
+  case "$opt" in
+    -std=c99|-std=iso9899:1999)
+      fl=""
+      ;;
+    -std=*)
+      echo "`basename $0` called with non ISO C99 option $opt" >&2
+      exit 1
+      ;;
+  esac
+done
+exec gcc $fl ${1+"$@"}
+EOF
+chmod 755 $ToolchainPrefix/bin/c{8,9}9
+
+# fortran links
+ln -vs gfortran $ToolchainPrefix/bin/f95
+
+# moving debugger scripts
+install -vd $ToolchainPrefix/share/gdb/auto-load
+mv $ToolchainPrefix/lib/libstdc++.so.6.*-gdb.py \
+  $ToolchainPrefix/share/gdb/auto-load
+
+# link time optimization plugin
+install -vdm755 $ToolchainPrefix/lib/bfd-plugins
+ln -sfv ../../libexec/gcc/$TARGET/$GccVersion/liblto_plugin.so \
+  $ToolchainPrefix/lib/bfd-plugins/
+
 # linker cache
 echo "$ToolchainBase/lib" > $ToolchainPrefix/etc/ld.so.conf
 $ToolchainPrefix/sbin/ldconfig
-
-# create cc link (used by cmake and others)
-ln -sv gcc $ToolchainPrefix/bin/cc
-ln -sv $TARGET-gcc $ToolchainPrefix/bin/$TARGET-cc
-
-# link time optimization plugin
-install -v -dm755 $ToolchainPrefix/lib/bfd-plugins
-ln -sfv ../../libexec/gcc/$TARGET/$GccVersion/liblto_plugin.so \
-  $ToolchainPrefix/lib/bfd-plugins/
 
 # Cleaning
 # =============================================================================
 rm -rf $Buildtools
 rm -v $ToolchainPrefix/$TARGET/lib/crt{1,i,n}.o
+rm -rf $ToolchainPrefix/share/locale
 strip_unneeded $ToolchainPrefix
 compress_manpages $ToolchainPrefix/share/man
 clean_empty_dirs $ToolchainPrefix
@@ -574,7 +630,6 @@ prepend_path("INFOPATH", "$ToolchainPrefix/share/info")
 prepend_path("INFOPATH", "$ToolchainBase/share/info")
 
 -- configuration
-prepend_path("PKG_CONFIG_PATH", "$ToolchainBase/lib/pkgconfig")
 prepend_path("ACLOCAL_PATH", "$ToolchainBase/share/aclocal")
 
 -- module
