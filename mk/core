@@ -82,6 +82,14 @@ extract() {
   else
     echo "extracting '$file' in '$destination'"
     [[ -e "$destination" ]] || eval $cmd || exit 1
+    # zip has no strip option
+    case $file in
+      *.zip)
+        local f=("$destination"/*)
+        mv "$destination"/*/{*,.[^.]?*} "$destination"
+        rmdir "${f[@]}"
+        ;;
+    esac
   fi
 }
 
