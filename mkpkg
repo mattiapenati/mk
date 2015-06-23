@@ -176,13 +176,10 @@ fi
 # follows:
 #  1  for the standard output (if $mkVerbose = "no" then point to /dev/null)
 #  2  for the standard error  (if $mkVerbose = "no" then point to /dev/null)
-#  4  for the log file
 #  5  the real standard output (internal usage)
 #  6  the real standard error (internal usage)
-# the files 1 and 2 is duplicated to log file
 exec 5>&1
 exec 6>&2
-exec 4>/dev/null
 exec 1>/dev/null
 exec 2>/dev/null
 
@@ -218,31 +215,31 @@ readonly RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
 # error <msg>
 # Print an error message to the standard error stream
 error() {
-  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee >(cat - >&4) >&6
+  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&6
 }
 
 # warning <msg>
 # Print a warning message to the standard error stream
 warning() {
-  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee >(cat - >&4) >&6
+  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&6
 }
 
 # message <msg>
 # Print a message to the standard output stream
 message() {
-  echo -e "${BOLD}>> $1${RESET}" | tee >(cat - >&4) >&5
+  echo -e "${BOLD}>> $1${RESET}" | tee -a "$mkLogFile" >&5
 }
 
 # plain <msg>
 # Print a plain text to the standard output stream
 plain() {
-  echo -e "   ${RESET}$1${RESET}" | tee >(cat - >&4) >&5
+  echo -e "   ${RESET}$1${RESET}" | tee -a "$mkLogFile" >&5
 }
 
 # log <msg>
 # Print a messago only in the log file
 log() {
-  echo  -e "${BOLD}>> $1${RESET}" >&4
+  echo  -e "${BOLD}>> $1${RESET}"
 }
 
 
@@ -415,8 +412,10 @@ check() {
 
   case ${#sum} in
     0)  error "No checksum is provided for file '$file'"; exit 1;;
-    32) cmd=md5sum;;
-    40) cmd=sha1sum;;
+    32) cmd=md5sum
+        message "Checking MD5 checksum for '$(basename "$file")'";;
+    40) cmd=sha1sum
+        message "Checking SHA1 checksum for '$(basename "$file")'";;
     *)  error "Unknown hash function for '$file' ($sum)"; exit 1
   esac
 
@@ -465,10 +464,10 @@ extract() {
 
   # run the command
   if [[ -z "$destination" ]]; then
-    message "Extracting '$archive'"
+    message "Extracting '$(basename "$archive")'"
     $mkPrefix/bin/busybox $cmd
   else
-    message "Extracting '$archive' in '$destination'"
+    message "Extracting '$(basename "$archive")' in '$destination'"
     eval $cmd
     # zip has no strip option
     case $archive in
@@ -656,7 +655,7 @@ run() {
   if [[ -d "$dstdir" && ! "$dstdir" = "$mkToolchainBase" ]]; then
     rm -rf "$dstdir"/*
   fi
-  message "Building..."
+  message "Building the package"
   build $@
   message "Installing in '$dstdir'"
   package $@
@@ -671,9 +670,8 @@ umask 0022
 set +h
 # ERR trap is inherited by functions
 set -E
-# open the log file for writing
+# reset log file
 > $mkLogFile
-exec 4> $mkLogFile
 # managing verbosity
 if [[ "$mkVerbose" = "yes" ]]; then
   # 1 and 2 are redirected to tee, tee writes in $mkLogFile then to the real output
@@ -681,8 +679,8 @@ if [[ "$mkVerbose" = "yes" ]]; then
   exec 2> >(tee -a $mkLogFile >&6)
 else
   # 1 and 2 are redirected directly to log file
-  exec 1>&4
-  exec 2>&4
+  exec 1> $mkLogFile
+  exec 2> $mkLogFile
 fi
 # debugging
 [[ "$mkDebug" = "yes" ]] && set -x
