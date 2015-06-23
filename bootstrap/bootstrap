@@ -257,7 +257,6 @@ pushd $pkgname-$pkgver
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   cp -v $DIR/$pkgname-$pkgver.config .config
   make V=1 CC=$TMPDIR/bin/musl-gcc
-  cp .config $DIR/$pkgname-$pkgver.config
   install -vm 0755 busybox $PREFIX/bin/busybox
 popd
 
