@@ -1,0 +1,713 @@
+#!/u/sw/bin/bash
+
+# Copyright (c) 2015, Mattia Penati <mattia.penati@gmail.com>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#  1. Redistributions of source code must retain the above copyright notice,
+#     this list of conditions and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+# the following environment variables can change the behaviour of the command
+#
+# mkPrefix = [path] (mandatory)
+#   The installation prefix of mk.
+# mkUseColor = [auto|yes|no] (default: auto)
+#   If set to 'no' than the command does not use the colors for the output.
+# mkSandboxDir = [path] (default: none)
+#   In this directory the build script is executed, this to ensure enough space
+#   to build the package.
+# mkKeepBuildDir = [yes|no] (default: no)
+#   If set to 'yes' then the build directory is not removed if an error occours.
+# mkParallelBuild = [yes|no] (default: yes)
+#   If set to 'no' then the build process ignore the flags --jobs.
+# mkDebug = [yes|no] (default: no)
+#   If set to 'yes' then bash print all the commands.
+
+# setup the environment
+# =============================================================================
+
+# checking if the environment is setup correctly (variable mkPrefix)
+if test -z "$mkPrefix"; then
+  echo "The environment is not set properly, 'mkPrefix' variable is not set" >&2
+  exit 1
+fi
+if test ! -d $mkPrefix; then
+  echo "Variable 'mkPrefix' is not pointing to an existing directory" >&2
+  echo "  mkPrefix='$mkPrefix'" >&2
+  exit 1
+fi
+if test ! -r $mkPrefix/etc/mk.config; then
+  echo "Unable to read the configuration file '$mkPrefix/etc/mk.config'" >&2
+  exit 1
+fi
+
+# reset the environment, but the toolchain is not discarded
+if [[ -n "$mkToolchain" ]]; then
+  mkLoadedToolchain="$mkToolchain"
+  module purge
+fi
+export PATH=/usr/bin:/bin
+export LD_LIBRARY_PATH=
+export PKG_CONFIG_PATH=
+if [[ -n "$mkLoadedToolchain" ]]; then
+  module load "$mkLoadedToolchain"
+fi
+
+# some aliases to increase the verbosity
+#   Busybox is not used because it breaks some package build process.
+alias cp="command cp -v"
+alias install="command install -v"
+alias ln="command ln -v"
+alias mv="command mv -v"
+alias rm="command rm -v"
+alias rmdir="command rmdir -v"
+
+# load the configuration file and detect the current system configuration
+#   PREFIX       installation prefix
+#   PKGVERSION   used to customize the version string of some packages
+#   VENDOR       the vendor name
+#   BUGURL       the url used to report the bugs
+#   BUILD        the triple of build system
+#   TARGET       the triple of target system (computed by VENDOR)
+#   ARCH         the architecture of the system
+#   OS           the operating system
+#   CFLAGS       the common flags for C compiler
+#   CXXFLAGS     the common flags for C++ compiler
+source $mkPrefix/etc/mk.config
+
+if [[ ! "$mkPrefix" = "$PREFIX" ]]; then
+  echo "Internal error: $mkPrefix does not point to a proper installation."
+  exit 1
+fi
+
+BUILD=$(cc -dumpmachine 2> /dev/null)
+if [[ -z "$BUILD" ]]; then
+  echo "Unable to detect the build system"
+  exit 1
+fi
+
+ARCH=$(uname -m 2> /dev/null)
+if [[ -z "$ARCH" ]]; then
+  echo "Unable to detect the architecture of the system"
+  exit 1
+fi
+
+[[ -z "$VENDOR" ]] && VENDOR="unknown"
+
+case "$(uname -s 2> /dev/null)" in
+  "Linux")   OS="linux";;
+  *)         echo "Unsupport operating system"; exit 1
+esac
+
+TARGET=$ARCH-$VENDOR-$OS
+
+# fix the configuration depending on the architecture
+case "$ARCH" in
+  "x86_64")
+    CFLAGS="$CFLAGS -fPIC"
+    CXXFLAGS="$CXXFLAGS -fPIC"
+    ;;
+  *)
+    echo "Unsupported architecture '$ARCH'"
+    exit 1
+esac
+
+# exporting the environment variables
+export CFLAGS
+export CXXFLAGS
+
+# Check the environment variables used by mkpkg command
+[[ -z "$mkUseColor" ]] && mkUseColor=auto
+[[ -z "$mkKeepBuildDir" ]] && mkKeepBuildDir=no
+[[ -z "$mkParallelBuild" ]] && mkParallelBuild=yes
+[[ -z "$mkDebug" ]] && mkDebug=no
+
+if [[ $mkUseColor = "auto" ]]; then
+  mkUseColor=$([[ $(tput colors 2> /dev/null) -ge 8 ]] && echo yes || echo no)
+fi
+
+if [[ ! "$mkUseColor" = "no" && ! "$mkUseColor" = "yes" ]]; then
+  echo "Invalid value '$mkUseColor' for variable 'mkUseColor'" >&2
+  exit 1
+fi
+
+if [[ -n "$mkSandboxDir" && ! -d $mkSandboxDir ]]; then
+  echo "Variable 'mkSandboxDir' does not point to a valid directory: '$mkSandboxDir'" >&2
+  exit 1
+fi
+
+if [[ ! "$mkKeepBuildDir" = "no" && ! "$mkKeepBuildDir" = "yes" ]]; then
+  echo "Invalid value '$mkKeepBuildDir' for variable 'mkKeepBuildDir'" >&2
+  exit 1
+fi
+
+if [[ ! "$mkParallelBuild" = "no" && ! "$mkParallelBuild" = "yes" ]]; then
+  echo "Invalid value '$mkParallelBuild' for variable 'mkParallelBuild'" >&2
+  exit 1
+fi
+
+if [[ ! "$mkDebug" = "no" && ! "$mkDebug" = "yes" ]]; then
+  echo "Invalid value '$mkDebug' for variable 'mkDebug'" >&2
+  exit 1
+fi
+
+# defined the variables and the function used for the output
+# =============================================================================
+
+# create the special file descriptors, this command use the file descriptors as
+# follows:
+#  1  for the standard output (if $mkVerbose = "no" then point to /dev/null)
+#  2  for the standard error  (if $mkVerbose = "no" then point to /dev/null)
+#  4  for the log file
+#  5  the real standard output (internal usage)
+#  6  the real standard error (internal usage)
+# the files 1 and 2 is duplicated to log file
+exec 5>&1
+exec 6>&2
+exec 4>/dev/null
+exec 1>/dev/null
+exec 2>/dev/null
+
+# colors
+unset RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
+if [[ "$mkUseColor" != "no" && $(tput colors 2> /dev/null) -ge 8 ]]; then
+  if tput setaf 0 &>/dev/null; then
+    RESET="$(tput sgr0)"
+    BOLD="$(tput bold)"
+    BLACK="$(tput setaf 0)"
+    RED="$(tput setaf 1)"
+    GREEN="$(tput setaf 2)"
+    YELLOW="$(tput setaf 3)"
+    BLUE="$(tput setaf 4)"
+    MAGENTA="$(tput setaf 5)"
+    CYAN="$(tput setaf 6)"
+    WHITE="$(tput setaf 7)"
+  else
+    RESET="\e[0m"
+    BOLD="\e[1m"
+    BLACK="\e[30m"
+    RED="\e[31m"
+    GREEN="\e[32m"
+    YELLOW="\e[33m"
+    BLUE="\e[34m"
+    MAGENTA="\e[35m"
+    CYAN="\e[36m"
+    WHITE="\e[37m"
+  fi
+fi
+readonly RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
+
+# error <msg>
+# Print an error message to the standard error stream
+error() {
+  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee >(cat - >&4) >&6
+}
+
+# warning <msg>
+# Print a warning message to the standard error stream
+warning() {
+  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee >(cat - >&4) >&6
+}
+
+# message <msg>
+# Print a message to the standard output stream
+message() {
+  echo -e "${BOLD}>> $1${RESET}" | tee >(cat - >&4) >&5
+}
+
+# plain <msg>
+# Print a plain text to the standard output stream
+plain() {
+  echo -e "   ${RESET}$1${RESET}" | tee >(cat - >&4) >&5
+}
+
+# log <msg>
+# Print a messago only in the log file
+log() {
+  echo  -e "${BOLD}>> $1${RESET}" >&4
+}
+
+
+# parse the command line arguments
+# =============================================================================
+
+# usage
+# Print the command help.
+usage() {
+  # redirect to the correct file
+  exec 1>& 5
+  echo "Install the select package or the package contained in the current directory"
+  echo ""
+  echo "Usage:"
+  echo "  mkpkg [options] [pkg]"
+  echo "  mkpkg --configuration"
+  echo "  mkpkg -h | --help"
+  echo ""
+  echo "Options:"
+  echo "  --options=<opts>   Pass the given options to the build script"
+  echo "  --jobs=<jobs>      Execute the parallel building"
+  echo "  -v | --verbose     Print all messages to the screen (very verbose)"
+  echo "  --log=<file>       Write all messages in the given file"
+  echo "  --test=<path>      Build the package and install in the given path"
+  echo "  --configuration    Print the current configuration"
+  echo "  -h | --help        Show this help message"
+  echo ""
+  return 0
+}
+
+# default options
+pkgOptions=
+pkgJobs=1
+pkgScript=
+mkConfiguration=no
+mkVerbose=no
+mkLogFile=/dev/null
+mkTest=no
+
+# parse the command line arguments
+while true; do
+  case "$1" in
+    --options=*)      pkgOptions=${1#*=};;
+    --jobs=*)         pkgJobs=${1#*=};;
+    --configuration)  mkConfiguration=yes;;
+    -v|--verbose)     mkVerbose=yes;;
+    --log=*)          mkLogFile=${1#*=};;
+    --test=*)         mkTest=${1#*=};;
+    -h|--help)        usage; exit 0;;
+    -*)               error "Unknown option '$1'"; exit 1;;
+    *)                break;;
+  esac
+  shift
+done
+pkgScript="$1"; shift
+
+# there are some unkown arguments
+if [[ -n "$@" ]]; then
+  error "Unknown arguments '$@'"
+  exit 1
+fi
+
+# check value of variables
+if [[ ! $pkgJobs -ge 1 ]]; then
+  error "Invalid value for the options --jobs: '$mkJobs'"
+  exit 1
+fi
+
+# print the current configuration
+# =============================================================================
+if [[ "$mkConfiguration" = "yes" ]]; then
+  message "Current mkpkg configuration"
+  plain "PREFIX           $PREFIX"
+  plain "BUILD            $BUILD"
+  plain "TARGET           $TARGET"
+  plain "CFLAGS           $CFLAGS"
+  plain "CXXFLAGS         $CXXFLAGS"
+  plain "PATH             $PATH"
+  plain "LD_LIBRARY_PATH  $LD_LIBRARY_PATH"
+  plain "PKG_CONFIG_PATH  $PKG_CONFIG_PATH"
+  exit 0
+fi
+
+# check the given build script
+# =============================================================================
+if [[ -z "$pkgScript" ]]; then
+  pkgScript=$(pwd)
+fi
+if [[ -d $pkgScript ]]; then
+  pkgScript="$pkgScript"/PKGBUILD
+fi
+if [[ ! -r $pkgScript ]]; then
+  error "Unable to read the build script '$pkgScript'"
+  exit 1
+fi
+pkgScript=$(readlink -f "$pkgScript")
+
+# functions used to write the build script
+# =============================================================================
+# require_function <fun>
+# Check if the given function exists, return true if it exists
+require_function() {
+  local fun=$1; declare -f $fun &> /dev/null; return $?
+}
+
+# mktmpdir
+# Create a temporary directory. The behaviour of this command depends on the
+# value of the variable $mkSandboxDir
+mktmpdir() {
+  if [[ -z "$mkSandboxDir" ]]; then
+    echo "$(mktemp -d)"
+  else
+    echo "$(mktemp -d -p "$mkSandboxDir")"
+  fi
+}
+
+# download <url> [<output>]
+# Download the resource from the <url> and save it to the <output> file.
+# If the output is not given then the file is saved in the $srcdir.
+download() {
+  # arguments and variables
+  local url=$1
+  local output=$2
+  local cmd=""
+
+  # fix mirrors
+  case $url in
+    http://ftp.gnu.org/gnu/*)
+      if [[ -n "$GNU_MIRROR" ]]; then
+        local prefix=http://ftp.gnu.org/gnu/
+        url="$GNU_MIRROR/${url#$prefix}"
+      fi
+      ;;
+  esac
+
+  # create the command
+  case $url in
+    http:*)   cmd="wget $url";;
+    https:*)  cmd="wget --no-check-certificate $url";;
+    ftp*)     cmd="wget $url";;
+    *)        error "Unknown protocol for url '$url'"; exit 1;;
+  esac
+
+  # manage the output
+  [[ -z "$output" ]] && output=$srcdir
+  if [[ -d $output ]]; then
+    cmd="$cmd -P $output"
+  else
+    cmd="$cmd -O $output"
+  fi
+
+  if [[ -f $output || -f "$output"/$(basename $url) ]]; then
+    message "File '$url' already downloaded"
+  else
+    message "Downloading '$url'"
+    $mkPrefix/bin/busybox $cmd
+  fi
+}
+
+# check <file> <checksum>
+# Verify the <checksum> for the given <file>. If the file does not exist then
+# the function looks in $srcdir.
+check() {
+  local file=$1
+  local sum=$2
+  local cmd=
+
+  # if the file does not exists, then it tries to look in source directory
+  [[ ! -f $file && -f $srcdir/$file ]] && file="$srcdir/$file"
+
+  case ${#sum} in
+    0)  error "No checksum is provided for file '$file'"; exit 1;;
+    32) cmd=md5sum;;
+    40) cmd=sha1sum;;
+    *)  error "Unknown hash function for '$file' ($sum)"; exit 1
+  esac
+
+  local csum=$($mkPrefix/bin/busybox $cmd $file | cut -f 1 -d " ")
+  if [[ ! $sum = $csum ]]; then
+    error "Checksum for '$file' does not agree"
+    plain "$sum != $csum"
+    exit 1
+  fi
+}
+
+# extract <archive> [<output>]
+# Extract the given <archive> in the given <output> directory. If the file does
+# not exist then the function looks in $srcdir.
+extract() {
+  # arguments and variables
+  local archive=$1
+  local output=$2
+  local cmd=""
+
+  # if the file does not exists, then it tries to look in source directory
+  [[ ! -f $archive && -f $srcdir/$archive ]] && archive="$srcdir/$archive"
+
+  # create the command
+  case $archive in
+    *.tgz | *.tar.gz)
+      cmd="tar -vxzf $archive"
+      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      ;;
+    *.tar.bz2)
+      cmd="tar -vxjf $archive"
+      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      ;;
+    *.tar.xz)
+      cmd="tar -vxJf $archive"
+      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      ;;
+    *.zip)
+      cmd="unzip $archive"
+      [[ -n "$destination" ]] && cmd="$cmd -d $destination"
+      ;;
+    *)
+      error "Unknown type of archive for file '$archive'"
+      exit 1
+  esac
+
+  # run the command
+  if [[ -z "$destination" ]]; then
+    message "Extracting '$archive'"
+    $mkPrefix/bin/busybox $cmd
+  else
+    message "Extracting '$archive' in '$destination'"
+    eval $cmd
+    # zip has no strip option
+    case $archive in
+      *.zip)
+        local f=$(ls -A "$destination")
+        for dir in $f; do
+          if [[ ! -d "$destination/$dir" ]]; then
+            error "Unable to strip the first component from the zip file '$archive'"
+            exit 1
+          fi
+          mv "$destination/$dir"/{*,.[^.]?*} "$destination"
+          rmdir "$destination/$dir"
+        done
+        ;;
+    esac
+  fi
+}
+
+# make
+# A function that replace the command make. It is used to manage automatically
+# the parallel build. The behaviour of this function depends on the value of
+# the variable $mkParallelBuild.
+make() {
+  local cmd="command make"
+  if [[ ! "$mkParallelBuild" = "no" && $pkgJobs -ge 2 ]]; then
+    cmd="$cmd -j $pkgJobs"
+  fi
+  eval $cmd $@
+}
+
+
+# compress_man <file>
+# Compress the man pages. It accept arguments of two different types: directory
+# or files. If a regular file or a link is given, then it is compressed and
+# eventually the link recreated. If a directory is given then is assumed to be
+# the directory <prefix>/share/man and the function run on contained
+# directories.
+compress_man() {
+  for file in $@; do
+    if [[ ! $file = *.gz ]]; then
+      if [[ -f $file ]]; then
+        log "Compressing '$file'"
+        $mkPrefix/bin/busybox gzip -f --verbose -9 $file
+      elif [[ -h $file ]]; then
+        log "Compressing '$file'"
+        local realfile=$(readlink -f $file)
+        local reallink=$(readlink $file)
+        $mkPrefix/bin/busybox gzip -f --verbose 9 $realfile
+        rm -vf $file
+        ln -vs $reallink.gz $file.gz
+      elif [[ -d $file ]]; then
+        for manpagedir in $(find $file -maxdepth 1 -mindepth 1 -type d); do
+          for eachpage in $(ls -A $manpagedir) ; do
+            compress_man $manpagedir/$eachpage
+          done
+        done
+      fi
+    fi
+  done
+}
+
+# strip_
+# Strip a binary or a library, removing the unneeded and debug symbols and then
+# the rpath is cleared.
+strip_() {
+  local file=$1
+  local filetype=none
+
+  if [[ -n "$(file "$file" | grep "executable" | grep "ELF" | grep "dynamically")" ]]; then
+    filetype=executable
+  elif [[ -n "$(file "$file" | grep "shared object" | grep "ELF")" ]]; then
+    filetype=library
+  fi
+
+  # we need to manage the case when strip command strips itself.
+  if [[ $filetype = "executable" && "$(basename "$file")" = "strip" ]]; then
+    cp "$file" "$file.new"
+    command strip -v --strip-unneeded "$file.new"
+    "$mkPrefix/bin/patchelf" --set-rpath "" "$file.new"
+    rm "$file"
+    mv "$file.new" "$file"
+  else
+    case $filetype in
+      executable) log "Stripping '$(readlink -f $file)'"
+                  command strip -v --strip-unneeded "$file"
+                  "$mkPrefix/bin/patchelf" --set-rpath "" "$file"
+                  ;;
+      library)    log "Stripping '$(readlink -f $file)'"
+                  command strip -v --strip-debug "$file"
+                  "$mkPrefix/bin/patchelf" --set-rpath "" "$file"
+                  ;;
+      none)       ;;
+      *) error "Internal error"; exit 1
+    esac
+  fi
+}
+
+# strip <file>
+# Strip a file. If the argument is a directory, then all the contained files
+# are stripped recursively.
+strip() {
+  for file in $@; do
+    if [[ -d $file ]]; then
+      find $file -type f -print0 | while IFS= read -r -d '' file; do strip_ $file; done
+    else
+      strip_ $file
+    fi
+  done
+}
+
+# update_linker_cache
+# Update the linker cache if it necessary.
+update_linker_cache() {
+  if [[ -n "$mkToolchainPrefix" ]]; then
+    # Glibc case
+    if [[ -e "$mkToolchainPrefix"/sbin/ldconfig ]]; then
+      "$mkToolchainPrefix"/sbin/ldconfig
+    fi
+  fi
+}
+
+# error management
+# =============================================================================
+
+# die
+# Called when the program is interrupted by an external signal.
+die() {
+  local signal=$1
+
+  message "Removing '$tmpdir'"
+  rm -rf "$tmpdir" &> /dev/null || true
+  if [[ ! "$signal" = "EXIT" ]]; then
+    error "Aborting ($signal)"
+  fi
+
+  trap - "$signal"
+  kill "-$signal" "$$"
+}
+
+# error_exit
+# Called when an error occours (when a function has a return status different
+# from 0).
+error_exit() {
+  trap - EXIT TERM HUP QUIT ERR
+  error "Build script '$pkgScript' failed"
+  if [[ "$mkKeepBuildDir" = "yes" ]]; then
+    message "You can inspect the build directory '$tmpdir' for more information"
+  else
+    message "Removing '$tmpdir'"
+    rm -rf "$tmpdir"
+  fi
+}
+
+# Setting the traps
+for signal in EXIT TERM HUP QUIT; do
+  trap "die $signal" "$signal"
+done
+trap 'error_exit' ERR
+
+# default operations
+# =============================================================================
+
+# build and package functions are empty by default
+build() {
+  return 0
+}
+
+package() {
+  return 0
+}
+
+# run
+# This is the default implementation of run function. First it runs the build
+# function, then it runs the package function. If $mkTest is set to yes then
+# the package step is executed in the given directory.
+run() {
+  # if test, then fix the dstdir
+  if [[ ! "$mkTest" = "no" ]]; then
+    mkTest=$(readlink -f "$mkTest")
+    message "Creating the test directory '$mkTest'"
+    install -dm 0700 "$mkTest"
+    dstdir="$mkTest"
+  fi
+  # the toolchain base dir cannot be cleared (otherwise it fails)
+  if [[ -d "$dstdir" && ! "$dstdir" = "$mkToolchainBase" ]]; then
+    rm -rf "$dstdir"/*
+  fi
+  message "Building..."
+  build $@
+  message "Installing in '$dstdir'"
+  package $@
+}
+
+# execute the build script
+# =============================================================================
+
+# set a sane umask
+umask 0022
+# turn off bahs hash function
+set +h
+# ERR trap is inherited by functions
+set -E
+# open the log file for writing
+> $mkLogFile
+exec 4> $mkLogFile
+# managing verbosity
+if [[ "$mkVerbose" = "yes" ]]; then
+  # 1 and 2 are redirected to tee, tee writes in $mkLogFile then to the real output
+  exec 1> >(tee -a $mkLogFile >&5)
+  exec 2> >(tee -a $mkLogFile >&6)
+else
+  # 1 and 2 are redirected directly to log file
+  exec 1>&4
+  exec 2>&4
+fi
+# debugging
+[[ "$mkDebug" = "yes" ]] && set -x
+
+# These variables contains the path to the common directories used for the
+# build and package processes:
+#  srcdir  The directory containing the build script and related files
+#  tmpdir  The temporary directory where the build process acts
+srcdir=$(dirname "$pkgScript")
+tmpdir=$(mktmpdir)
+
+# read the build script
+message "Running the build script '$pkgScript'"
+[[ -n "$pkgOptions" ]] && plain "options > $pkgOptions"
+message "Running in '$tmpdir'"
+source "$pkgScript"
+pushd $tmpdir
+run $pkgOptions
+popd
+
+# cleanup
+message "Removing '$tmpdir'"
+rm -rf "$tmpdir"
+
+# exit without problems
+exec 4>&-; exec 5>&-; exec 6>&-
+trap - EXIT TERM HUP QUIT ERR
+exit 0
