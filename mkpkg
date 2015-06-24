@@ -174,14 +174,12 @@ fi
 
 # create the special file descriptors, this command use the file descriptors as
 # follows:
-#  1  for the standard output (if $mkVerbose = "no" then point to /dev/null)
-#  2  for the standard error  (if $mkVerbose = "no" then point to /dev/null)
-#  5  the real standard output (internal usage)
-#  6  the real standard error (internal usage)
-exec 5>&1
-exec 6>&2
-exec 1>/dev/null
-exec 2>/dev/null
+#  1  for the standard output (if $mkVerbose = "no" then point to $mkLogFile)
+#  2  for the standard error  (if $mkVerbose = "no" then point to $mkLogFile)
+#  3  the real standard output (internal usage)
+#  4  the real standard error (internal usage)
+exec 3>&1
+exec 4>&2
 
 # colors
 unset RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
@@ -215,25 +213,25 @@ readonly RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
 # error <msg>
 # Print an error message to the standard error stream
 error() {
-  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&6
+  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee /dev/fd/4 >> "$mkLogFile"
 }
 
 # warning <msg>
 # Print a warning message to the standard error stream
 warning() {
-  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&6
+  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee /dev/fd/4 >> "$mkLogFile"
 }
 
 # message <msg>
 # Print a message to the standard output stream
 message() {
-  echo -e "${BOLD}>> $1${RESET}" | tee -a "$mkLogFile" >&5
+  echo -e "${BOLD}>> $1${RESET}" | tee /dev/fd/3 >> "$mkLogFile"
 }
 
 # plain <msg>
 # Print a plain text to the standard output stream
 plain() {
-  echo -e "   ${RESET}$1${RESET}" | tee -a "$mkLogFile" >&5
+  echo -e "   ${RESET}$1${RESET}" | tee /dev/fd/3 >> "$mkLogFile"
 }
 
 # log <msg>
@@ -250,7 +248,6 @@ log() {
 # Print the command help.
 usage() {
   # redirect to the correct file
-  exec 1>& 5
   echo "Install the select package or the package contained in the current directory"
   echo ""
   echo "Usage:"
@@ -303,6 +300,7 @@ if [[ -n "$@" ]]; then
 fi
 
 # check value of variables
+mkLogFile=$(readlink -f "$mkLogFile")
 if [[ ! $pkgJobs -ge 1 ]]; then
   error "Invalid value for the options --jobs: '$mkJobs'"
   exit 1
@@ -613,11 +611,11 @@ die() {
   local signal=$1
 
   message "Removing '$tmpdir'"
-  rm -rf "$tmpdir" &> /dev/null || true
   if [[ ! "$signal" = "EXIT" ]]; then
     error "Aborting ($signal)"
   fi
 
+  rm -rf "$tmpdir" &> /dev/null || true
   trap - "$signal"
   kill "-$signal" "$$"
 }
@@ -626,7 +624,6 @@ die() {
 # Called when an error occours (when a function has a return status different
 # from 0).
 error_exit() {
-  trap - EXIT TERM HUP QUIT ERR
   error "Build script '$pkgScript' failed"
   if [[ "$mkKeepBuildDir" = "yes" ]]; then
     message "You can inspect the build directory '$tmpdir' for more information"
@@ -637,7 +634,7 @@ error_exit() {
 }
 
 # Setting the traps
-for signal in EXIT TERM HUP QUIT; do
+for signal in TERM HUP QUIT SIGINT; do
   trap "die $signal" "$signal"
 done
 trap 'error_exit' ERR
@@ -690,12 +687,11 @@ set -E
 # managing verbosity
 if [[ "$mkVerbose" = "yes" ]]; then
   # 1 and 2 are redirected to tee, tee writes in $mkLogFile then to the real output
-  exec 1> >(tee -a $mkLogFile >&5)
-  exec 2> >(tee -a $mkLogFile >&6)
+  exec 1> >(tee -a $mkLogFile >&3)
+  exec 2> >(tee -a $mkLogFile >&4)
 else
   # 1 and 2 are redirected directly to log file
-  exec 1> $mkLogFile
-  exec 2> $mkLogFile
+  exec 1>>$mkLogFile 2>&1
 fi
 # debugging
 [[ "$mkDebug" = "yes" ]] && set -x
@@ -721,6 +717,4 @@ message "Removing '$tmpdir'"
 rm -rf "$tmpdir"
 
 # exit without problems
-exec 4>&-; exec 5>&-; exec 6>&-
-trap - EXIT TERM HUP QUIT ERR
 exit 0
