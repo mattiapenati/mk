@@ -499,31 +499,45 @@ make() {
 }
 
 
-# compress_man <file>
-# Compress the man pages. It accept arguments of two different types: directory
-# or files. If a regular file or a link is given, then it is compressed and
-# eventually the link recreated. If a directory is given then is assumed to be
-# the directory <prefix>/share/man and the function run on contained
-# directories.
-compress_man() {
+# compress_doc <file>
+# Compress the documentation pages (both man and info). It accept arguments of
+# two different types: directory or files. If a regular file or a link is
+# given, then it is compressed and eventually the link recreated. If a
+# directory is given then if it is of the form <prefix>/share/man then the
+# function run on contained directories, otherwise if it is of the form
+# <prefix>/share/info then the function run on the contained files.
+compress_doc() {
+  local file=
   for file in $@; do
+    # this remove the trailing / if any
+    file=$(readlink -f "$file")
     if [[ ! $file = *.gz ]]; then
       if [[ -f $file ]]; then
         log "Compressing '$file'"
-        $mkPrefix/bin/busybox gzip -f --verbose -9 $file
+        "$mkPrefix"/bin/busybox gzip -f --verbose -9 "$file"
       elif [[ -h $file ]]; then
         log "Compressing '$file'"
-        local realfile=$(readlink -f $file)
-        local reallink=$(readlink $file)
-        $mkPrefix/bin/busybox gzip -f --verbose 9 $realfile
-        rm -vf $file
-        ln -vs $reallink.gz $file.gz
+        local realfile=$(readlink -f "$file")
+        local reallink=$(readlink "$file")
+        "$mkPrefix"/bin/busybox gzip -f --verbose 9 "$realfile"
+        rm -vf "$file"
+        ln -vs "$reallink.gz" "$file.gz"
       elif [[ -d $file ]]; then
-        for manpagedir in $(find $file -maxdepth 1 -mindepth 1 -type d); do
-          for eachpage in $(ls -A $manpagedir) ; do
-            compress_man $manpagedir/$eachpage
-          done
-        done
+        case $file in
+          */share/man)
+            for manpagedir in $(find "$file" -maxdepth 1 -mindepth 1 -type d); do
+              for eachpage in $(ls -A "$manpagedir") ; do
+                compress_doc "$manpagedir/$eachpage"
+              done
+            done;;
+          */share/info)
+            for eachpage in $(ls -A "$file") ; do
+              case $eachpage in
+                dir) ;;
+                *)   compress_doc "$file/$eachpage";;
+              esac
+            done;;
+        esac
       fi
     fi
   done
@@ -569,6 +583,7 @@ strip_() {
 # Strip a file. If the argument is a directory, then all the contained files
 # are stripped recursively.
 strip() {
+  local file=
   for file in $@; do
     if [[ -d $file ]]; then
       find $file -type f -print0 | while IFS= read -r -d '' file; do strip_ $file; done

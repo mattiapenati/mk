@@ -570,6 +570,6 @@ EOF
   message "Cleaning up"
   rm -f $prefix/$TARGET/lib/crt{1,i,n}.o
   rm -rf $prefix/share/locale
-  compress_man $prefix/share/man
+  compress_doc $prefix/share/{man,info}
   strip $prefix
 }
