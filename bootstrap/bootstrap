@@ -260,6 +260,10 @@ pushd $pkgname-$pkgver
   install -vm 0755 busybox $PREFIX/bin/busybox
 popd
 
+for bin in less sha1sum; do
+  ln -sv busybox $PREFIX/bin/$bin
+done
+
 # compose the lua source (static)
 # =============================================================================
 mkdir -vp lua/{src,include}
