@@ -237,11 +237,6 @@ run() {
                >> $gccdir/gcc/config/i386/linux64.h
              ;;
   esac
-  pushd $gccdir
-    # (4.8) https://gcc.gnu.org/ml/gcc-patches/2013-12/msg01552.html
-    [[ -r $srcdir/gcc-$gccver.patch ]] && \
-      patch -p1 -i $srcdir/gcc-$gccver.patch
-  popd
 
   # compile the build dependecies
   message "Installing M4"
