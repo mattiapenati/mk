@@ -431,19 +431,19 @@ extract() {
   case $archive in
     *.tgz | *.tar.gz)
       cmd="tar -vxzf $archive"
-      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      [[ -n "$output" ]] && cmd="$cmd --strip 1 -C $output"
       ;;
     *.tar.bz2)
       cmd="tar -vxjf $archive"
-      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      [[ -n "$output" ]] && cmd="$cmd --strip 1 -C $output"
       ;;
     *.tar.xz)
       cmd="tar -vxJf $archive"
-      [[ -n "$destination" ]] && cmd="$cmd --strip 1 -C $destination"
+      [[ -n "$output" ]] && cmd="$cmd --strip 1 -C $output"
       ;;
     *.zip)
       cmd="unzip $archive"
-      [[ -n "$destination" ]] && cmd="$cmd -d $destination"
+      [[ -n "$output" ]] && cmd="$cmd -d $output"
       ;;
     *)
       error "Unknown type of archive for file '$archive'"
@@ -451,23 +451,24 @@ extract() {
   esac
 
   # run the command
-  if [[ -z "$destination" ]]; then
+  if [[ -z "$output" ]]; then
     message "Extracting '$(basename "$archive")'"
     $mkPrefix/bin/busybox $cmd
   else
-    message "Extracting '$(basename "$archive")' in '$destination'"
+    message "Extracting '$(basename "$archive")' in '$output'"
+    mkdir "$output"
     eval $cmd
     # zip has no strip option
     case $archive in
       *.zip)
-        local f=$(ls -A "$destination")
+        local f=$(ls -A "$output")
         for dir in $f; do
-          if [[ ! -d "$destination/$dir" ]]; then
+          if [[ ! -d "$output/$dir" ]]; then
             error "Unable to strip the first component from the zip file '$archive'"
             exit 1
           fi
-          mv "$destination/$dir"/{*,.[^.]?*} "$destination"
-          rmdir "$destination/$dir"
+          mv "$output/$dir"/{*,.[^.]?*} "$output"
+          rmdir "$output/$dir"
         done
         ;;
     esac
