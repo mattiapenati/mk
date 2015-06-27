@@ -10,7 +10,3 @@ BUGURL=https://bitbucket.org/mattiapenati/mk/issues
 # Compiler flags
 CFLAGS="-O2 -pipe -mtune=generic"
 CXXFLAGS=$CFLAGS
-
-# Mirros
-# =============================================================================
-GNU_MIRROR=http://mirrors.muzzy.it/gnu

@@ -18,15 +18,15 @@ run() {
   # getting the versions
   case $pkgver in
     4.8)
-      gccver=4.8.4
-      gccsum=40867a9ac74a054b1cee855988fd680cabf42006
+      gccver=4.8.5
+      gccsum=de144b551f10e23d82f30ecd2d6d0e18c26f8850
       islver=0.11.1
       islsum=d7936929c3937e03f09b64c3c54e49422fa8ddb3
       cloog=yes
       ;;
     4.9)
-      gccver=4.9.2
-      gccsum=79dbcb09f44232822460d80b033c962c0237c6d8
+      gccver=4.9.3
+      gccsum=2e6490a908eac8b2b56b73679bd7c2a5237df1f8
       islver=0.12.2
       islsum=ca98a91e35fb3ded10d080342065919764d6f928
       cloog=yes
@@ -51,25 +51,25 @@ run() {
   m4ver=1.4.17
   m4dir=m4-$m4ver
   m4archive=m4-$m4ver.tar.xz
-  m4url=http://ftp.gnu.org/gnu/m4/$m4archive
+  m4url=http://ftpmirror.gnu.org/m4/$m4archive
   m4sum=74ad71fa100ec8c13bc715082757eb9ab1e4bbb0
 
   bisonver=3.0.4
   bisondir=bison-$bisonver
   bisonarchive=bison-$bisonver.tar.xz
-  bisonurl=http://ftp.gnu.org/gnu/bison/$bisonarchive
+  bisonurl=http://ftpmirror.gnu.org/bison/$bisonarchive
   bisonsum=8270497aad88c7dd4f2c317298c50513fb0c3c8e
 
   texinfover=5.2
   texinfodir=texinfo-$texinfover
   texinfoarchive=texinfo-$texinfover.tar.xz
-  texinfourl=http://ftp.gnu.org/gnu/texinfo/$texinfoarchive
+  texinfourl=http://ftpmirror.gnu.org/texinfo/$texinfoarchive
   texinfosum=fbbc35c5857d11d1164c8445c78b66ad6d472072
 
   binutilsver=2.25
   binutilsdir=binutils-$binutilsver
   binutilsarchive=binutils-$binutilsver.tar.bz2
-  binutilsurl=http://ftp.gnu.org/gnu/binutils/$binutilsarchive
+  binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
   binutilssum=b46cc90ebaba7ffcf6c6d996d60738881b14e50d
 
   gmpver=6.0.0
@@ -87,7 +87,7 @@ run() {
   mpcver=1.0.3
   mpcdir=mpc-$mpcver
   mpcarchive=mpc-$mpcver.tar.gz
-  mpcurl=http://ftp.gnu.org/gnu/mpc/$mpcarchive
+  mpcurl=http://ftpmirror.gnu.org/mpc/$mpcarchive
   mpcsum=b8be66396c726fdc36ebb0f692ed8a8cca3bcc66
 
   isldir=isl-$islver
@@ -108,7 +108,7 @@ run() {
 
   gccdir=gcc-$gccver
   gccarchive=gcc-$gccver.tar.bz2
-  gccurl=http://ftp.gnu.org/gnu/gcc/gcc-$gccver/$gccarchive
+  gccurl=http://ftpmirror.gnu.org/gcc/gcc-$gccver/$gccarchive
 
   linuxver=$(uname -r)
   case $linuxver in
@@ -140,7 +140,7 @@ run() {
   glibcver=2.21
   glibcdir=glibc-$glibcver
   glibcarchive=glibc-$glibcver.tar.xz
-  glibcurl=http://ftp.gnu.org/gnu/glibc/$glibcarchive
+  glibcurl=http://ftpmirror.gnu.org/glibc/$glibcarchive
   glibcsum=1157be3fe63baa81b7ba104a103337775a6ed06f
 
   # cleaning and creating the directories hierarchy
@@ -311,8 +311,6 @@ run() {
     #   Prevents the compiling of any code that requires libc support.
     # --enable-languages=c,c++
     #   This option ensures that only the C and C++ compilers are built.
-    # --enable-linker-build-id
-    #   Enable the unique build id by default.
     # --disable-threads --disable-decimal-float --disable-libatomic
     # --disable-libcilkrts --disable-libgomp --disable-libitm
     # --disable-libmudflap --disable-libquadmath --disable-libsanitizer
@@ -323,7 +321,7 @@ run() {
                          --with-native-system-header-dir="$prefix/include" \
                          --disable-nls --disable-multilib --disable-shared \
                          --with-newlib --without-headers \
-                         --enable-languages=c,c++  --enable-linker-build-id \
+                         --enable-languages=c,c++ \
                          --disable-threads --disable-decimal-float --disable-libatomic \
                          --disable-libcilkrts --disable-libgomp --disable-libitm \
                          --disable-libmudflap --disable-libquadmath --disable-libsanitizer \
@@ -467,8 +465,6 @@ run() {
     #   Enable a complete bootstrap for the compiler.
     # --enable-languages=c,c++,fortran
     #   This option ensures that only the C, C++ and Fortran compilers are built.
-    # --enable-linker-build-id
-    #   Enable the unique build id by default.
     CC="$TARGET-gcc -isystem $prefix/include -B$prefix/lib" \
     CXX="$TARGET-g++ -isystem $prefix/include -B$prefix/lib" \
     ../$gccdir/configure --build=$TARGET \
@@ -481,7 +477,7 @@ run() {
                          --enable-lto --enable-libgomp \
                          --disable-libstdcxx-pch \
                          --enable-bootstrap \
-                         --enable-languages=c,c++,fortran --enable-linker-build-id
+                         --enable-languages=c,c++,fortran
     # LIBRARY_PATH=$prefix/lib
     #   The path of the libraries used during the bootstrap for the link step.
     LIBRARY_PATH=$prefix/lib make

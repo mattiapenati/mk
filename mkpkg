@@ -363,16 +363,6 @@ download() {
   local output=$2
   local cmd=""
 
-  # fix mirrors
-  case $url in
-    http://ftp.gnu.org/gnu/*)
-      if [[ -n "$GNU_MIRROR" ]]; then
-        local prefix=http://ftp.gnu.org/gnu/
-        url="$GNU_MIRROR/${url#$prefix}"
-      fi
-      ;;
-  esac
-
   # create the command
   case $url in
     http:*)   cmd="wget $url";;
@@ -594,9 +584,13 @@ strip() {
 # update_linker_cache
 # Update the linker cache if it necessary.
 update_linker_cache() {
+  if [[ ! "$mkTest" = "no" ]]; then
+    return 0
+  fi
   if [[ -n "$mkToolchainPrefix" ]]; then
     # Glibc case
     if [[ -e "$mkToolchainPrefix"/sbin/ldconfig ]]; then
+      log "Updating the dynamic linker cache"
       "$mkToolchainPrefix"/sbin/ldconfig
     fi
   fi
@@ -609,14 +603,12 @@ update_linker_cache() {
 # Called when the program is interrupted by an external signal.
 die() {
   local signal=$1
+  trap - "$signal"
 
   message "Removing '$tmpdir'"
-  if [[ ! "$signal" = "EXIT" ]]; then
-    error "Aborting ($signal)"
-  fi
+  error "Aborting ($signal)"
 
   rm -rf "$tmpdir" &> /dev/null || true
-  trap - "$signal"
   kill "-$signal" "$$"
 }
 
@@ -624,6 +616,7 @@ die() {
 # Called when an error occours (when a function has a return status different
 # from 0).
 error_exit() {
+  trap - ERR
   error "Build script '$pkgScript' failed"
   if [[ "$mkKeepBuildDir" = "yes" ]]; then
     message "You can inspect the build directory '$tmpdir' for more information"
@@ -631,6 +624,7 @@ error_exit() {
     message "Removing '$tmpdir'"
     rm -rf "$tmpdir"
   fi
+  exit 1
 }
 
 # Setting the traps
