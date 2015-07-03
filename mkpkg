@@ -533,15 +533,14 @@ compress_doc() {
 }
 
 # strip_
-# Strip a binary or a library, removing the unneeded and debug symbols and then
-# the rpath is cleared.
+# Strip a binary or a library, removing the unneeded and debug symbols.
 strip_() {
   local file=$1
   local filetype=none
 
-  if [[ -n "$(file "$file" | grep "executable" | grep "ELF" | grep "dynamically")" ]]; then
+  if [[ -n "$(file -b "$file" | grep "executable" | grep "ELF" | grep "dynamically")" ]]; then
     filetype=executable
-  elif [[ -n "$(file "$file" | grep "shared object" | grep "ELF")" ]]; then
+  elif [[ -n "$(file -b "$file" | grep "shared object" | grep "ELF")" ]]; then
     filetype=library
   fi
 
@@ -549,18 +548,15 @@ strip_() {
   if [[ $filetype = "executable" && "$(basename "$file")" = "strip" ]]; then
     cp "$file" "$file.new"
     command strip -v --strip-unneeded "$file.new"
-    "$mkPrefix/bin/patchelf" --set-rpath "" "$file.new"
     rm "$file"
     mv "$file.new" "$file"
   else
     case $filetype in
       executable) log "Stripping '$(readlink -f $file)'"
                   command strip -v --strip-unneeded "$file"
-                  "$mkPrefix/bin/patchelf" --set-rpath "" "$file"
                   ;;
       library)    log "Stripping '$(readlink -f $file)'"
                   command strip -v --strip-debug "$file"
-                  "$mkPrefix/bin/patchelf" --set-rpath "" "$file"
                   ;;
       none)       ;;
       *) error "Internal error"; exit 1
@@ -579,6 +575,15 @@ strip() {
     else
       strip_ $file
     fi
+  done
+}
+
+# reset_rpath <file>
+# Reset the RPATH of the file
+reset_rpath() {
+  for file in $@; do
+    log "Reset the RAPTH of '$file'"
+    "$mkPrefix"/bin/patchelf --set-rpath "" $file
   done
 }
 

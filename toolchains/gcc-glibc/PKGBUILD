@@ -434,6 +434,8 @@ run() {
   rm -rf binutils-build
   rm -rf $binutilsdir
 
+  rm "$prefix"/bin/ld; ln -s ld.bfd "$prefix"/bin/ld
+
   ln -s ../../lib/crt1.o $prefix/$TARGET/lib/crt1.o
   ln -s ../../lib/crti.o $prefix/$TARGET/lib/crti.o
   ln -s ../../lib/crtn.o $prefix/$TARGET/lib/crtn.o
@@ -483,9 +485,21 @@ run() {
   rm -rf $libelfdir $cloogdir $isldir $mpcdir $mpfrdir $gmpdir
 
   # finishing the installation
-  ln -s gcc $prefix/bin/cc
+  rm "$prefix"/bin/$TARGET-gcc; ln -s $TARGET-gcc-$gccver "$prefix"/bin/$TARGET-gcc
   ln -s $TARGET-gcc $prefix/bin/$TARGET-cc
-  ln -s gfortran $prefix/bin/f95
+  rm "$prefix"/bin/gcc; ln -s $TARGET-gcc "$prefix"/bin/gcc
+  ln -s $TARGET-cc $prefix/bin/cc
+
+  rm "$prefix"/bin/$TARGET-c++; ln -s $TARGET-g++ "$prefix"/bin/$TARGET-c++
+  rm "$prefix"/bin/g++; ln -s $TARGET-c++ "$prefix"/bin/g++
+  rm "$prefix"/bin/c++; ln -s $TARGET-c++ "$prefix"/bin/c++
+
+  rm "$prefix"/bin/gfortran; ln -s $TARGET-gfortran "$prefix"/bin/gfortran
+  ln -s gfortran "$prefix"/bin/f95
+
+  for exe in ar nm ranlib; do
+    rm "$prefix"/bin/gcc-$exe; ln -s $TARGET-gcc-$exe "$prefix"/bin/gcc-$exe
+  done
 
   cat > $prefix/bin/c89 <<"EOF"
 #!/bin/sh
@@ -561,6 +575,20 @@ EOF
   message "Cleaning up"
   rm -f $prefix/$TARGET/lib/crt{1,i,n}.o
   rm -rf $prefix/share/locale
-  compress_doc $prefix/share/{man,info}
+
   strip $prefix
+  compress_doc $prefix/share/{man,info}
+
+  case $pkgver in
+    4.8) for lib in asan gfortran tsan; do
+           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+         done;;
+    4.9) for lib in asan cilkrts gfortran lsan tsan ubsan; do
+           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+         done;;
+    5.1) for lib in asan cc1 cilkrts gfortran gomp-plugin-host_nonshm lsan tsan ubsan; do
+           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+         done
+         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?
+  esac
 }
