@@ -345,10 +345,12 @@ for src in $(find $DIR -name \*.in -printf '%P\n'); do
   sed -e "s:%PREFIX%:$PREFIX:g" $DIR/$src > $PREFIX/etc/${src%.*}
 done
 if [[ $UPDATE = "no" ]]; then
-  sed -e "s:%PREFIX%:$PREFIX:g" $DIR/../mk.config.in > $PREFIX/etc/mk.config
+  sed -e "s:%PREFIX%:$PREFIX:g" "$DIR"/../mk.config.in > "$PREFIX"/etc/mk.config
 fi
-install -m 0755 $DIR/../mkpkg $PREFIX/bin/mkpkg
-sed -e "1s;^;#!$PREFIX/bin/bash\n;" -i $PREFIX/bin/mkpkg
+for exe in mkpkg mkcheck; do
+  install -m 0755 "$DIR"/../$exe "$PREFIX"/bin/$exe
+  sed -e "1s;^;#!$PREFIX/bin/bash\n;" -i "$PREFIX"/bin/$exe
+done
 
 # exit without problems
 trap - EXIT
