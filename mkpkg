@@ -499,7 +499,6 @@ compress_doc() {
   local file=
   for file in $@; do
     # this remove the trailing / if any
-    file=$(readlink -f "$file")
     if [[ ! $file = *.gz ]]; then
       if [[ -f $file ]]; then
         log "Compressing '$file'"
@@ -508,7 +507,9 @@ compress_doc() {
         log "Compressing '$file'"
         local realfile=$(readlink -f "$file")
         local reallink=$(readlink "$file")
-        "$mkPrefix"/bin/busybox gzip -f --verbose 9 "$realfile"
+        if [[ -e "$realfile" ]]; then
+          "$mkPrefix"/bin/busybox gzip -f --verbose 9 "$realfile"
+        fi
         rm -vf "$file"
         ln -vs "$reallink.gz" "$file.gz"
       elif [[ -d $file ]]; then
