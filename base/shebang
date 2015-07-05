@@ -1,0 +1,20 @@
+#!/bin/bash
+
+path=$1
+orig=$2
+new=$3
+
+case $orig in
+  */perl)  type="text/x-perl";;
+  */bash)  type="text/x-shellscript";;
+  */sh)    type="text/x-shellscript";;
+  *)       exit 0;;
+esac
+
+cd "$path"
+for file in $(ls -A); do
+  if [[ -n "$(file -bi "$file" | grep "$type")" ]]; then
+    echo "Fixing $path/$file"
+    sed -i "1s:$orig:$new:" "$file"
+  fi
+done

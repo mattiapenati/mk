@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pkgname=m4
+pkgver=1.4.17
+archive=$pkgname-$pkgver.tar.gz
+sum=4f80aed6d8ae3dacf97a0cb6e989845269e342f0
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --enable-threads=posix
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/m4
+  compress_doc "$dstdir"/share/man/man1/m4.1
+  compress_doc "$dstdir"/share/info/m4.*
+}
