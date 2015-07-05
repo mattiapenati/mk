@@ -1,0 +1,70 @@
+#!/bin/bash
+
+pkgname=ncurses
+pkgver=5.9
+archive=$pkgname-$pkgver.tar.gz
+sum=3e042e5f2c7223bffdaac9646a533b8c758b65b5
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    if [[ $mkToolchain = gcc-*/5.1 && -e "$srcdir"/ncurses-$pkgver-gcc5.patch ]]; then
+      message "Applying patches to $pkgname"
+      patch -Np1 -i "$srcdir"/ncurses-$pkgver-gcc5.patch
+    fi
+    message "Configuring $pkgname"
+    # everything works correctly also for installation in the test directory
+    install -dm 0755 "$dstdir"/lib/pkgconfig
+    # PKG_CONFIG_LIBDIR=$mkToolchainBase/lib/pkgconfig
+    #   Specify where to put .pc files.
+    PKG_CONFIG_LIBDIR="$dstdir"/lib/pkgconfig \
+    ./configure --build=$TARGET --prefix="$dstdir" --mandir="$dstdir"/share/man \
+                --with-cxx --with-cxx-binding --without-ada \
+                --with-pkg-config=$(which pkg-config) --enable-pc-files \
+                --with-shared --without-debug --disable-rpath-hack \
+                --enable-widec --enable-symliks
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+
+  # stripping the executable
+  for exe in clear infocmp tabs tic toe tput tset; do
+    strip "$dstdir"/bin/$exe
+  done
+
+  # fix the headers
+  ln -vsf ncursesw "$dstdir"/include/ncurses
+
+  # The wide and not-wide are compatibles.
+  for lib in form menu ncurses panel; do
+    rm "$dstdir"/lib/lib${lib}w.a
+    ln -sf lib${lib}w.so "$dstdir"/lib/lib${lib}.so
+    ln -sf ${lib}w.pc "$dstdir"/lib/pkgconfig/${lib}.pc
+  done
+
+  ln -sf libncursesw.so "$dstdir"/lib/libcursesw.so
+  ln -sf libncurses.so "$dstdir"/lib/libcurses.so
+
+  # compress the documentation
+  for doc in captoinfo clear infocmp infotocap ncursesw5-config reset tabs tic toe tput tset; do
+    compress_doc "$dstdir"/share/man/man1/$doc.1
+  done
+  compress_doc "$dstdir"/share/man/man3/*.3form
+  compress_doc "$dstdir"/share/man/man3/*.3menu
+  compress_doc "$dstdir"/share/man/man3/*.3ncurses
+  compress_doc "$dstdir"/share/man/man3/*.3curses
+  compress_doc "$dstdir"/share/man/man5/term.5
+  compress_doc "$dstdir"/share/man/man5/terminfo.5
+  compress_doc "$dstdir"/share/man/man7/term.7
+
+  update_linker_cache
+}
