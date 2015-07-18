@@ -131,8 +131,8 @@ usage() {
   echo "Check the installation of a package."
   echo ""
   echo "Usage:"
-  echo "  mkpkg <pkg>"
-  echo "  mkpkg -h | --help"
+  echo "  mkcheck <dir>"
+  echo "  mkcheck -h | --help"
   echo ""
   echo "Options:"
   echo "  -h | --help        Show this help message"
@@ -169,7 +169,7 @@ fi
 # Run through all files
 check_rpath() {
   rpath=$("$mkPrefix"/bin/patchelf --print-rpath "$1")
-  if [[ -n "$rpath" ]]; then
+  if [[ -n "$rpath" && ! "$rpath" = "\$ORIGIN" ]]; then
     message "Not empty RPATH for '$1'"
     plain "$rpath"
   fi
@@ -191,7 +191,7 @@ check_shebang() {
   shebang=${shebang:2}
   if [[ "$prefix" = "#!" ]]; then
     shebang="$(echo -e "$shebang" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    if [[ ! $shebang = "$mkPrefix"/* ]]; then
+    if [[ ! $shebang = "$mkPrefix"/* && ! $shebang = "/bin/bash" && ! $shebang = "/bin/sh" ]]; then
       message "Invalid interpreter for '$1'"
       plain "$shebang"
     fi

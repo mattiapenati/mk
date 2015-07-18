@@ -1,0 +1,35 @@
+#!/bin/bash
+
+pkgname=xz
+pkgver=5.2.1
+archive=$pkgname-$pkgver.tar.gz
+sum=6022493efb777ff4e872b63a60be1f1e146f3c0b
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://tukaani.org/xz/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-nls \
+                --disable-rpath --disable-static
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  rm -rf "$dstdir"/share/doc
+  reset_rpath "$dstdir"/bin/{lzmainfo,lzmadec,xz,xzdec}
+  strip "$dstdir"/bin/{lzmainfo,lzmadec,xz,xzdec}
+  strip "$dstdir"/lib/liblzma.so.$pkgver
+  compress_doc "$dstdir"/share/man/man1/{lz,xz}{cat,cmp,diff,egrep,fgrep,grep,less,more}.1
+  compress_doc "$dstdir"/share/man/man1/lzma{,dec,info}.1
+  compress_doc "$dstdir"/share/man/man1/xz{,dec}.1
+  compress_doc "$dstdir"/share/man/man1/un{xz,lzma}.1
+  update_linker_cache
+}

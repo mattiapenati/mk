@@ -13,7 +13,7 @@ build() {
   extract $archive
 
   pushd $pkgname-$pkgver
-    if [[ $mkToolchain = gcc-*/5.1 && -e "$srcdir"/ncurses-$pkgver-gcc5.patch ]]; then
+    if [[ $mkToolchain = gcc-*/5 && -e "$srcdir"/ncurses-$pkgver-gcc5.patch ]]; then
       message "Applying patches to $pkgname"
       patch -Np1 -i "$srcdir"/ncurses-$pkgver-gcc5.patch
     fi
