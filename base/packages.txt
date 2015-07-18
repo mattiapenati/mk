@@ -2,6 +2,8 @@ This file contains the list of the packages contained in the base setup of each
 toolchain. The packages are listed in the order of installation, with its own
 dependencies:
 
+  (bash: is assumed to be installed)
+
   make: no dependencies
     GNU Make is a tool which controls the generation of executables and other
     non-source files of a program from the program's source files.
@@ -9,6 +11,10 @@ dependencies:
   diffutils: no dependencies
     GNU Diffutils is a package of several programs related to finding
     differences between files.
+
+  findutils: no dependencies
+    The GNU Find Utilities are the basic directory searching utilities of the
+    GNU operating system.
 
   m4: no dependencies
     GNU M4 is an implementation of the traditional Unix macro processor.
@@ -78,21 +84,40 @@ dependencies:
 
   (recompile gawk because of circular dependency gawk <> readline)
 
-  bash: readline
-    Bash is the Bourne Again SHell. Bash is an sh-compatible shell that
-    incorporates useful features from the Korn shell (ksh) and C shell (csh).
-    It is intended to conform to the IEEE POSIX P1003.2/ISO 9945.2 Shell and
-    Tools standard.
-
-  (fix the scripts shebang /bin/bash -> $mkToolchainBase/bin/bash)
-  (fix the scripts shebang /bin/sh -> $mkToolchainBase/bin/sh)
-
   automake: perl, autoconf
+    Automake is a tool for automatically generating Makefile.in files compliant
+    with the GNU Coding Standards.
 
-  findutils: no dependencies
   zlib: no dependencies
+    The zlib compression library provides in-memory compression and
+    decompression functions, including integrity checks of the uncompressed
+    data.
+
   gzip: no dependencies
-  texinfo: gzip, findutils, ncurses, perl
+    GNU Gzip is a popular data compression program originally written by
+    Jean-loup Gailly for the GNU project. Mark Adler wrote the decompression
+    part.
+
+  bzip2: no dependencies
+    bzip2 is a freely available, patent free, high-quality data compressor.
+
+  xz: no dependencies
+    XZ Utils is free general-purpose data compression software with high
+    compression ratio. XZ Utils were written for POSIX-like systems, but also
+    work on some not-so-POSIX systems. XZ Utils are the successor to LZMA
+    Utils.
+
+  tar: no dependencies
+    GNU Tar provides the ability to create tar archives, as well as various
+    other kinds of manipulation.
+
+  texinfo: ncurses, perl
+    Texinfo is the official documentation format of the GNU project.
+
+  openssl:
+  sqlite:
+  expat:
+  libffi:
 
   python:
   python3:

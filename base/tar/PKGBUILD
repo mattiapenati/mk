@@ -1,0 +1,29 @@
+#!/bin/bash
+
+pkgname=tar
+pkgver=1.28
+archive=$pkgname-$pkgver.tar.xz
+sum=40f3470a96b80749531fe48dbba99e43b6dfa7d3
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --without-selinux \
+                --disable-nls --disable-silent-rules
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/{bin/tar,libexec/rmt}
+  compress_doc "$dstdir"/share/info/tar.info*
+  compress_doc "$dstdir"/share/man/{man1/tar.1,man8/rmt.8}
+}

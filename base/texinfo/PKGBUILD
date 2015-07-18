@@ -1,0 +1,29 @@
+#!/bin/bash
+
+pkgname=texinfo
+pkgver=6.0
+archive=$pkgname-$pkgver.tar.gz
+sum=110d45256c4219c88dc2fdb8c9c1a20749e4e7c5
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-nls
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/{install-,}info
+  compress_doc "$dstdir"/share/man/man1/{info,install-info,makeinfo,pdftexi2dvi,pod2texi,texi2any,texi2dvi,texi2pdf,texindex}.1
+  compress_doc "$dstdir"/share/man/man5/{info,texinfo}.5
+  compress_doc "$dstdir"/share/info/{info-stnd,info,texinfo}.info*
+}
