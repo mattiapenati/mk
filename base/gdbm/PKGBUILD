@@ -1,0 +1,38 @@
+#!/bin/bash
+
+pkgname=gdbm
+pkgver=1.11
+archive=$pkgname-$pkgver.tar.gz
+sum=ce433d0f192c21d41089458ca5c8294efe9806b4
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --enable-libgdbm-compat \
+                --disable-silent-rules --disable-nls --disable-static
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  for exe in gdbm_dump gdbm_load gdbmtool; do
+    strip "$dstdir"/bin/$exe
+    reset_rpath "$dstdir"/bin/$exe
+    compress_doc "$dstdir"/share/man/man1/$exe.1
+  done
+  for lib in gdbm gdbm_compat; do
+    strip "$dstdir"/lib/lib$lib.so.?.?.?
+    reset_rpath "$dstdir"/lib/lib$lib.so.?.?.?
+  done
+  compress_doc "$dstdir"/share/info/$pkgname.info
+  compress_doc "$dstdir"/share/man/man3/$pkgname.3
+  update_linker_cache
+}

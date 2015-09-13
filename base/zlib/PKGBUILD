@@ -1,0 +1,27 @@
+#!/bin/bash
+
+pkgname=zlib
+pkgver=1.2.8
+archive=$pkgname-$pkgver.tar.gz
+sum=44d667c142d7cda120332623eab69f40
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://www.zlib.net/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --prefix="$dstdir" --shared
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  compress_doc "$dstdir"/share/man/man3/zlib.3
+  update_linker_cache
+}

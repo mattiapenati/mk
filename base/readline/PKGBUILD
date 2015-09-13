@@ -1,0 +1,43 @@
+#!/bin/bash
+
+pkgname=readline
+pkgver=6.3
+patchlevel=8
+archive=$pkgname-$pkgver.tar.gz
+sum=017b92dc7fd4e636a2b5c9265a77ccc05798c9e1
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  # download and apply the patch
+
+  pushd $pkgname-$pkgver
+    message "Applying patches to $pkgname"
+    for patch in {1..8}; do
+      patchfile=$pkgname${pkgver//.}-$(printf "%03d" $patch)
+      download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver-patches/$patchfile
+      patch -p0 -i "$srcdir"/$patchfile
+    done
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-static
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  install -dm 0755 "$dstdir"/etc
+  install -m 0644 "$srcdir"/inputrc "$dstdir"/etc/inputrc
+  rm -rf "$dstdir"/share/doc
+  compress_doc "$dstdir"/share/info/{history,readline,rluserman}.info
+  compress_doc "$dstdir"/share/man/man3/{history,readline}.3
+  chmod 0755 "$dstdir"/lib/lib{history,readline}.so.$pkgver
+  strip "$dstdir"/lib/lib{history,readline}.so.$pkgver
+  reset_rpath "$dstdir"/lib/lib{history,readline}.so.$pkgver
+  update_linker_cache
+}

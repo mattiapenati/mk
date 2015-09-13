@@ -1,0 +1,31 @@
+#!/bin/bash
+
+pkgname=automake
+pkgver=1.15
+archive=$pkgname-$pkgver.tar.gz
+sum=b5a840c7ec4321e78fdc9472e476263fa6614ca1
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  rm -f "$dstdir"/bin/aclocal; ln -sf aclocal-$pkgver "$dstdir"/bin/aclocal
+  rm -f "$dstdir"/bin/automake; ln -sf automake-$pkgver "$dstdir"/bin/automake
+  rm -rf "$dstdir"/share/doc
+  compress_doc "$dstdir"/share/info/automake.info*
+  compress_doc "$dstdir"/share/info/automake-history.info*
+  compress_doc "$dstdir"/share/man/man1/{aclocal,automake}*.1
+}

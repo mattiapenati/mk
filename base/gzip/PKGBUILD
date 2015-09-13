@@ -1,0 +1,29 @@
+#!/bin/bash
+
+pkgname=gzip
+pkgver=1.6
+archive=$pkgname-$pkgver.tar.xz
+sum=05bd01fc90178b806e0c13f9526e2ad392084085
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/gzip
+  compress_doc "$dstdir"/share/man/man1/{gunzip,gzip,gzexe}.1
+  compress_doc "$dstdir"/share/man/man1/z{less,force,grep,more,cmp,cat,diff,new}.1
+  compress_doc "$dstdir"/share/info/gzip.info
+}
