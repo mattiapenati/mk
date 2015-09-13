@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pkgname=cmake
+pkgver=3.2.3
+archive=$pkgname-$pkgver.tar.gz
+sum=fa176cc5b1ccf2e98196b50908432d0268323501
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://www.cmake.org/files/v${pkgver%.*}/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --prefix="$dstdir" --mandir=/share/man --docdir=/share/doc/cmake \
+                --no-system-libs --no-qt-gui --parallel=$pkgJobs
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  rm -rf "$dstdir"/share/doc/$pkgname
+  strip "$dstdir"/bin/{ccmake,cmake,cpack,ctest}
+}
