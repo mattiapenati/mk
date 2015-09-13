@@ -1,0 +1,27 @@
+#!/bin/bash
+
+pkgname=
+pkgver=
+archive=$pkgname-$pkgver.tar.gz
+sum=
+dstdir=
+
+build() {
+  download $archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    # ./configure; make
+  popd
+}
+
+package() {
+  pushd $pkgname-$pkgver
+    # make install
+  popd
+
+  compress_man $dstdir/share/man
+  strip $dstdir/bin
+  strip $dstdir/lib
+}
