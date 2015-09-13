@@ -41,3 +41,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) xz
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tar
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) texinfo
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libffi
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) expat
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sqlite
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openssl

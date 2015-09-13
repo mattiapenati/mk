@@ -114,10 +114,23 @@ dependencies:
   texinfo: ncurses, perl
     Texinfo is the official documentation format of the GNU project.
 
-  openssl:
-  sqlite:
-  expat:
-  libffi:
+  libffi: libtool
+    The libffi library provides a portable, high level programming interface to
+    various calling conventions. This allows a programmer to call any function
+    specified by a call interface description at run time.
+
+  expat: libtool
+    The Expat package contains a stream oriented C library for parsing XML.
+
+  sqlite: libtool, readline
+    SQLite is an in-process library that implements a self-contained,
+    serverless, zero-configuration, transactional SQL database engine.
+
+  openssl: perl
+    The OpenSSL Project is a collaborative effort to develop a robust,
+    commercial-grade, full-featured, and Open Source toolkit implementing the
+    Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS)
+    protocols as well as a full-strength general purpose cryptography library.
 
   python:
   python3:
