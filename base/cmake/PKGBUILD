@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pkgname=cmake
-pkgver=3.2.3
+pkgver=3.3.2
 archive=$pkgname-$pkgver.tar.gz
 sum=fa176cc5b1ccf2e98196b50908432d0268323501
 
