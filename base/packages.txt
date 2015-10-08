@@ -132,9 +132,14 @@ dependencies:
     Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS)
     protocols as well as a full-strength general purpose cryptography library.
 
-  python:
-  python3:
+  python: bzip2, db, expat, gdbm, libffi, openssl, sqlite, zlib
+    Python is a general purpose scripting language.
+
+  mercurial: python
+    Mercurial is a free, distributed source control management tool. It
+    efficiently handles projects of any size and offers an easy and intuitive
+    interface.
+
   sphynx:
-  doxygen:
   cmake: ncurses, python
-  doxygen
+  doxygen:

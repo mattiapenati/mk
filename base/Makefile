@@ -45,3 +45,5 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) expat
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sqlite
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openssl
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) python
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
