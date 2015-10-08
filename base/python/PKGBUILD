@@ -15,12 +15,13 @@ build() {
   pushd Python-$pkgver
     # ensure to use system libraries
     rm -rf Modules/{expat,zlib,_ctypes/{darwin,libffi}*}
+    # fixing the system paths
+    sed -i "s:/usr/include:$mkToolchainBase/include:g" setup.py
+    sed -i "s:/usr/lib:$mkToolchainBase/lib:g" setup.py
     message "Configuring $pkgname"
     # --with-dbmliborder=bdb:gdbm
     #   Use this switch if you want to build Python DBM Module against Berkeley
     #   DB instead of GDBM
-    CPPFLAGS="-I\"$mkToolchainBase/include\"" \
-    LDFLAGS="-L\"$mkToolchainBase/lib\"" \
     ./configure --build=$TARGET --prefix="$dstdir" --enable-shared \
                 --with-threads --enable-ipv6 --enable-unicode=ucs4 \
                 --with-system-expat --with-system-ffi --without-ensurepip \
@@ -31,7 +32,6 @@ build() {
 }
 
 package() {
-  return 0
   make -C Python-$pkgver install
   strip "$dstdir"/bin/python${pkgver%.*}
   chmod 0755 "$dstdir"/lib/libpython${pkgver%.*}.so.?.?
