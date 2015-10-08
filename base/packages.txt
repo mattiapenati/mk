@@ -140,6 +140,9 @@ dependencies:
     efficiently handles projects of any size and offers an easy and intuitive
     interface.
 
+  sharutils: texinfo
+    Makes so-called shell archives out of many files.
+
   sphynx:
   cmake: ncurses, python
   doxygen:
