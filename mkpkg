@@ -1,5 +1,3 @@
-#!/u/sw/bin/bash
-
 # Copyright (c) 2015, Mattia Penati <mattia.penati@gmail.com>
 # All rights reserved.
 #
@@ -32,8 +30,8 @@
 # mkUseColor = [auto|yes|no] (default: auto)
 #   If set to 'no' than the command does not use the colors for the output.
 # mkSandboxDir = [path] (default: none)
-#   In this directory the build script is executed, this to ensure enough space
-#   to build the package.
+#   In this directory where the build script is executed, this to ensure enough
+#   space to build the package.
 # mkKeepBuildDir = [yes|no] (default: no)
 #   If set to 'yes' then the build directory is not removed if an error occours.
 # mkParallelBuild = [yes|no] (default: yes)
@@ -213,25 +211,25 @@ readonly RESET BOLD BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
 # error <msg>
 # Print an error message to the standard error stream
 error() {
-  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee /dev/fd/4 >> "$mkLogFile"
+  echo -e "${BOLD}${RED}>> Error${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&4
 }
 
 # warning <msg>
 # Print a warning message to the standard error stream
 warning() {
-  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee /dev/fd/4 >> "$mkLogFile"
+  echo -e "${BOLD}${YELLOW}>> Warning${RESET}${BOLD} $1${RESET}" | tee -a "$mkLogFile" >&4
 }
 
 # message <msg>
 # Print a message to the standard output stream
 message() {
-  echo -e "${BOLD}>> $1${RESET}" | tee /dev/fd/3 >> "$mkLogFile"
+  echo -e "${BOLD}>> $1${RESET}" | tee -a "$mkLogFile" >&3
 }
 
 # plain <msg>
 # Print a plain text to the standard output stream
 plain() {
-  echo -e "   ${RESET}$1${RESET}" | tee /dev/fd/3 >> "$mkLogFile"
+  echo -e "   ${RESET}$1${RESET}" | tee -a "$mkLogFile" >&3
 }
 
 # log <msg>

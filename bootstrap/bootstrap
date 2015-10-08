@@ -260,7 +260,7 @@ pushd $pkgname-$pkgver
   install -vm 0755 busybox $PREFIX/bin/busybox
 popd
 
-for bin in less sha1sum; do
+for bin in less sha1sum md5sum; do
   ln -sv busybox $PREFIX/bin/$bin
 done
 
