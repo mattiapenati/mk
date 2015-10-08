@@ -140,9 +140,20 @@ dependencies:
     efficiently handles projects of any size and offers an easy and intuitive
     interface.
 
+  sphinx: python
+    Sphinx is a tool that makes it easy to create intelligent and beautiful
+    documentation.
+
   sharutils: texinfo
     Makes so-called shell archives out of many files.
 
-  sphynx:
+  icu:
+    ICU is a mature, widely used set of C/C++ and Java libraries providing
+    Unicode and Globalization support for software applications. ICU is widely
+    portable and gives applications the same results on all platforms and
+    between C/C++ and Java software.
+
+  libxml2: icu, python
+
   cmake: ncurses, python
   doxygen:

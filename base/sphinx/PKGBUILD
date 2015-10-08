@@ -1,0 +1,8 @@
+#!/bin/bash
+
+dstdir=$mkToolchainBase
+
+package() {
+  pip install --install-option="--prefix=$dstdir" sphinx
+}
+
