@@ -47,3 +47,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openssl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) python
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
