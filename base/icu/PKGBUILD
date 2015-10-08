@@ -1,0 +1,32 @@
+#!/bin/bash
+
+pkgname=icu
+pkgver=56.1
+archive=${pkgname}4c-${pkgver//./_}-src.tgz
+sum=c4a2d71ff56aec5ebfab2a3f059be99d
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://download.icu-project.org/files/${pkgname}4c/$pkgver/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname/source
+    message "Configuring $pkgname"
+    ./configure --target=$TARGET --prefix="$dstdir"
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname/source install
+  strip "$dstdir"/bin/{derb,genbrk,gencfu,gencnval,gendict,genrb,icuinfo,makeconv,pkgdata,uconv}
+  strip "$dstdir"/sbin/{genccode,gencmn,gennorm2,gensprep,icupkg}
+  strip "$dstdir"/lib/lib{icudata,icui18n,icuio,icule,iculx,icutest,icutu,icuuc}.so.$pkgver
+  compress_doc "$dstdir"/share/man/man1/{derb,genbrk,gencfu,gencnval,gendict}.1
+  compress_doc "$dstdir"/share/man/man1/{genrb,icu-config,makeconv,pkgdata,uconv}.1
+  compress_doc "$dstdir"/share/man/man8/{genccode,gencmn,gensprep,icupkg}.8
+  update_linker_cache
+}
