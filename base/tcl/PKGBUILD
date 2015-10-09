@@ -1,0 +1,57 @@
+#!/bin/bash
+
+pkgname=tcl
+pkgver=8.6.4
+archive=$pkgname$pkgver-src.tar.gz
+sum=33c5a083a23cf54f15e25a9e787dc39ef3fa0a2b
+dstdir=$mkToolchainBase
+
+build() {
+  download http://prdownloads.sourceforge.net/tcl/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname$pkgver/unix
+    message "Configuring $pkgname"
+    [[ $ARCH == "x86_64" ]] && BIT="--enable-64bit"
+    ./configure --prefix="$dstdir" --mandir="$dstdir"/share/man \
+                --enable-threads --enable-shared --disable-rpath $BIT
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname$pkgver/unix install install-private-headers
+  ln -sfv tclsh${pkgver%.*} "$dstdir"/bin/tclsh
+  ln -sfv libtcl${pkgver%.*}.so "$dstdir/lib/libtcl.so"
+
+  chmod -v 755 "$dstdir"/lib/libtcl${pkgver%.*}.so
+  strip "$dstdir"/bin/tclsh${pkgver%.*}
+  strip "$dstdir"/lib/libtcl${pkgver%.*}.so
+
+  compress_doc "$dstdir"/share/man/man1/tclsh.1
+  compress_doc "$dstdir"/share/man/man3/{TCL,Tcl}*.3
+  compress_doc "$dstdir"/share/man/man3/{attempt,}ck{alloc,realloc}.3
+  compress_doc "$dstdir"/share/man/man3/ckfree.3
+  compress_doc "$dstdir"/share/man/mann/*.n
+
+  sed -e "s#$tmpdir/tcl$pkgver/unix#$dstdir/lib#" \
+      -e "s#$tmpdir/tcl$pkgver#$dstdir/include#" \
+      -i "$dstdir/lib/tclConfig.sh"
+
+  tdbcver=tdbc1.0.3
+  sed -e "s#$tmpdir/tcl$pkgver/unix/pkgs/$tdbcver#$dstdir/lib/$tdbcver#" \
+      -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver/generic#$dstdir/include#" \
+      -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver/library#$dstdir/lib/tcl${pkgver%.*}#" \
+      -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver#$dstdir/include#" \
+      -i "$dstdir/lib/$tdbcver/tdbcConfig.sh"
+
+  itclver=itcl4.0.3
+  sed -e "s#$tmpdir/tcl$pkgver/unix/pkgs/$itclver#$dstdir/lib/$itclver#" \
+      -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver/generic#$dstdir/include#" \
+      -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver#$dstdir/include#" \
+      -i "$dstdir/lib/$itclver/itclConfig.sh"
+
+  update_linker_cache
+}

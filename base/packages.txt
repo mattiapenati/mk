@@ -149,6 +149,14 @@ dependencies:
   python: bzip2, db, expat, gdbm, libffi, openssl, sqlite, zlib
     Python is a general purpose scripting language.
 
+  lua: readline
+    Lua is a powerful, fast, lightweight, embeddable scripting language.
+
+  tcl: zlib
+    Tcl (Tool Command Language) is a very powerful but easy to learn dynamic
+    programming language, suitable for a very wide range of uses, including web
+    and desktop applications, networking, administration, testing and many more.
+
   mercurial: python
     Mercurial is a free, distributed source control management tool. It
     efficiently handles projects of any size and offers an easy and intuitive
