@@ -1,0 +1,31 @@
+#!/bin/bash
+
+pkgname=grep
+pkgver=2.21
+archive=$pkgname-$pkgver.tar.xz
+sum=c7e6525c5c5aaa1bc3c1774db1697f42b11c2d85
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build="$TARGET" --prefix="$dstdir" --disable-nls \
+                --without-included-regex --disable-rpath
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/grep
+  compress_doc "$dstdir"/share/man/man1/{e,f,}grep.1
+  compress_doc "$dstdir"/share/info/grep.info
+}
+

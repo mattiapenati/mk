@@ -117,6 +117,14 @@ dependencies:
   texinfo: ncurses, perl
     Texinfo is the official documentation format of the GNU project.
 
+  pcre: bzip2, ncurses, readline, zlib
+    The PCRE library is a set of functions that implement regular expression
+    pattern matching using the same syntax and semantics as Perl 5.
+
+  grep: pcre, texinfo
+    Grep searches one or more input files for lines containing a match to a
+    specified pattern.
+
   libffi: libtool
     The libffi library provides a portable, high level programming interface to
     various calling conventions. This allows a programmer to call any function
@@ -147,9 +155,6 @@ dependencies:
     Sphinx is a tool that makes it easy to create intelligent and beautiful
     documentation.
 
-  sharutils: texinfo
-    Makes so-called shell archives out of many files.
-
   icu:
     ICU is a mature, widely used set of C/C++ and Java libraries providing
     Unicode and Globalization support for software applications. ICU is widely
@@ -158,6 +163,9 @@ dependencies:
 
   libxml2: icu, python
     Libxml2 is the XML C parser and toolkit developed for the Gnome project.
+
+  sharutils: texinfo
+    Makes so-called shell archives out of many files.
 
   cmake: ncurses, python
   doxygen:
