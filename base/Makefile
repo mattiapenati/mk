@@ -25,7 +25,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) db
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) gdbm
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) perl
-	@"${mkPrefix}"/bin/bash shebang "${mkToolchainPrefix}"/bin /usr/bin/perl "${mkToolchainBase}"/bin/perl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) gmp
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mpfr
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mpc
