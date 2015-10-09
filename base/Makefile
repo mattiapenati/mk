@@ -17,6 +17,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) make
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) diffutils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) findutils
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sed
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) m4
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libtool
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) flex
@@ -50,3 +51,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sphinx
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) icu
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libxml2

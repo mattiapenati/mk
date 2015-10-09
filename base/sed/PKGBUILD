@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pkgname=sed
+pkgver=4.2.2
+archive=$pkgname-$pkgver.tar.gz
+sum=2f24b4624d1a3080626b11610053996ec30ba0f1
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-nls
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/$pkgname
+  compress_doc "$dstdir"/share/man/man1/$pkgname.1
+  compress_doc "$dstdir"/share/info/$pkgname.info
+}
