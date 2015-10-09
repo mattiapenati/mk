@@ -16,6 +16,9 @@ dependencies:
     The GNU Find Utilities are the basic directory searching utilities of the
     GNU operating system.
 
+  sed: no dependencies
+    sed (stream editor) isn't an interactive text editor.
+
   m4: no dependencies
     GNU M4 is an implementation of the traditional Unix macro processor.
 
@@ -154,6 +157,7 @@ dependencies:
     between C/C++ and Java software.
 
   libxml2: icu, python
+    Libxml2 is the XML C parser and toolkit developed for the Gnome project.
 
   cmake: ncurses, python
   doxygen:
