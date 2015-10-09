@@ -42,8 +42,10 @@ package() {
     "$dstdir"/lib/perl5/$pkgver/Math/BigInt/Trace.pm
   sed -i "s:/usr/bin/perl:$dstdir/bin/perl:" \
     "$dstdir"/lib/perl5/$pkgver/Math/BigFloat/Trace.pm
-  if [[ -e "$mkToolchainPrefix"/bin/mtrace ]]; then
-    sed -i "1s:/usr/bin/perl:$mkToolchainBase/bin/perl:" "$mkToolchainPrefix"/bin/mtrace
+  if [[ "$mkTest" = "no" ]]; then
+    if [[ -e "$mkToolchainPrefix"/bin/mtrace ]]; then
+      sed -i "1s:/usr/bin/perl:$mkToolchainBase/bin/perl:" "$mkToolchainPrefix"/bin/mtrace
+    fi
   fi
   update_linker_cache
 }

@@ -58,3 +58,5 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libarchive
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cmake
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) patchelf
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) pax-utils
