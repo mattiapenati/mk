@@ -14,14 +14,17 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
+                --with-python
     message "Compiling $pkgname"
     make
   popd
 }
 
 package() {
+  pip install --install-option="--prefix=$dstdir" pyelftools
   make -C $pkgname-$pkgver install
   strip "$dstdir"/bin/{dumpelf,pspax,scanelf,scanmacho}
+  sed -i "1s:/usr/bin/python:$mkToolchainBase/bin/python:" "$dstdir"/bin/lddtree
   compress_doc "$dstdir"/share/man/man1/{dumpelf,pspax,scanelf,scanmacho}.1
 }
