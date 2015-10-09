@@ -4,5 +4,7 @@ dstdir=$mkToolchainBase
 
 package() {
   pip install --install-option="--prefix=$dstdir" mercurial
+  pip install --install-option="--prefix=$dstdir" hgsubversion
+  pip install --install-option="--prefix=$dstdir" hg-git
 }
 
