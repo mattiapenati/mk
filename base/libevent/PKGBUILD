@@ -1,0 +1,26 @@
+#!/bin/bash
+
+pkgname=libevent
+pkgver=2.0.22
+archive=$pkgname-$pkgver-stable.tar.gz
+sum=c4c56f986aa985677ca1db89630a2e11
+dstdir=$mkToolchainBase
+
+build() {
+  download http://prdownloads.sourceforge.net/levent/$pkgname/$pkgname-${pkgver%.*}/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver-stable
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-static
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver-stable install
+  strip "$dstdir"/lib/libevent{,_core,_extra,_openssl,_pthreads}-2.0.so.?.?.?
+  update_linker_cache
+}
