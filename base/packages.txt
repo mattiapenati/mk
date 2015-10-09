@@ -184,3 +184,10 @@ dependencies:
 
   sharutils: texinfo
     Makes so-called shell archives out of many files.
+
+  patchelf: autoconf
+    A small utility to modify the dynamic linker and RPATH of ELF executables.
+
+  pax-utils:
+    ELF related utils for ELF 32/64 binaries that can check files for security
+    relevant properties.
