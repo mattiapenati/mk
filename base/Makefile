@@ -52,6 +52,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) lua
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tcl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) swig
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) subversion
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sphinx
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) icu
