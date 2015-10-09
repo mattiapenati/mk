@@ -52,8 +52,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) lua
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tcl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) swig
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) subversion
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sphinx
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) icu
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libxml2
@@ -61,6 +59,8 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) curl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libarchive
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cmake
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) subversion
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libevent
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tmux
