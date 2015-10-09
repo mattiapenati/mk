@@ -143,6 +143,9 @@ dependencies:
     Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS)
     protocols as well as a full-strength general purpose cryptography library.
 
+  libssh2: openssl, zlib
+    libssh2 is a client-side C library implementing the SSH2 protocol.
+
   python: bzip2, db, expat, gdbm, libffi, openssl, sqlite, zlib
     Python is a general purpose scripting language.
 
@@ -163,6 +166,15 @@ dependencies:
 
   libxml2: icu, python
     Libxml2 is the XML C parser and toolkit developed for the Gnome project.
+
+  libidn: texinfo
+    GNU Libidn is a fully documented implementation of the Stringprep, Punycode
+    and IDNA specifications. Libidn's purpose is to encode and decode
+    internationalized domain names.
+
+  curl: libidn, libssh2, libtool, openssl, zlib
+    curl is an open source command line tool and library for transferring data
+    with URL syntax.
 
   sharutils: texinfo
     Makes so-called shell archives out of many files.

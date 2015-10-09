@@ -48,9 +48,12 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) expat
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sqlite
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openssl
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libssh2
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) python
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sphinx
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) icu
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libxml2
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libidn
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) curl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
