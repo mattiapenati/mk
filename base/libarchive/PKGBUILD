@@ -1,0 +1,35 @@
+#!/bin/bash
+
+pkgname=libarchive
+pkgver=3.1.2
+archive=$pkgname-$pkgver.tar.gz
+sum=6a991777ecb0f890be931cec4aec856d1a195489
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://libarchive.org/downloads/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
+                --disable-rpath --disable-static --with-zlib --with-bz2lib \
+                --with-lzma --with-openssl --with-xml2
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  reset_rpath "$dstdir"/bin/{bsdcpio,bsdtar}
+  reset_rpath "$dstdir"/lib/libarchive.so.1$pkgver
+  strip "$dstdir"/bin/{bsdcpio,bsdtar}
+  strip "$dstdir"/liblibarchive.so.1$pkgver
+  compress_doc "$dstdir"/share/man/man1/{bsdcpio,bsdtar}.1
+  compress_doc "$dstdir"/share/man/man3/{,lib}archive*.3
+  compress_doc "$dstdir"/share/man/man5/{cpio,libarchive-formats,mtree,tar}.5
+  update_linker_cache
+}
