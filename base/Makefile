@@ -60,6 +60,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libarchive
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cmake
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) subversion
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) git
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libevent
