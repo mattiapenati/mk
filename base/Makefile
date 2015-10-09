@@ -42,6 +42,8 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) xz
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tar
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) texinfo
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) pcre
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) grep
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libffi
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) expat
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sqlite
@@ -49,6 +51,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) python
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sphinx
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) icu
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libxml2
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils

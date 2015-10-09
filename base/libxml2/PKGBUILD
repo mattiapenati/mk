@@ -14,7 +14,7 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    ./configure --target=$TARGET --prefix="$dstdir" --disable-static \
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-static \
                 --with-thread --with-icu --with-history
     message "Compiling $pkgname"
     make
