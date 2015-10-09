@@ -1,0 +1,29 @@
+#!/bin/bash
+
+pkgname=htop
+pkgver=1.0.3
+archive=$pkgname-$pkgver.tar.gz
+sum=261492274ff4e741e72db1ae904af5766fc14ef4
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://hisham.hm/$pkgname/releases/$pkgver/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" \
+                --enable-unicode --enable-native-affinity
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  rm -rf "$dstdir"/share/{applications,pixmaps}
+  strip "$dstdir"/bin/htop
+  compress_doc "$dstdir"/share/man/man1/htop.1
+}

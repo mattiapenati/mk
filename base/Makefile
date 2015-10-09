@@ -57,7 +57,9 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) curl
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libarchive
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cmake
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hwloc
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) htop
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) patchelf
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) pax-utils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) unrar
