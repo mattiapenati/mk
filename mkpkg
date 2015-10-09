@@ -509,7 +509,7 @@ compress_doc() {
           "$mkPrefix"/bin/busybox gzip -f --verbose 9 "$realfile"
         fi
         rm -vf "$file"
-        ln -vs "$reallink.gz" "$file.gz"
+        ln -vfs "$reallink.gz" "$file.gz"
       elif [[ -d $file ]]; then
         case $file in
           */share/man)
