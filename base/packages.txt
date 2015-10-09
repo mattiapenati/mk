@@ -188,6 +188,10 @@ dependencies:
   patchelf: autoconf
     A small utility to modify the dynamic linker and RPATH of ELF executables.
 
-  pax-utils:
+  pax-utils: python
     ELF related utils for ELF 32/64 binaries that can check files for security
     relevant properties.
+
+  unrar:
+    The UnRar package contains a RAR extraction utility used for extracting
+    files from RAR archives.
