@@ -1,0 +1,26 @@
+#!/bin/bash
+
+pkgname=swig
+pkgver=3.0.7
+archive=$pkgname-$pkgver.tar.gz
+sum=7fff46c84b8c630ede5b0f0827e3d90a
+dstdir=$mkToolchainBase
+
+build() {
+  download http://prdownloads.sourceforge.net/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
+                --with-pcre --with-tcl --with-python --with-lua --disable-ccache
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  strip "$dstdir"/bin/{swig}
+}
