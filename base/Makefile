@@ -55,4 +55,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libxml2
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libidn
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) curl
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libarchive
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cmake
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils

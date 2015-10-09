@@ -3,7 +3,7 @@
 pkgname=cmake
 pkgver=3.3.2
 archive=$pkgname-$pkgver.tar.gz
-sum=fa176cc5b1ccf2e98196b50908432d0268323501
+sum=85f4debf7406bb2a436a302bfd51ada2b4e43719
 
 dstdir=$mkToolchainBase
 
@@ -14,8 +14,11 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    ./configure --prefix="$dstdir" --mandir=/share/man --docdir=/share/doc/cmake \
-                --no-system-libs --no-qt-gui --parallel=$pkgJobs
+    ./configure --prefix="$dstdir" --parallel=$pkgJobs \
+                --mandir=/share/man --docdir=/share/doc/cmake \
+                --system-curl --system-expat --no-system-jsoncpp \
+                --system-zlib --system-bzip2 --system-libarchive --no-qt-gui \
+                --sphinx-man
     message "Compiling $pkgname"
     make
   popd
@@ -23,6 +26,9 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/doc/$pkgname
+  rm -rf "$dstdir"/share/doc
+  rm -f "$dstdir"/share/man/man1/cmake-gui.1
   strip "$dstdir"/bin/{ccmake,cmake,cpack,ctest}
+  compress_doc "$dstdir"/share/man/man1/{ccmake,cmake,cpack,ctest}.1
+  compress_doc "$dstdir"/share/man/man7/cmake-*.7
 }

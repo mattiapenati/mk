@@ -176,8 +176,11 @@ dependencies:
     curl is an open source command line tool and library for transferring data
     with URL syntax.
 
+  libarchive: bzip2, libxml2, openssl, xz, zlib
+    Multi-format archive and compression library.
+
+  cmake: curl, expat, libarchive, ncurses, sphinx, zlib
+    The CMake package contains a modern toolset used for generating Makefiles.
+
   sharutils: texinfo
     Makes so-called shell archives out of many files.
-
-  cmake: ncurses, python
-  doxygen:

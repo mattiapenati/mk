@@ -12,14 +12,15 @@ build() {
   extract $archive
 
   pushd $pkgname-$pkgver
-    # ./configure; make
+    message "Configuring $pkgname"
+    # ./configure
+    message "Compiling $pkgname"
+    make
   popd
 }
 
 package() {
-  pushd $pkgname-$pkgver
-    # make install
-  popd
+  # make -C $pkgname-$pkgver install
 
   compress_man $dstdir/share/man
   strip $dstdir/bin
