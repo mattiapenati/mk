@@ -1,0 +1,33 @@
+#!/bin/bash
+
+pkgname=libidn
+pkgver=1.32
+archive=$pkgname-$pkgver.tar.gz
+sum=ddd018611b98af7c67d434aa42d15d39f45129f5
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
+                --disable-static --disable-nls --disable-rpath
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  reset_rpath "$dstdir"/bin/idn
+  strip "$dstdir"/bin/idn
+  strip "$dstdir"/lib/libidn.so.?.?.?
+  compress_doc "$dstdir"/share/man/man1/idn.1
+  compress_doc "$dstdir"/share/man/man3/{idn,pr29,punycode,stringprep,tld}*.3
+  compress_doc "$dstdir"/share/info/libidn.info
+  update_linker_cache
+}

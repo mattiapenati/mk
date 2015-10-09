@@ -1,0 +1,35 @@
+#!/bin/bash
+
+pkgname=curl
+pkgver=7.45.0
+archive=$pkgname-$pkgver.tar.gz
+sum=e44fc290844c1e3c9b7f6ef9926d4366d0600514
+
+dstdir=$mkToolchainBase
+
+build() {
+  download http://curl.haxx.se/download/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
+                --disable-static --with-libz --with-libidn --with-libssh2 \
+                --enable-threaded-resolver --enable-ipv6 \
+                --with-ca-bundle="$mkToolchainBase"/etc/ssl/certs/ca-certificates.crt
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  reset_rpath "$dstdir"/bin/curl
+  reset_rpath "$dstdir"/lib/libcurl.so.?.?.?
+  strip "$dstdir"/bin/curl
+  strip "$dstdir"/lib/libcurl.so.?.?.?
+  compress_doc "$dstdir"/share/man/man1/curl{,-config}.1
+  compress_doc "$dstdir"/share/man/man3/{CURL,curl,libcurl}*.3
+  update_linker_cache
+}
