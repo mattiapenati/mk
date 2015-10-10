@@ -1,0 +1,46 @@
+#!/bin/bash
+
+pkgname=gdb
+pkgver=7.10
+archive=$pkgname-$pkgver.tar.xz
+sum=95338f65ae9f61ecb76592f2cbe336a7d948b905
+dstdir=$mkToolchainBase
+
+build() {
+  download http://ftpmirror.gnu.org/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    if [[ -e "$srcdir"/$pkgname-$pkgver.patch ]]; then
+      message "Applying patch to $pkgname"
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
+    fi
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-nls \
+                --with-system-gdbinit="$dstdir"/etc/gdb/gdbinit \
+                --with-system-zlib --with-system-readline \
+                --with-python=$(which python)
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+
+  # gdbinit file
+  install -dm755 "$dstdir"/etc/gdb
+  touch "$dstdir"/etc/gdb/gdbinit
+
+  strip "$dstdir"/bin/{gdb,gdbserver}
+  strip "$dstdir"/lib/libinproctrace.so
+
+  rm -vf "$dstdir"/include/{ansidecl,bfd,bfdlink,dis-asm,plugin-api,symcat}.h
+  rm -vf "$dstdir"/lib/{libbfd,libopcodes}.{l,}a
+  rm -vf "$dstdir"/share/info/bfd.info
+
+  compress_doc "$dstdir"/share/info/{annotate,gdb,stabs}.info*
+  compress_doc "$dstdir"/share/man/man1/{gcore,gdb,gdbserver}.1
+  compress_doc "$dstdir"/share/man/man5/gdbinit.5
+}
