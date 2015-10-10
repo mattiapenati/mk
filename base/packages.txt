@@ -225,6 +225,9 @@ dependencies:
   htop: ncurses
     htop is an interactive process viewer for Linux.
 
+  gdb: expat, ncurses, python, texinfo, zlib
+    The GNU Debugger.
+
   hwloc: icu, libtool, libxml2, xz, zlib
     Portable Hardware Locality is a portable abstraction of hierarchical
     architectures.

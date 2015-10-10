@@ -7,7 +7,8 @@ package() {
   pip install --install-option="--prefix=$dstdir" hgsubversion
   pip install --install-option="--prefix=$dstdir" hg-git
 
-  mkdir -pv "$dstdir"/etc/mercurial
+  # mercurial configuration file with svn and git extensions
+  install -dm755 "$dstdir"/etc/mercurial
   echo "[extensions]" > "$dstdir"/etc/mercurial/hgrc
   echo "hgsubversion =" >> "$dstdir"/etc/mercurial/hgrc
   echo "hggit =" >> "$dstdir"/etc/mercurial/hgrc
