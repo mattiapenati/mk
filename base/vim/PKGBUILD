@@ -1,0 +1,46 @@
+#!/bin/bash
+
+pkgname=vim
+pkgver=7.4.891
+archive=v$pkgver.tar.gz
+sum=790b5372c74b9fce43c391a70c4c4043c6d270c0
+dstdir=$mkToolchainBase
+
+pagerver=2.06
+pagerarchive=$pagerver.tar.gz
+pagersum=4aa7feed1843e0b2554dd5110fbf031ba0889f9d
+
+build() {
+  download https://github.com/vim/vim/archive/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --prefix="$dstdir" --with-compiledby="$PKGVERSION" \
+                --disable-nls --disable-sysmouse --disable-gui --with-x=no \
+                --disable-selinux --enable-multibyte --with-features=huge \
+                --enable-cscope --disable-netbeans --disable-workshop \
+                --enable-perlinterp --enable-pythoninterp \
+                --disable-python3interp --enable-tclinterp \
+                --enable-luainterp --with-lua-prefix="$mkToolchainBase"
+    message "Compiling $pkgname"
+    make
+  popd
+
+  download https://github.com/rkitover/vimpager/archive/$pagerarchive
+  check $pagerarchive $pagersum
+  extract $pagerarchive
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+  make -C vimpager-$pagerver PREFIX="$dstdir" SYSCONFDIR="$dstdir"/etc install
+
+  reset_rpath "$dstdir"/bin/{vim,xxd}
+  strip "$dstdir"/bin/{vim,xxd}
+
+  sed -i "s:/usr/bin/nawk:$mkToolchainBase/bin/nawk:g" "$dstdir"/share/vim/vim74/tools/mve.awk
+
+  compress_doc "$dstdir"/share/man/man1/{evim,ex,rview,rvim,view,vim,vimdiff,vimtutor,xxd}.1
+}

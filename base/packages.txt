@@ -206,6 +206,13 @@ dependencies:
   sharutils: texinfo
     Makes so-called shell archives out of many files.
 
+  vim: lua, python, sharutils, tcl
+    Vim is an advanced text editor that seeks to provide the power of the
+    de-facto Unix editor 'Vi', with a more complete feature set.
+
+  emacs: libxml2, ncurses, perl
+    GNU Emacs is an extensible, customizable text editor—and more.
+
   libevent: openssl, python
     The libevent API provides a mechanism to execute a callback function when a
     specific event occurs on a file descriptor or after a timeout has been

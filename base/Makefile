@@ -63,6 +63,8 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) git
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mercurial
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) sharutils
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) vim
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) emacs
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libevent
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tmux
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) htop

@@ -13,16 +13,12 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    # ./configure
+    ./configure
     message "Compiling $pkgname"
     make
   popd
 }
 
 package() {
-  # make -C $pkgname-$pkgver install
-
-  compress_man $dstdir/share/man
-  strip $dstdir/bin
-  strip $dstdir/lib
+  make -C $pkgname-$pkgver install
 }
