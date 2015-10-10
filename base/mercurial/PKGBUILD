@@ -6,5 +6,10 @@ package() {
   pip install --install-option="--prefix=$dstdir" mercurial
   pip install --install-option="--prefix=$dstdir" hgsubversion
   pip install --install-option="--prefix=$dstdir" hg-git
+
+  mkdir -pv "$dstdir"/etc/mercurial
+  echo "[extensions]" > "$dstdir"/etc/mercurial/hgrc
+  echo "hgsubversion =" >> "$dstdir"/etc/mercurial/hgrc
+  echo "hggit =" >> "$dstdir"/etc/mercurial/hgrc
 }
 
