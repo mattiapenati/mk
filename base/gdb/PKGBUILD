@@ -43,4 +43,6 @@ package() {
   compress_doc "$dstdir"/share/info/{annotate,gdb,stabs}.info*
   compress_doc "$dstdir"/share/man/man1/{gcore,gdb,gdbserver}.1
   compress_doc "$dstdir"/share/man/man5/gdbinit.5
+
+  update_linker_cache
 }

@@ -49,8 +49,6 @@ dependencies:
     mainframes and is suitable for both rapid prototyping and large scale
     development projects.
 
-  (fix the scripts shebang /usr/bin/perl -> $mkToolchainBase/bin/perl)
-
   gmp: libtool
     GMP is a free library for arbitrary precision arithmetic, operating on
     signed integers, rational numbers, and floating-point numbers.
@@ -231,6 +229,19 @@ dependencies:
   hwloc: icu, libtool, libxml2, xz, zlib
     Portable Hardware Locality is a portable abstraction of hierarchical
     architectures.
+
+  openmpi: hwloc, libtool, valgrind
+    The Open MPI Project is an open source Message Passing Interface
+    implementation that is developed and maintained by a consortium of
+    academic, research, and industry partners.
+
+  valgrind: gdb, openmpi, perl
+    Valgrind is an instrumentation framework for building dynamic analysis
+    tools. There are Valgrind tools that can automatically detect many memory
+    management and threading bugs, and profile your programs in detail. You can
+    also use Valgrind to build new tools.
+
+  (recompile openmpi because of circular dependency opempi <> valgrind)
 
   patchelf: autoconf
     A small utility to modify the dynamic linker and RPATH of ELF executables.
