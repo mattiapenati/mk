@@ -4,6 +4,7 @@ pkgname=libtool
 pkgver=2.4.6
 archive=$pkgname-$pkgver.tar.gz
 sum=25b6931265230a06f0fc2146df64c04e5ae6ec33
+
 dstdir=$mkToolchainBase
 
 build() {
@@ -26,6 +27,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  compress_doc "$dstdir"/share/man/man1/{libtool,libtoolize}.1
-  compress_doc "$dstdir"/share/info/libtool.*
 }

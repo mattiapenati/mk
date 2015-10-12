@@ -26,9 +26,7 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/pkgconf
-  compress_doc "$dstdir"/share/man/man1/$pkgname.1
-  ln -sf $pkgname "$dstdir"/bin/pkg-config
-  ln -sf $pkgname.1.gz "$dstdir"/share/man/man1/pkg-config.1.gz
+  ln -sf pkgconf "$dstdir"/bin/pkg-config
+  ln -sf pkcong.1 "$dstdir"/share/man/man1/pkg-config.1
   install -dm 755 "$dstdir"/lib/pkgconfig
 }

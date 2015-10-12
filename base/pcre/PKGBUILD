@@ -27,12 +27,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  reset_rpath "$dstdir"/bin/{pcretest,pcregrep}
-  reset_rpath "$dstdir"/lib/libpcre{cpp,posix}.so.?.?.?
-  strip "$dstdir"/bin/{pcretest,pcregrep}
-  strip "$dstdir"/lib/libpcre{,16,32,cpp,posix}.so.?.?.?
-  compress_doc "$dstdir"/share/man/man1/pcre*.1
-  compress_doc "$dstdir"/share/man/man3/pcre*.3
-  rm -rf "$dstdir"/share/doc
-  update_linker_cache
 }

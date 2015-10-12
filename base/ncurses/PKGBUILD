@@ -36,11 +36,6 @@ build() {
 package() {
   make -C $pkgname-$pkgver install
 
-  # stripping the executable
-  for exe in clear infocmp tabs tic toe tput tset; do
-    strip "$dstdir"/bin/$exe
-  done
-
   # fix the headers
   ln -vsf ncursesw "$dstdir"/include/ncurses
 
@@ -53,18 +48,4 @@ package() {
 
   ln -sf libncursesw.so "$dstdir"/lib/libcursesw.so
   ln -sf libncurses.so "$dstdir"/lib/libcurses.so
-
-  # compress the documentation
-  for doc in captoinfo clear infocmp infotocap ncursesw5-config reset tabs tic toe tput tset; do
-    compress_doc "$dstdir"/share/man/man1/$doc.1
-  done
-  compress_doc "$dstdir"/share/man/man3/*.3form
-  compress_doc "$dstdir"/share/man/man3/*.3menu
-  compress_doc "$dstdir"/share/man/man3/*.3ncurses
-  compress_doc "$dstdir"/share/man/man3/*.3curses
-  compress_doc "$dstdir"/share/man/man5/term.5
-  compress_doc "$dstdir"/share/man/man5/terminfo.5
-  compress_doc "$dstdir"/share/man/man7/term.7
-
-  update_linker_cache
 }

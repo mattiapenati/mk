@@ -22,9 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  for file in cmp diff diff3 sdiff; do
-    strip "$dstdir"/bin/$file
-    compress_doc "$dstdir"/share/man/man1/$file.1
-  done
-  compress_doc "$dstdir"/share/info/diffutils.info
 }

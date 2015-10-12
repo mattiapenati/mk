@@ -24,7 +24,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/lib/libssh2.so.?.?.?
-  compress_doc "$dstdir"/share/man/man3/libssh2_*.3
-  update_linker_cache
 }

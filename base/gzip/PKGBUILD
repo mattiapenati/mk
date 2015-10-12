@@ -22,8 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/gzip
-  compress_doc "$dstdir"/share/man/man1/{gunzip,gzip,gzexe}.1
-  compress_doc "$dstdir"/share/man/man1/z{less,force,grep,more,cmp,cat,diff,new}.1
-  compress_doc "$dstdir"/share/info/gzip.info
 }

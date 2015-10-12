@@ -22,8 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/{shar,unshar,uudecode,uuencode}
-  compress_doc "$dstdir"/share/info/$pkgname.info
-  compress_doc "$dstdir"/share/man/man1/{shar,unshar,uudecode,uuencode}.1
-  compress_doc "$dstdir"/share/man/man5/uuencode.5
 }

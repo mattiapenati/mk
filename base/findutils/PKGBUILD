@@ -24,7 +24,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  compress_doc "$dstdir"/share/info/find*.info
-  compress_doc "$dstdir"/share/man/man1/{find,xargs}.1
-  strip "$dstdir"/bin/{find,oldfind,xargs}
 }

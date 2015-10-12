@@ -24,12 +24,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  reset_rpath "$dstdir"/bin/{bsdcpio,bsdtar}
-  reset_rpath "$dstdir"/lib/libarchive.so.1$pkgver
-  strip "$dstdir"/bin/{bsdcpio,bsdtar}
-  strip "$dstdir"/liblibarchive.so.1$pkgver
-  compress_doc "$dstdir"/share/man/man1/{bsdcpio,bsdtar}.1
-  compress_doc "$dstdir"/share/man/man3/{,lib}archive*.3
-  compress_doc "$dstdir"/share/man/man5/{cpio,libarchive-formats,mtree,tar}.5
-  update_linker_cache
 }

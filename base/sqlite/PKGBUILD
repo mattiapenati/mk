@@ -22,8 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-autoconf-$pkgver install
-  strip "$dstdir"/bin/sqlite3
-  strip "$dstdir"/lib/libsqlite3.so.?.?.?
-  compress_doc "$dstdir"/share/man/man1/sqlite3.1
-  update_linker_cache
 }

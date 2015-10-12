@@ -22,8 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/lib/libmpc.so.?.?.?
-  reset_rpath "$dstdir"/lib/libmpc.so.?.?.?
-  compress_doc "$dstdir"/share/info/mpc.info
-  update_linker_cache
 }

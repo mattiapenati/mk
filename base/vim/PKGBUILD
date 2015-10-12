@@ -36,11 +36,6 @@ build() {
 package() {
   make -C $pkgname-$pkgver install
   make -C vimpager-$pagerver PREFIX="$dstdir" SYSCONFDIR="$dstdir"/etc install
-
-  reset_rpath "$dstdir"/bin/{vim,xxd}
-  strip "$dstdir"/bin/{vim,xxd}
-
-  sed -i "s:/usr/bin/nawk:$mkToolchainBase/bin/nawk:g" "$dstdir"/share/vim/vim74/tools/mve.awk
-
-  compress_doc "$dstdir"/share/man/man1/{evim,ex,rview,rvim,view,vim,vimdiff,vimtutor,xxd}.1
+  sed -i "s:/usr/bin/nawk:$mkToolchainBase/bin/nawk:g" \
+    "$dstdir"/share/vim/vim74/tools/mve.awk
 }

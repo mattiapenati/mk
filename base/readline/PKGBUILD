@@ -31,13 +31,7 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  install -dm 0755 "$dstdir"/etc
-  install -m 0644 "$srcdir"/inputrc "$dstdir"/etc/inputrc
-  rm -rf "$dstdir"/share/doc
-  compress_doc "$dstdir"/share/info/{history,readline,rluserman}.info
-  compress_doc "$dstdir"/share/man/man3/{history,readline}.3
-  chmod 0755 "$dstdir"/lib/lib{history,readline}.so.$pkgver
-  strip "$dstdir"/lib/lib{history,readline}.so.$pkgver
-  reset_rpath "$dstdir"/lib/lib{history,readline}.so.$pkgver
-  update_linker_cache
+
+  install -dm755 "$dstdir"/etc
+  install -m644 "$srcdir"/inputrc "$dstdir"/etc/inputrc
 }

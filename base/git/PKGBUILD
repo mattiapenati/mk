@@ -26,10 +26,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/locale
-
-  strip "$dstdir"/bin/git{,-receive-pack,-shell,-upload-archive,-upload-pack}
-
-  compress_doc "$dstdir"/share/man/man3/Git*.3perl
-  compress_doc "$dstdir"/share/man/man3/private-Error.3perl
 }

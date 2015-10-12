@@ -22,6 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/lua{,c}
-  compress_doc "$dstdir"/share/man/man1/lua{,c}.1
 }

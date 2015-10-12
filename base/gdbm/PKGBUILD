@@ -23,16 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  for exe in gdbm_dump gdbm_load gdbmtool; do
-    strip "$dstdir"/bin/$exe
-    reset_rpath "$dstdir"/bin/$exe
-    compress_doc "$dstdir"/share/man/man1/$exe.1
-  done
-  for lib in gdbm gdbm_compat; do
-    strip "$dstdir"/lib/lib$lib.so.?.?.?
-    reset_rpath "$dstdir"/lib/lib$lib.so.?.?.?
-  done
-  compress_doc "$dstdir"/share/info/$pkgname.info
-  compress_doc "$dstdir"/share/man/man3/$pkgname.3
-  update_linker_cache
 }

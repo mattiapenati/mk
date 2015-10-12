@@ -23,11 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/{gtk-,}doc
-  compress_doc "$dstdir"/share/man/man1/{xml2-config,xmlcatalog,xmllint}.1
-  compress_doc "$dstdir"/share/man/man3/libxml.3
-  reset_rpath "$dstdir"/bin/{xmllint,xmlcatalog}
-  strip "$dstdir"/bin/{xmllint,xmlcatalog}
-  reset_rpath "$dstdir"/lib/libxml2.so.$pkgver
-  strip "$dstdir"/lib/libxml2.so.$pkgver
 }

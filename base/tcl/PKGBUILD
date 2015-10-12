@@ -26,16 +26,6 @@ package() {
   ln -sfv tclsh${pkgver%.*} "$dstdir"/bin/tclsh
   ln -sfv libtcl${pkgver%.*}.so "$dstdir/lib/libtcl.so"
 
-  chmod -v 755 "$dstdir"/lib/libtcl${pkgver%.*}.so
-  strip "$dstdir"/bin/tclsh${pkgver%.*}
-  strip "$dstdir"/lib/libtcl${pkgver%.*}.so
-
-  compress_doc "$dstdir"/share/man/man1/tclsh.1
-  compress_doc "$dstdir"/share/man/man3/{TCL,Tcl}*.3
-  compress_doc "$dstdir"/share/man/man3/{attempt,}ck{alloc,realloc}.3
-  compress_doc "$dstdir"/share/man/man3/ckfree.3
-  compress_doc "$dstdir"/share/man/mann/*.n
-
   sed -e "s#$tmpdir/tcl$pkgver/unix#$dstdir/lib#" \
       -e "s#$tmpdir/tcl$pkgver#$dstdir/include#" \
       -i "$dstdir/lib/tclConfig.sh"
@@ -52,6 +42,4 @@ package() {
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver/generic#$dstdir/include#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver#$dstdir/include#" \
       -i "$dstdir/lib/$itclver/itclConfig.sh"
-
-  update_linker_cache
 }

@@ -21,6 +21,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver-stable install
-  strip "$dstdir"/lib/libevent{,_core,_extra,_openssl,_pthreads}-2.0.so.?.?.?
-  update_linker_cache
 }
