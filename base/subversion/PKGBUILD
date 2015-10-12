@@ -71,21 +71,5 @@ package() {
   site_packages=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
   echo "$dstdir"/lib/svn-python > "$site_packages"/subversion.pth
 
-  strip "$dstdir"/bin/svn{,admin,bench,dumpfilter,fsfs,look,mucc,rdump,serve,sync,version}
-  strip "$dstdir"/lib/libapr-${aprver%%.*}.so.0.${aprver#*.}
-  strip "$dstdir"/lib/libaprutil-${aprutilver%%.*}.so.0.${aprutilver#*.}
-  strip "$dstdir"/lib/libsvn_{client,delta,diff,fs,fs_fs,fs_util,fs_x,ra,ra_local,ra_svn,repos,subr,wc}-${pkgver%%.*}.so.0.0.0
-  strip "$dstdir"/lib/apr-util-1/apr_dbm_*.so
-
-  reset_rpath "$dstdir"/bin/svn{,admin,bench,dumpfilter,fsfs,look,mucc,rdump,serve,sync,version}
-  reset_rpath "$dstdir"/lib/libapr-${aprver%%.*}.so.0.${aprver#*.}
-  reset_rpath "$dstdir"/lib/libaprutil-${aprutilver%%.*}.so.0.${aprutilver#*.}
-  reset_rpath "$dstdir"/lib/libsvn_{client,delta,diff,fs,fs_fs,fs_util,fs_x,ra,ra_local,ra_svn,repos,subr,wc}-${pkgver%%.*}.so.0.0.0
-  reset_rpath "$dstdir"/lib/apr-util-1/apr_dbm_*.so
-
-  compress_doc "$dstdir"/share/man/man1/svn{,admin,dumpfilter,look,mucc,rdump,sync,version}.1
-  compress_doc "$dstdir"/share/man/man5/svnserve.conf.5
-  compress_doc "$dstdir"/share/man/man8/svnserve.8
-
   update_linker_cache
 }

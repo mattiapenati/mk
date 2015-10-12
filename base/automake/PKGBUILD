@@ -24,8 +24,9 @@ package() {
   make -C $pkgname-$pkgver install
   rm -f "$dstdir"/bin/aclocal; ln -sf aclocal-$pkgver "$dstdir"/bin/aclocal
   rm -f "$dstdir"/bin/automake; ln -sf automake-$pkgver "$dstdir"/bin/automake
-  rm -rf "$dstdir"/share/doc
-  compress_doc "$dstdir"/share/info/automake.info*
-  compress_doc "$dstdir"/share/info/automake-history.info*
-  compress_doc "$dstdir"/share/man/man1/{aclocal,automake}*.1
+  if [[ -d "$dstdir"/share/aclocal ]]; then
+    mv -v "$dstdir"/share/aclocal/* "$dstdir"/share/aclocal-$pkgver/
+    rmdir "$dstdir"/share/aclocal
+  fi
+  ln -svf aclocal-$pkgver "$dstdir"/share/aclocal
 }

@@ -23,15 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  reset_rpath "$dstdir"/bin/hwloc-{annotate,assembler,bind,calc,diff,distances,distrib,info,patch,ps}
-  reset_rpath "$dstdir"/bin/lstopo-no-graphics
-  reset_rpath "$dstdir"/lib/libhwloc.so.?.?.?
-  strip "$dstdir"/bin/hwloc-{annotate,assembler,bind,calc,diff,distances,distrib,info,patch,ps}
-  strip "$dstdir"/bin/lstopo-no-graphics
-  strip "$dstdir"/lib/libhwloc.so.?.?.?
-  rm -rf "$dstdir"/share/doc
-  compress_doc "$dstdir"/share/man/man1/{hwloc,lstopo}*.1
-  compress_doc "$dstdir"/share/man/man3/{HWLOC,hwloc}*.3
-  compress_doc "$dstdir"/share/man/man7/hwloc.7
-  update_linker_cache
 }

@@ -24,8 +24,5 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/grep
-  compress_doc "$dstdir"/share/man/man1/{e,f,}grep.1
-  compress_doc "$dstdir"/share/info/grep.info
 }
 

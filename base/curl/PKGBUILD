@@ -25,11 +25,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  reset_rpath "$dstdir"/bin/curl
-  reset_rpath "$dstdir"/lib/libcurl.so.?.?.?
-  strip "$dstdir"/bin/curl
-  strip "$dstdir"/lib/libcurl.so.?.?.?
-  compress_doc "$dstdir"/share/man/man1/curl{,-config}.1
-  compress_doc "$dstdir"/share/man/man3/{CURL,curl,libcurl}*.3
-  update_linker_cache
 }

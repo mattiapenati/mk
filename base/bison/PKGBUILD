@@ -4,6 +4,7 @@ pkgname=bison
 pkgver=3.0.4
 archive=$pkgname-$pkgver.tar.gz
 sum=ec1f2706a7cfedda06d29dc394b03e092a1e1b74
+
 dstdir=$mkToolchainBase
 
 build() {
@@ -22,8 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/doc
-  strip "$dstdir"/bin/bison
-  compress_doc "$dstdir"/share/man/man1/{bison,yacc}.1
-  compress_doc "$dstdir"/share/info/bison.info
 }

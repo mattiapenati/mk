@@ -33,18 +33,21 @@ build() {
 
 package() {
   make -C Python-$pkgver install
-  strip "$dstdir"/bin/python${pkgver%.*}
-  chmod 0755 "$dstdir"/lib/libpython${pkgver%.*}.so.?.?
-  strip "$dstdir"/lib/libpython${pkgver%.*}.so.?.?
-  compress_doc "$dstdir"/share/man/man1/python{,2,${pkgver%.*}}.1
-  update_linker_cache
+
+  # linker cache is not updated
+  export LD_LIBRARY_PATH="$dstdir"/lib
 
   # installing setuptools and pip
-  if [[ ! "$mkTest" = "no" ]]; then
-    export LD_LIBRARY_PATH="$dstdir"/lib
-  fi
   download https://bootstrap.pypa.io/ez_setup.py ez_setup.py
   "$dstdir"/bin/python ez_setup.py
   download https://bootstrap.pypa.io/get-pip.py get-pip.py
   "$dstdir"/bin/python get-pip.py
+
+  rm -vf "$dstdir"/bin/pip
+  rm -vf "$dstdir"/bin/pip${pkgver%%.*}
+  ln -svf pip${pkgver%.*} "$dstdir"/bin/pip${pkgver%%.*}
+  ln -svf pip${pkgver%%.*} "$dstdir"/bin/pip
+
+  rm -vf "$dstdir"/bin/easy_install
+  ln -svf easy_install-${pkgver%.*} "$dstdir"/bin/easy_install
 }

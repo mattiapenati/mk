@@ -24,8 +24,4 @@ build() {
 package() {
   make -C $pkgname-$pkgver install
   rm "$dstdir"/bin/gawk; ln -s gawk-$pkgver "$dstdir"/bin/gawk
-  strip "$dstdir"/lib/gawk/*.so "$dstdir"/libexec/awk/{grcat,pwcat}
-  compress_doc "$dstdir"/share/man/man1/{gawk,igawk}.1
-  compress_doc "$dstdir"/share/man/man3/{filefuncs,fnmatch,fork,inplace,ordchr,readdir,readfile,revoutput,revtwoway,rwarray,time}.3am
-  compress_doc "$dstdir"/share/info/{gawk,gawkinet}.info
 }

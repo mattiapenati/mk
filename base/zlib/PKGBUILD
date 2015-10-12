@@ -22,6 +22,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  compress_doc "$dstdir"/share/man/man3/zlib.3
-  update_linker_cache
 }

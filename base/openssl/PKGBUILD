@@ -24,17 +24,8 @@ build() {
 package() {
   # installing openssl
   make -C $pkgname-$pkgver MANDIR="$dstdir"/share/man MANSUFFIX=ssl install
-  strip "$dstdir"/bin/openssl; reset_rpath "$dstdir"/bin/openssl
-  chmod 0755 "$dstdir"/lib/lib{crypto,ssl}.so.?.?.?
-  strip "$dstdir"/lib/lib{crypto,ssl}.so.?.?.?
-  chmod 0755 "$dstdir"/lib/engines/*.so
-  strip "$dstdir"/lib/engines/*.so
   sed -i "1s:/usr/bin/perl:$(which perl):" "$dstdir"/bin/c_rehash
   sed -i "1s:/usr/bin/perl:$(which perl):" "$dstdir"/etc/ssl/misc/tsget
-  for i in 1 3 5 7; do
-    compress_doc "$dstdir"/share/man/man$i/*.${i}ssl
-  done
-  update_linker_cache
 
   # installing certificates
   if [[ ! "$mkTest" = "no" ]]; then

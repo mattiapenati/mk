@@ -35,31 +35,19 @@ package() {
   for pkgver in 2.13 2.54 2.69; do
     make -C $pkgname-$pkgver install
 
-    mv -f "$dstdir"/share/autoconf{,-$pkgver}
-    mv -f "$dstdir"/share/info/autoconf{,-$pkgver}.info
-    compress_doc "$dstdir"/share/info/autoconf-$pkgver.info
-    mv -f "$dstdir"/share/info/standards{,-$pkgver}.info
-    compress_doc "$dstdir"/share/info/standards-$pkgver.info
-    for exe in autoconf autoheader autom4te autoreconf autoscan autoupdate ifnames; do
-      if [[ -e "$dstdir"/bin/$exe-$pkgver ]]; then
-        strip "$dstdir"/bin/$exe-$pkgver
-      fi
-    done
-    for doc in autoconf autoheader autom4te autoreconf autoscan autoupdate config.guess config.sub ifnames; do
-      if [[ -e "$dstdir"/share/man/man1/$doc-$pkgver.1 ]]; then
-        compress_doc "$dstdir"/share/man/man1/$doc-$pkgver.1
-      fi
-    done
+    mv -vf "$dstdir"/share/autoconf{,-$pkgver}
+    mv -vf "$dstdir"/share/info/autoconf{,-$pkgver}.info
+    mv -vf "$dstdir"/share/info/standards{,-$pkgver}.info
   done
 
   # link to the last version
-  ln -sf autoconf-2.69 "$dstdir"/share/autoconf
-  ln -sf autoconf-$pkgver.info.gz "$dstdir"/share/info/autoconf.info.gz
-  ln -sf standards-$pkgver.info.gz "$dstdir"/share/info/standards.info.gz
+  ln -vsf autoconf-2.69 "$dstdir"/share/autoconf
+  ln -vsf autoconf-$pkgver.info "$dstdir"/share/info/autoconf.info
+  ln -vsf standards-$pkgver.info "$dstdir"/share/info/standards.info
   for exe in autoconf autoheader autom4te autoreconf autoscan autoupdate ifnames; do
-    ln -sf $exe-2.69 "$dstdir"/bin/$exe
+    ln -vsf $exe-2.69 "$dstdir"/bin/$exe
   done
   for doc in autoconf autoheader autom4te autoreconf autoscan autoupdate config.guess config.sub ifnames; do
-    ln -sf $doc-$pkgver.1.gz "$dstdir"/share/man/man1/$doc.1.gz
+    ln -vsf $doc-$pkgver.1 "$dstdir"/share/man/man1/$doc.1
   done
 }

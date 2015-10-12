@@ -25,7 +25,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/make
-  compress_doc "$dstdir"/share/man/man1/$pkgname.1
-  compress_doc "$dstdir"/share/info/$pkgname.info*
 }

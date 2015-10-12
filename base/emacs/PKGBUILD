@@ -24,9 +24,6 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-
-  rm -rf "$dstdir"/share/{applications,icons}
-  strip "$dstdir"/bin/{ctags,ebrowse,emacs-24.5,emacsclient,etags}
-
-  sed -i "s:/usr/bin/perl:$mkToolchainBase/bin/perl:g" "$dstdir"/bin/grep-changelog
+  sed -i "s:/usr/bin/perl:$mkToolchainBase/bin/perl:" \
+    "$dstdir"/bin/grep-changelog
 }

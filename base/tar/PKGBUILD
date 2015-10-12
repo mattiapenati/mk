@@ -23,7 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/{bin/tar,libexec/rmt}
-  compress_doc "$dstdir"/share/info/tar.info*
-  compress_doc "$dstdir"/share/man/{man1/tar.1,man8/rmt.8}
 }

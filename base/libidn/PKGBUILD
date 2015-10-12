@@ -23,11 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  reset_rpath "$dstdir"/bin/idn
-  strip "$dstdir"/bin/idn
-  strip "$dstdir"/lib/libidn.so.?.?.?
-  compress_doc "$dstdir"/share/man/man1/idn.1
-  compress_doc "$dstdir"/share/man/man3/{idn,pr29,punycode,stringprep,tld}*.3
-  compress_doc "$dstdir"/share/info/libidn.info
-  update_linker_cache
 }

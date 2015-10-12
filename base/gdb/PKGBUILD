@@ -33,16 +33,8 @@ package() {
   install -dm755 "$dstdir"/etc/gdb
   touch "$dstdir"/etc/gdb/gdbinit
 
-  strip "$dstdir"/bin/{gdb,gdbserver}
-  strip "$dstdir"/lib/libinproctrace.so
-
+  # remove the files already installed in the toolchains
   rm -vf "$dstdir"/include/{ansidecl,bfd,bfdlink,dis-asm,plugin-api,symcat}.h
   rm -vf "$dstdir"/lib/{libbfd,libopcodes}.{l,}a
   rm -vf "$dstdir"/share/info/bfd.info
-
-  compress_doc "$dstdir"/share/info/{annotate,gdb,stabs}.info*
-  compress_doc "$dstdir"/share/man/man1/{gcore,gdb,gdbserver}.1
-  compress_doc "$dstdir"/share/man/man5/gdbinit.5
-
-  update_linker_cache
 }

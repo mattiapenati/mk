@@ -23,13 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/doc
-  reset_rpath "$dstdir"/bin/{lzmainfo,lzmadec,xz,xzdec}
-  strip "$dstdir"/bin/{lzmainfo,lzmadec,xz,xzdec}
-  strip "$dstdir"/lib/liblzma.so.$pkgver
-  compress_doc "$dstdir"/share/man/man1/{lz,xz}{cat,cmp,diff,egrep,fgrep,grep,less,more}.1
-  compress_doc "$dstdir"/share/man/man1/lzma{,dec,info}.1
-  compress_doc "$dstdir"/share/man/man1/xz{,dec}.1
-  compress_doc "$dstdir"/share/man/man1/un{xz,lzma}.1
-  update_linker_cache
 }

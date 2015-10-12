@@ -26,9 +26,5 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/doc
   rm -f "$dstdir"/share/man/man1/cmake-gui.1
-  strip "$dstdir"/bin/{ccmake,cmake,cpack,ctest}
-  compress_doc "$dstdir"/share/man/man1/{ccmake,cmake,cpack,ctest}.1
-  compress_doc "$dstdir"/share/man/man7/cmake-*.7
 }

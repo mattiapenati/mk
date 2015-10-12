@@ -32,20 +32,21 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  ln -sf  "$dstdir"/lib/perl5/$pkgver/$ARCH-$OS-thread-multi/CORE/libperl.so "$dstdir"/lib
-  rm -f "$dstdir"/bin/perl; ln -sf perl$pkgver "$dstdir"/bin/perl
-  reset_rpath "$dstdir"/bin/perl$pkgver
-  reset_rpath "$dstdir"/lib/perl5/$pkgver/$ARCH-$OS-thread-multi/auto/*/*.so
-  reset_rpath "$dstdir"/lib/perl5/$pkgver/$ARCH-$OS-thread-multi/auto/*/*/*.so
-  compress_doc "$dstdir"/share/man/man{1,3}/*.?perl
+
+  # fix some files
+  ln -vsf perl5/$pkgver/$ARCH-$OS-thread-multi/CORE/libperl.so "$dstdir"/lib/libperl.so
+  rm -vf "$dstdir"/bin/perl; ln -sf perl$pkgver "$dstdir"/bin/perl
+
+  # fix shebang
   sed -i "s:/usr/bin/perl:$dstdir/bin/perl:" \
     "$dstdir"/lib/perl5/$pkgver/Math/BigInt/Trace.pm
   sed -i "s:/usr/bin/perl:$dstdir/bin/perl:" \
     "$dstdir"/lib/perl5/$pkgver/Math/BigFloat/Trace.pm
+
   if [[ "$mkTest" = "no" ]]; then
     if [[ -e "$mkToolchainPrefix"/bin/mtrace ]]; then
-      sed -i "1s:/usr/bin/perl:$mkToolchainBase/bin/perl:" "$mkToolchainPrefix"/bin/mtrace
+      sed -i "1s:/usr/bin/perl:$mkToolchainBase/bin/perl:" \
+        "$mkToolchainPrefix"/bin/mtrace
     fi
   fi
-  update_linker_cache
 }

@@ -76,3 +76,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) patchelf
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) pax-utils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) unrar
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags)

@@ -4,6 +4,7 @@ pkgname=flex
 pkgver=2.5.39
 archive=$pkgname-$pkgver.tar.gz
 sum=40866373afd3ab88a7f7fe26c9b27b035aa1f2a9
+
 dstdir=$mkToolchainBase
 
 build() {
@@ -21,9 +22,7 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -rf "$dstdir"/share/doc
+
+  # remove unused libraries
   rm -f "$dstdir"/lib/libfl_pic.{a,la}
-  strip "$dstdir"/bin/flex
-  compress_doc "$dstdir"/share/man/man1/flex.1
-  compress_doc "$dstdir"/share/info/flex.*
 }

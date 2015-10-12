@@ -24,13 +24,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver/build_unix install
-  rm -rf "$dstdir"/docs
-  strip "$dstdir"/lib/lib{db,db_cxx}-${pkgver%.*}.so
-  reset_rpath "$dstdir"/lib/libdb_cxx-${pkgver%.*}.so
-  for exe in archive checkpoint deadlock dump hotbackup load log_verify printlog recover replicate stat tuner upgrade verify; do
-    chmod 755 "$dstdir"/bin/db_$exe
-    strip "$dstdir"/bin/db_$exe
-    reset_rpath "$dstdir"/bin/db_$exe
-  done
-  update_linker_cache
 }

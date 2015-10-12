@@ -21,8 +21,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/bin/xmlwf; reset_rpath "$dstdir"/bin/xmlwf
-  strip "$dstdir"/lib/libexpat.so.?.?.?
-  compress_doc "$dstdir"/share/man/man1/xmlwf.1
-  update_linker_cache
 }

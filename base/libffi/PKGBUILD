@@ -27,8 +27,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  strip "$dstdir"/lib/libffi.so.?.?.?
-  compress_doc "$dstdir"/share/info/libffi.info
-  compress_doc "$dstdir"/share/man/man3/ffi{,_call,_prep_cif,_prep_cif_var}.3
-  update_linker_cache
 }
