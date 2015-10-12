@@ -222,18 +222,17 @@ pushd $pkgname-$pkgver
   make ARCH=$(uname -m) prefix=$TMPDIR install
 popd
 
-# install the administration tools: patchelf, bash, busybox
+# install the administration tools: chrpath, bash, busybox
 # =============================================================================
-pkgname=patchelf
-pkgver=$patchelf_version
-download https://github.com/NixOS/$pkgname/archive/$pkgver.tar.gz
-extract $pkgver.tar.gz
+pkgname=chrpath
+pkgver=$chrpath_version
+download https://alioth.debian.org/frs/download.php/latestfile/813/$pkgname-$pkgver.tar.gz
+extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  ./bootstrap.sh
-  CFLAGS="-Os" LDFLAGS="-static -static-libgcc -static-libstdc++" ./configure
+  CFLAGS="-Os" LDFLAGS="-static" ./configure
   make
-  strip --strip-unneeded src/patchelf
-  install -vm 0755 src/patchelf $PREFIX/bin/patchelf
+  strip --strip-unneeded chrpath
+  install -vm 0755 chrpath $PREFIX/bin/chrpath
 popd
 
 pkgname=bash

@@ -246,6 +246,9 @@ dependencies:
   patchelf: autoconf
     A small utility to modify the dynamic linker and RPATH of ELF executables.
 
+  chrpath: no dependencies
+    Command line tool to adjust the RPATH or RUNPATH of ELF binaries.
+
   pax-utils: python
     ELF related utils for ELF 32/64 binaries that can check files for security
     relevant properties.

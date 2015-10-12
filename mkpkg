@@ -600,7 +600,7 @@ reset_rpath_() {
     case $filetype in
       executable | library )
         log "Reset the RAPTH of '$file'"
-        "$mkPrefix"/bin/patchelf --set-rpath "" $file
+        "$mkPrefix"/bin/chrpath --delete $file
         ;;
       none) ;;
       *) error "Internal error"; exit 1

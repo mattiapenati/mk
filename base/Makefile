@@ -74,6 +74,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) valgrind
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openmpi
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) patchelf
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) chrpath
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) pax-utils
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) unrar
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags)
