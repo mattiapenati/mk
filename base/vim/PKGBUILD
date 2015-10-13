@@ -23,7 +23,8 @@ build() {
                 --enable-cscope --disable-netbeans --disable-workshop \
                 --enable-perlinterp --enable-pythoninterp \
                 --disable-python3interp --enable-tclinterp \
-                --enable-luainterp --with-lua-prefix="$mkToolchainBase"
+                --with-tclsh=$(which tclsh) --enable-luainterp \
+                --with-lua-prefix="$mkToolchainBase"
     message "Compiling $pkgname"
     make
   popd
