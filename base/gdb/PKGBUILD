@@ -18,6 +18,7 @@ build() {
     fi
     message "Configuring $pkgname"
     ./configure --build=$TARGET --prefix="$dstdir" --disable-nls \
+                --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL" \
                 --with-system-gdbinit="$dstdir"/etc/gdb/gdbinit \
                 --with-system-zlib --with-system-readline \
                 --with-python=$(which python)
