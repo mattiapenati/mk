@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=git
-pkgver=2.6.1
+pkgver=2.6.4
 archive=$pkgname-$pkgver.tar.xz
-sum=ec6608e91e8969d58e5755b998fa9d73da44675d
+sum=aa38f1a026add0d840049abd0040ad2938c113e8
 dstdir=$mkToolchainBase
 
 build() {

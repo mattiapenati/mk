@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=perl
-pkgver=5.22.0
+pkgver=5.22.1
 archive=$pkgname-$pkgver.tar.gz
-sum=e4c9e40d18efa7368e77343e0fd3339ca87e34f8
+sum=105fe2515cb6e7d22e583336f93823d7407b9359
 
 dstdir=$mkToolchainBase
 

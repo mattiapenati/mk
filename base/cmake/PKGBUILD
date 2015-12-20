@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=cmake
-pkgver=3.3.2
+pkgver=3.4.1
 archive=$pkgname-$pkgver.tar.gz
-sum=85f4debf7406bb2a436a302bfd51ada2b4e43719
+sum=345258f3fdb8609e5c021c1d70490010ae3cb9bc
 
 dstdir=$mkToolchainBase
 

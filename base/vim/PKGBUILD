@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=vim
-pkgver=7.4.891
+pkgver=7.4.979
 archive=v$pkgver.tar.gz
-sum=790b5372c74b9fce43c391a70c4c4043c6d270c0
+sum=14fe9117408bcf90f35845a3ebc20814462165c4
 dstdir=$mkToolchainBase
 
 pagerver=2.06
