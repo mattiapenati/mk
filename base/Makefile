@@ -10,6 +10,7 @@ clean:
 	@rm -vf */*.{tar.{bz2,gz,xz},zip,tgz}
 	@find . -name \*.log -exec rm -v '{}' \;
 	@rm -vf readline/readline??-???
+	@rm -vf openssl/certdata.txt
 
 install:
 	test -n "${mkToolchainBase}" && test -d "${mkToolchainBase}"
