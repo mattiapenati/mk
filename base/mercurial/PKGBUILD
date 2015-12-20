@@ -4,7 +4,8 @@ dstdir=$mkToolchainBase
 
 package() {
   pip install --install-option="--prefix=$dstdir" mercurial
-  pip install --install-option="--prefix=$dstdir" --pre hgsubversion
+  SVN_PREFIX=$mkToolchainBase pip install --install-option="--prefix=$dstdir" subvertpy
+  pip install --install-option="--prefix=$dstdir" hg+https://mattiapenati@bitbucket.org/durin42/hgsubversion
   pip install --install-option="--prefix=$dstdir" hg-git
 
   # mercurial configuration file with svn and git extensions
