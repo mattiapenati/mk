@@ -96,7 +96,7 @@ usage() {
 }
 
 version() {
-  echo "bootstrap script for mk"
+  echo "bootstrap script for mk (version $mk_version)"
 }
 
 # optional flags (default values)
