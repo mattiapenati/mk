@@ -496,7 +496,6 @@ make() {
 compress_doc() {
   local file=
   for file in $@; do
-    # this remove the trailing / if any
     if [[ ! $file = *.gz ]]; then
       if [[ -f $file ]]; then
         log "Compressing '$file'"

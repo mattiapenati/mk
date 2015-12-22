@@ -36,10 +36,10 @@ if [[ $(tput colors 2> /dev/null) -ge 8 ]]; then
   alias grep='grep --color=auto'
   alias ls='ls --color=auto'
   alias less='less -r'
-  export LMOD_COLORIZE=yes
+  export LMOD_COLORIZE=YES
 else
   export PS1='\u@\h \W \$ '
-  export LMOD_COLORIZE=no
+  export LMOD_COLORIZE=NO
 fi
 
 
