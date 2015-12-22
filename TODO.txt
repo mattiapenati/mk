@@ -1,3 +1,12 @@
  * updating the bootstrap, using busybox-1.24.1 and lua-5.3.2
  * fix pax-utils, lddtree does not work properly
- * fftw package
+ * boost package
+ * metis package
+ * suitesparse package (openblas + metis)
+ * scipy stack package
+    * numpy (openblas + suitesparse + fftw)
+    * scipy (numpy)
+    * ipython
+    * pandas
+    * sympy
+    * nose
