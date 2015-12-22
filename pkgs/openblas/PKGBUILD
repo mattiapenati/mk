@@ -1,0 +1,74 @@
+#!/bin/bash
+
+pkgname=openblas
+pkgver=0.2.15
+archive=v$pkgver.tar.gz
+sum=ce9c5243b43bced4eb61a3971dc9eb2059c331ca
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+build() {
+  download https://github.com/xianyi/OpenBLAS/archive/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd OpenBLAS-$pkgver
+    make clean
+    message "Compiling $pkgname"
+    make USE_THREAD=1 USE_OPENMP=0 DYNAMIC_ARCH=1 libs netlib shared
+    cc -o openblas_corename $srcdir/openblas_corename.c cpuid.S cpuid_x86.c
+    cc -o openblas_numcores $srcdir/openblas_numcores.c cpuid.S cpuid_x86.c
+  popd
+
+}
+
+package() {
+  install -vd -m 0755 $dstdir/{bin,include,lib}
+  make -C OpenBLAS-$pkgver install PREFIX=$dstdir
+  install -v -m 0755 OpenBLAS-$pkgver/openblas_corename $dstdir/bin
+  install -v -m 0755 OpenBLAS-$pkgver/openblas_numcores $dstdir/bin
+
+  # removing the static libraries
+  rm -vrf $dstdir/lib/*.a
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("OpenBLAS is an optimized BLAS library based on GotoBLAS2.")
+help([[
+This module provides an optimized implementation of the BLAS and LAPACK
+libraries, it is both multithreaded and optimized for multiple platforms.
+For using OpenBLAS library you should use the linker flags:
+  -L\$mkOpenblasLib -lopenblas
+By default the library run in single-thread mode, but you can set the number of
+threads for the multi-thread mode using the proper environment variable:
+  export OPENBLAS_NUM_THREADS=4
+or using the proper function to control the number of threads at runtime
+  void openblas_set_num_threads(int num_threads);
+Loading this module two utility commands are provided:
+  openblas_corename - Return the name of the current architecture
+  openblas_numcores - Return the number of physical cores of cpu
+These command can be used to set the optimal value of the OPENBLAS_NUM_THREADS
+variable for your architecture:
+  export OPENBLAS_NUM_THREADS=\$(openblas_numcores)
+]])
+
+setenv("mkOpenblasPrefix", "$dstdir")
+setenv("mkOpenblasLib", "$dstdir/lib")
+setenv("mkOpenblasInc", "$dstdir/include")
+
+prepend_path("PATH", "$dstdir/bin")
+prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+
+if (mode() == "load") then
+  local corename = capture("$dstdir/bin/openblas_corename")
+  local numcores = capture("$dstdir/bin/openblas_numcores")
+
+  setenv("mkOpenblasCorename", corename)
+  setenv("mkOpenblasNumcores", numcores)
+
+  setenv("OPENBLAS_NUM_THREADS", 1)
+end
+EOF
+  fi
+}
