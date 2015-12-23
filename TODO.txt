@@ -10,3 +10,5 @@
     * pandas
     * sympy
     * nose
+ * hdf5 package (scipy)
+ * qhull package

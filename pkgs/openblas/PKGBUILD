@@ -27,6 +27,9 @@ package() {
   install -v -m 0755 OpenBLAS-$pkgver/openblas_corename $dstdir/bin
   install -v -m 0755 OpenBLAS-$pkgver/openblas_numcores $dstdir/bin
 
+  strip $dstdir/bin
+  strip $dstdir/lib
+
   # removing the static libraries
   rm -vrf $dstdir/lib/*.a
 
