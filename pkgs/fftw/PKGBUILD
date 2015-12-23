@@ -43,6 +43,7 @@ build() {
 }
 
 package() {
+  install -vd $dstdir
   pushd dstdir/$dstdir
     tar -cf - . | (cd $dstdir && tar -xf -)
   popd
@@ -51,8 +52,10 @@ package() {
   compress_doc $dstdir/share/info
 
   reset_rpath $dstdir/bin/fftw{,f,l}-wisdom
-
   reset_rpath $dstdir/lib/libfftw3{,f,l}_{mpi,threads}.so.?.?.?
+
+  strip $dstdir/bin
+  strip $dstdir/lib
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
