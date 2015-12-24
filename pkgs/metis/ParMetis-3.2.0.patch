@@ -1,0 +1,116 @@
+diff -Naur a/METISLib/Makefile b/METISLib/Makefile
+--- a/METISLib/Makefile	2009-06-29 22:24:30.000000000 +0200
++++ b/METISLib/Makefile	2015-12-24 16:35:37.764691570 +0100
+@@ -1,9 +1,5 @@
+ include ../Makefile.in
+ 
+-
+-CFLAGS = $(COPTIONS) $(OPTFLAGS) -I. $(INCDIR)
+-
+-
+ OBJS = coarsen.o fm.o initpart.o match.o ccgraph.o \
+        pmetis.o pqueue.o refine.o util.o timing.o debug.o \
+        bucketsort.o graph.o stat.o kmetis.o kwayrefine.o \
+@@ -16,18 +12,17 @@
+        kvmetis.o kwayvolrefine.o kwayvolfm.o subdomains.o \
+        mfm.o memory.o mrefine.o checkgraph.o 
+ 
+-.c.o:
+-	$(CC) $(CFLAGS) -c $*.c
++%.o: %.c
++	$(CC) -fPIC -I. $(CFLAGS) -c $<
+ 
+-../libmetis.a: $(OBJS)
+-	$(AR) $@ $(OBJS)
+-	$(RANLIB) $@
++../libmetis.so: $(OBJS)
++	$(CC) $(OBJS) -lm -shared -o $@ -Wl,-soname,libmetis.so.4
+ 
+ clean:
+ 	rm -f *.o 
+ 
+ realclean:
+-	rm -f *.o ; rm -f ../libmetis.a
++	rm -f *.o ; rm -f ../libmetis.so
+ 
+ 
+ checkin:
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2007-03-19 19:00:38.000000000 +0100
++++ b/Makefile	2015-12-24 16:38:30.714916827 +0100
+@@ -3,25 +3,20 @@
+ default:
+ 	(cd METISLib ; make ) 
+ 	(cd ParMETISLib ; make ) 
+-	(cd Programs ; make ) 
+ 
+ clean:
+ 	(cd METISLib ; make clean )
+ 	(cd ParMETISLib ; make clean )
+-	(cd Programs ; make clean )
+ 
+ realclean:
+ 	(cd METISLib ; make realclean )
+ 	(cd ParMETISLib ; make realclean )
+-	(cd Programs ; make realclean )
+ 
+ 
+ checkin:
+ 	(cd METISLib ; make checkin )
+ 	(cd ParMETISLib ; make checkin )
+-	(cd Programs ; make checkin )
+ 
+ checkin2:
+ 	(cd METISLib ; make checkin2 )
+ 	(cd ParMETISLib ; make checkin2 )
+-	(cd Programs ; make checkin2 )
+diff -Naur a/ParMETISLib/Makefile b/ParMETISLib/Makefile
+--- a/ParMETISLib/Makefile	2011-03-28 18:17:37.000000000 +0200
++++ b/ParMETISLib/Makefile	2015-12-24 16:36:58.733392551 +0100
+@@ -1,9 +1,5 @@
+ include ../Makefile.in
+ 
+-
+-CFLAGS = $(COPTIONS) $(OPTFLAGS) -I. $(INCDIR)
+-
+-
+ OBJS = comm.o util.o debug.o setup.o grsetup.o timer.o \
+        node_refine.o initmsection.o \
+        xyzpart.o pspases.o frename.o \
+@@ -18,19 +14,18 @@
+        selectq.o akwayfm.o serial.o move.o \
+        mmetis.o mesh.o memory.o weird.o backcompat.o 
+ 
+-.c.o:
+-	$(CC) $(CFLAGS) -c $*.c
++%.o: %.c
++	$(CC) -fPIC -I. $(CFLAGS) -c $<
+ 
+ 
+-../libparmetis.a: $(OBJS)
+-	$(AR) $@ $(OBJS)
+-	$(RANLIB) $@
++../libparmetis.so: $(OBJS)
++	$(CC) $(OBJS) -lm -L.. -lmetis -shared -o $@ -Wl,-soname,libparmetis.so.3
+ 
+ clean:
+ 	rm -f *.o 
+ 
+ realclean:
+-	rm -f *.o ; rm -f ../libparmetis.a
++	rm -f *.o ; rm -f ../libparmetis.so
+ 
+ 
+ checkin:
+diff -Naur a/Programs/Makefile b/Programs/Makefile
+--- a/Programs/Makefile	2011-04-06 00:18:53.000000000 +0200
++++ b/Programs/Makefile	2015-12-24 16:37:35.378804627 +0100
+@@ -9,7 +9,7 @@
+ 
+ LIBSDIR = -L.. $(LIBDIR) 
+ LIBS = -lparmetis -lmetis $(XTRALIBS) -lm
+-PARMETISLIB = ../libparmetis.a ../libmetis.a
++PARMETISLIB = ../libparmetis.so ../libmetis.so
+ 
+ 
+ PTESTOBJS = ptest.o io.o adaptgraph.o 

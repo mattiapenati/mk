@@ -34,10 +34,13 @@ package() {
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
     cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
 whatis("Widely used C++ template library for task parallelism.")
 help([[
-The TBB library are installed in "\$mkTbbPrefix" directory, the dynamic
-libraries are located in "\$mkTbbLib" directory and headers files in "\$mkTbbInc".
+The TBB library is installed in "\$mkTbbPrefix" directory, the dynamic libraries
+are located in "\$mkTbbLib" directory and headers files in "\$mkTbbInc".
+
+url: https://www.threadingbuildingblocks.org/
 ]])
 
 setenv("mkTbbPrefix", "$dstdir")

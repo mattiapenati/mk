@@ -54,6 +54,8 @@ Loading this module two utility commands are provided:
 These command can be used to set the optimal value of the OPENBLAS_NUM_THREADS
 variable for your architecture:
   export OPENBLAS_NUM_THREADS=\$(openblas_numcores)
+
+url: http://www.openblas.net/
 ]])
 
 setenv("mkOpenblasPrefix", "$dstdir")
