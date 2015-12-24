@@ -71,6 +71,8 @@ should be used:
   -I$dstdir/include
   $ pkg-config --libs fftw3
   -L$dstdir/lib -lfftw3
+
+url: http://www.fftw.org/
 ]])
 
 setenv("mkFftwPrefix", "$dstdir")
