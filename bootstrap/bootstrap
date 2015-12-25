@@ -169,7 +169,7 @@ if [[ -d $PREFIX ]]; then
   # directory is not empty
   elif [[ -n "$(ls -A $PREFIX)" ]]; then
     if prompt "Directory '$PREFIX' is not empty. Do you want to remove its content?"; then
-      rm -vrf $PREFIX/*
+      rm -rf $PREFIX/*
     else
       echo "Aborting..."; exit 1
     fi
