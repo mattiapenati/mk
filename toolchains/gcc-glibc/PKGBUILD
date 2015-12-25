@@ -238,6 +238,12 @@ run() {
              ;;
   esac
 
+  # fix CFLAGS and CXXFLAGS environment variables
+  # `-DNDEBUG` disables the assertions, but it generates some warnings in GCC
+  # and Glibc, such warnings are treated as errors.
+  export CFLAGS=`echo "$CFLAGS" | sed "s/-DNDEBUG //g"`
+  export CXXFLAGS=`echo "$CXXFLAGS" | sed "s/-DNDEBUG //g"`
+
   # compile the build dependecies
   message "Installing M4"
   pushd $m4dir
