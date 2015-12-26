@@ -1,25 +1,32 @@
 diff -Naur a/METISLib/Makefile b/METISLib/Makefile
---- a/METISLib/Makefile	2009-06-29 22:24:30.000000000 +0200
-+++ b/METISLib/Makefile	2015-12-24 16:35:37.764691570 +0100
-@@ -1,9 +1,5 @@
+--- a/METISLib/Makefile	2009-06-29 20:24:30.000000000 +0000
++++ b/METISLib/Makefile	2015-12-26 13:26:41.465916372 +0000
+@@ -1,33 +1,19 @@
  include ../Makefile.in
  
--
--CFLAGS = $(COPTIONS) $(OPTFLAGS) -I. $(INCDIR)
--
--
- OBJS = coarsen.o fm.o initpart.o match.o ccgraph.o \
-        pmetis.o pqueue.o refine.o util.o timing.o debug.o \
-        bucketsort.o graph.o stat.o kmetis.o kwayrefine.o \
-@@ -16,18 +12,17 @@
-        kvmetis.o kwayvolrefine.o kwayvolfm.o subdomains.o \
-        mfm.o memory.o mrefine.o checkgraph.o 
++SRCS=$(wildcard *.c)
++OBJS=$(SRCS:.c=.o)
  
--.c.o:
--	$(CC) $(CFLAGS) -c $*.c
+-CFLAGS = $(COPTIONS) $(OPTFLAGS) -I. $(INCDIR)
 +%.o: %.c
 +	$(CC) -fPIC -I. $(CFLAGS) -c $<
  
+-
+-OBJS = coarsen.o fm.o initpart.o match.o ccgraph.o \
+-       pmetis.o pqueue.o refine.o util.o timing.o debug.o \
+-       bucketsort.o graph.o stat.o kmetis.o kwayrefine.o \
+-       kwayfm.o balance.o ometis.o srefine.o sfm.o separator.o \
+-       mincover.o mmd.o mesh.o meshpart.o frename.o fortran.o \
+-       myqsort.o compress.o parmetis.o estmem.o \
+-       mpmetis.o mcoarsen.o mmatch.o minitpart.o mbalance.o \
+-       mutil.o mkmetis.o mkwayrefine.o mkwayfmh.o \
+-       mrefine2.o minitpart2.o mbalance2.o mfm2.o \
+-       kvmetis.o kwayvolrefine.o kwayvolfm.o subdomains.o \
+-       mfm.o memory.o mrefine.o checkgraph.o 
+-
+-.c.o:
+-	$(CC) $(CFLAGS) -c $*.c
+-
 -../libmetis.a: $(OBJS)
 -	$(AR) $@ $(OBJS)
 -	$(RANLIB) $@
@@ -36,8 +43,8 @@ diff -Naur a/METISLib/Makefile b/METISLib/Makefile
  
  checkin:
 diff -Naur a/Makefile b/Makefile
---- a/Makefile	2007-03-19 19:00:38.000000000 +0100
-+++ b/Makefile	2015-12-24 16:38:30.714916827 +0100
+--- a/Makefile	2007-03-19 18:00:38.000000000 +0000
++++ b/Makefile	2015-12-26 13:26:04.372486403 +0000
 @@ -3,25 +3,20 @@
  default:
  	(cd METISLib ; make ) 
@@ -65,8 +72,8 @@ diff -Naur a/Makefile b/Makefile
  	(cd ParMETISLib ; make checkin2 )
 -	(cd Programs ; make checkin2 )
 diff -Naur a/ParMETISLib/Makefile b/ParMETISLib/Makefile
---- a/ParMETISLib/Makefile	2011-03-28 18:17:37.000000000 +0200
-+++ b/ParMETISLib/Makefile	2015-12-24 16:36:58.733392551 +0100
+--- a/ParMETISLib/Makefile	2011-03-28 16:17:37.000000000 +0000
++++ b/ParMETISLib/Makefile	2015-12-26 13:26:04.372486403 +0000
 @@ -1,9 +1,5 @@
  include ../Makefile.in
  
@@ -103,8 +110,8 @@ diff -Naur a/ParMETISLib/Makefile b/ParMETISLib/Makefile
  
  checkin:
 diff -Naur a/Programs/Makefile b/Programs/Makefile
---- a/Programs/Makefile	2011-04-06 00:18:53.000000000 +0200
-+++ b/Programs/Makefile	2015-12-24 16:37:35.378804627 +0100
+--- a/Programs/Makefile	2011-04-05 22:18:53.000000000 +0000
++++ b/Programs/Makefile	2015-12-26 13:26:04.372486403 +0000
 @@ -9,7 +9,7 @@
  
  LIBSDIR = -L.. $(LIBDIR) 
