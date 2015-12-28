@@ -4,13 +4,11 @@
 
  * blacs package
  * scalapack package
- * scotch package
 
  * suitesparse package (openblas + metis)
  * mumps package (openblas + blacs + scalapack + scotch)
  * superlu package (openblas + metis)
- * pardiso package
- * pastix package
+ * pastix package (openblas + metis + scotch)
 
  * boost package
  * qhull package
