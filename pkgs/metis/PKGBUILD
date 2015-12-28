@@ -25,9 +25,9 @@ build() {
   extract $parmetisarchive
 
   pushd ParMetis-$parmetisver
-    [[ -r $srcdir/ParMetis-$parmetisver.patch ]] && \
-      patch -p1 -i $srcdir/ParMetis-$parmetisver.patch
-    # the included version of METIS has a bug
+    [[ -r $srcdir/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i $srcdir/$pkgname-$pkgver.patch
+    # the included version of METIS has a bug, is replaced by the standalone one
     rm -v METISLib/*.{c,h}
     cp -v ../metis-$metisver/Lib/*.{c,h} METISLib/
     message "Compiling parmetis"
