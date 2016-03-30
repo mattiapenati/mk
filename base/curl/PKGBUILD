@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=curl
-pkgver=7.46.0
+pkgver=7.47.1
 archive=$pkgname-$pkgver.tar.gz
-sum=7775b7f79e820d50a86f0dbe59c7afe766129e8a
+sum=09952f607522e39b82a72c604df276255cdb9918
 
 dstdir=$mkToolchainBase
 

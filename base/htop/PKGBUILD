@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=htop
-pkgver=1.0.3
+pkgver=2.0.1
 archive=$pkgname-$pkgver.tar.gz
-sum=261492274ff4e741e72db1ae904af5766fc14ef4
+sum=ef9adab68b0218a16936c306f635e7fce227b7e6
 
 dstdir=$mkToolchainBase
 
@@ -15,7 +15,7 @@ build() {
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
     ./configure --build=$TARGET --prefix="$dstdir" \
-                --enable-unicode --enable-native-affinity
+                --enable-unicode --enable-linux-affinity
     message "Compiling $pkgname"
     make
   popd

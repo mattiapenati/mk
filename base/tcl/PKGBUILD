@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=tcl
-pkgver=8.6.4
+pkgver=8.6.5
 archive=$pkgname$pkgver-src.tar.gz
-sum=33c5a083a23cf54f15e25a9e787dc39ef3fa0a2b
+sum=c3a50ea58dac00a3c7e83cb4a4651c40d0f55160
 dstdir=$mkToolchainBase
 
 build() {
@@ -30,14 +30,14 @@ package() {
       -e "s#$tmpdir/tcl$pkgver#$dstdir/include#" \
       -i "$dstdir/lib/tclConfig.sh"
 
-  tdbcver=tdbc1.0.3
+  tdbcver=tdbc1.0.4
   sed -e "s#$tmpdir/tcl$pkgver/unix/pkgs/$tdbcver#$dstdir/lib/$tdbcver#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver/generic#$dstdir/include#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver/library#$dstdir/lib/tcl${pkgver%.*}#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver#$dstdir/include#" \
       -i "$dstdir/lib/$tdbcver/tdbcConfig.sh"
 
-  itclver=itcl4.0.3
+  itclver=itcl4.0.4
   sed -e "s#$tmpdir/tcl$pkgver/unix/pkgs/$itclver#$dstdir/lib/$itclver#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver/generic#$dstdir/include#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver#$dstdir/include#" \

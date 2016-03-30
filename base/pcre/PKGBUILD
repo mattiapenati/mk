@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=pcre
-pkgver=8.37
+pkgver=8.38
 archive=$pkgname-$pkgver.tar.bz2
-sum=4c629b3f582366fae4e8912f0d9fa3140347d6e7
+sum=ae84e3b3ef0764788ce33b1adeff1add938126e1
 
 dstdir=$mkToolchainBase
 
