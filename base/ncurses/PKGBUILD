@@ -37,7 +37,7 @@ package() {
   make -C $pkgname-$pkgver install
 
   # fix the headers
-  ln -vsf ncursesw "$dstdir"/include/ncurses
+  ln -sf ncursesw "$dstdir"/include/ncurses
 
   # The wide and not-wide are compatibles.
   for lib in form menu ncurses panel; do
@@ -48,4 +48,8 @@ package() {
 
   ln -sf libncursesw.so "$dstdir"/lib/libcursesw.so
   ln -sf libncurses.so "$dstdir"/lib/libcurses.so
+
+  ln -sf libncursesw.so.${pkgver} "$dstdir"/lib/libtinfo.so.${pkgver}
+  ln -sf libtinfo.so.${pkgver} "$dstdir"/lib/libtinfo.so.${pkgver%%.*}
+  ln -sf libtinfo.so.${pkgver%%.*} "$dstdir"/lib/libtinfo.so
 }

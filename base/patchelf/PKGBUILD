@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=patchelf
-pkgver=0.8
+pkgver=0.9
 archive=$pkgver.tar.gz
-sum=1b1a090fe902285c7b01be9ad2c15af9ff99eced
+sum=c068c60a67388fbf9267142516d3a8cd6ffc4397
 
 dstdir=$mkToolchainBase
 
