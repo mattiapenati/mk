@@ -33,6 +33,24 @@ package() {
   # removing the static libraries
   rm -vrf $dstdir/lib/*.a
 
+  install -vd -m 0755 $dstdir/lib/pkgconfig
+  cat > $dstdir/lib/pkgconfig/openblas.pc << EOF
+prefix=$dstdir
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: openblas
+Description: Optimized BLAS library based on GotoBLAS2
+Version: $pkgver
+URL: http://www.openblas.net/
+
+Requires:
+Libs: -L\${libdir} -lopenblas
+CFlags: -I\${includedir}
+EOF
+  ln -sf openblas.pc $dstdir/lib/pkgconfig/blas.pc
+  ln -sf openblas.pc $dstdir/lib/pkgconfig/lapack.pc
+
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
     cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
@@ -64,6 +82,7 @@ setenv("mkOpenblasInc", "$dstdir/include")
 
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
 
 if (mode() == "load") then
   local corename = capture("$dstdir/bin/openblas_corename")
