@@ -29,4 +29,12 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
+
+  # fix pkg-config
+  ln -sf ompi.pc "$dstdir"/lib/pkgconfig/mpi.pc
+  ln -sf ompi-c.pc "$dstdir"/lib/pkgconfig/mpi-c.pc
+  ln -sf ompi-cxx.pc "$dstdir"/lib/pkgconfig/mpi-cxx.pc
+  ln -sf ompi-fort.pc "$dstdir"/lib/pkgconfig/mpi-fort.pc
+  ln -sf ompi-f77.pc "$dstdir"/lib/pkgconfig/mpi-f77.pc
+  ln -sf ompi-f90.pc "$dstdir"/lib/pkgconfig/mpi-f90.pc
 }
