@@ -2,7 +2,6 @@
  * fix pax-utils, lddtree does not work properly with shared libraries, it does
    not detect the proper dynamic loader
 
- * suitesparse package (openblas + metis) (missing metis)
  * mumps package (openblas + blacs + scalapack + scotch)
  * superlu package (openblas + metis)
  * pastix package (openblas + metis + scotch)
