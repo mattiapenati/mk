@@ -20,3 +20,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scalapack
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) metis
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scotch
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) suitesparse
