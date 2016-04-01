@@ -8,15 +8,19 @@
  * pastix package (openblas + metis + scotch)
 
  * boost package
+ * glpk package
+ * qrupdate package
 
  * scipy stack package
     * numpy (openblas + suitesparse + fftw)
     * scipy (numpy)
-    * ipython
     * pandas
     * sympy
     * nose
     * cython
+    * ipython
+    * jupyter
+
  * hdf5 package (scipy)
  * netcdf package (hdf5 + scipy)
 
