@@ -21,3 +21,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) metis
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scotch
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) suitesparse
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mumps
