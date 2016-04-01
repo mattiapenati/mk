@@ -48,7 +48,7 @@ package() {
 whatis("ScaLAPACK is a library of high-performance linear algebra routines for parallel distributed memory machines.")
 help([[
 ScaLAPACK library is installed with the prefix "\$mkScalapackPrefix", the
-dynamic library is located in "\$mkScalapackaLib" directory. For the
+dynamic library is located in "\$mkScalapackLib" directory. For the
 configuration flags the pkg-config command should be used:
   $ pkg-config --libs scalapack
 

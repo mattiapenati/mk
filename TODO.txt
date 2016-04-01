@@ -8,7 +8,6 @@
  * pastix package (openblas + metis + scotch)
 
  * boost package
- * qhull package
 
  * scipy stack package
     * numpy (openblas + suitesparse + fftw)
