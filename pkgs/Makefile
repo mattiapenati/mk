@@ -17,6 +17,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scalapack
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tbb
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) fftw
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) glpk
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qhull
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qrupdate
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) metis

@@ -16,7 +16,6 @@
  * pastix package (openblas + scotch)
 
  * boost package
- * glpk package
  * arpack package
 
  * petsc package
