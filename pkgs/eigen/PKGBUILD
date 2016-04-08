@@ -1,0 +1,63 @@
+#!/bin/bash
+
+pkgname=eigen
+pkgver=3.2.8
+archive=$pkgver.tar.bz2
+sum=64f4aef8012a424c7e079eaf0be71793ab9bc6e0
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+build() {
+  download http://bitbucket.org/eigen/eigen/get/$archive
+  check $archive $sum
+  extract $archive
+
+  module load fftw
+  module load metis
+  module load suitesparse
+  module load superlu
+
+  mkdir build
+  pushd build
+    message "Configuring $pkgname"
+    cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
+          -D FFTW_INCLUDES="$mkFftwInc" \
+          -D FFTWF_LIB="$mkFftwLib"/libfftw3f.so \
+          -D FFTW_LIB="$mkFftwLib"/libfftw3.so \
+          -D FFTWL_LIB="$mkFftwLib"/libfftw3l.so \
+          -D METIS_INCLUDES="$mkMetisInc" \
+          -D METIS_LIBRARIES="$mkMetisLib"/libmetis.so \
+          -D CHOLMOD_INCLUDES="$mkSuitesparseInc" \
+          -D CHOLMOD_LIBRARIES="$mkSuitesparseLib"/libcholmod.so \
+          -D UMFPACK_INCLUDES="$mkSuitesparseInc" \
+          -D UMFPACK_LIBRARIES="$mkSuitesparseLib"/libumfpack.so \
+          -D SUPERLU_INCLUDES="$mkSuperluInc" \
+          -D SUPERLU_LIBRARIES="$mkSuperluLib"/libsuperlu.so \
+          ../eigen-eigen-07105f7124f9
+    make check || true
+  popd
+}
+
+package() {
+  make -C build install
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("C++ template library for linear algebra")
+help([[
+The Eigen library is installed in "\$mkEigenPrefix" directory, header files are
+located in "\$mkEigenInc". Alternatively pkg-config can be used
+  $ pkg-config --cflags eigen3
+  -I$dstdir/include/eigen3
+
+url: http://eigen.tuxfamily.org/
+]])
+
+setenv("mkEigenPrefix", "$dstdir")
+setenv("mkEigenInc", "$dstdir/include/eigen3")
+
+prepend_path("PKG_CONFIG_PATH", "$dstdir/share/pkgconfig")
+EOF
+  fi
+}
