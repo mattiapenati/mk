@@ -1,6 +1,7 @@
  * updating the bootstrap, using busybox-1.24.1 and lua-5.3.2
  * fix pax-utils, lddtree does not work properly with shared libraries, it does
    not detect the proper dynamic loader
+ * fix eigen testsuite
 
  * scipy stack package
     * cython
@@ -16,7 +17,6 @@
 
  * boost package
  * glpk package
- * qrupdate package
  * arpack package
 
  * petsc package
