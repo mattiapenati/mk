@@ -12,12 +12,13 @@ clean:
 
 install:
 	test -n "${mkToolchainBase}" && test -d "${mkToolchainBase}"
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tbb
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) fftw
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qhull
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openblas
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) blacs
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scalapack
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tbb
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) fftw
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qhull
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qrupdate
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) metis
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scotch
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) suitesparse
