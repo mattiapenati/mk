@@ -19,7 +19,6 @@
  * qrupdate package
  * arpack package
 
- * lis package
  * petsc package
  * trilinos package
 
