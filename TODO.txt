@@ -17,8 +17,8 @@
  * boost package
  * glpk package
  * qrupdate package
+ * arpack package
 
- * eigen package
  * lis package
  * petsc package
  * trilinos package
