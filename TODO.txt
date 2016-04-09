@@ -15,8 +15,8 @@
 
  * pastix package (openblas + scotch)
 
- * boost package
  * arpack package
+ * cgal package
 
  * petsc package
  * trilinos package

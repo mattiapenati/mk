@@ -1,0 +1,55 @@
+#!/bin/bash
+
+pkgname=boost
+pkgver=1.60.0
+archive=${pkgname}_${pkgver//./_}.tar.bz2
+sum=7f56ab507d3258610391b47fef6b11635861175a
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+build() {
+  download http://prdownloads.sourceforge.net/$pkgname/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd ${pkgname}_${pkgver//./_}
+    message "Configuring $pkgname"
+    ./bootstrap.sh --prefix="$dstdir" \
+                   --show-libraries
+    echo "using mpi ;" > user-config.jam
+  popd
+}
+
+
+package() {
+ pushd ${pkgname}_${pkgver//./_}
+   ./b2 --prefix="$dstdir" \
+         --user-config=user-config.jam \
+         --layout=tagged \
+         -d2 -j$pkgJobs \
+         link=shared \
+         threading=single,multi \
+         variant=release \
+         install
+  popd
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("Free peer-reviewed portable C++ source libraries")
+help([[
+The Boost libraries are installed in "\$mkBoostPrefix" directory, the dynamic
+libraries are located in "\$mkBoostLib" directory and header files in
+"\$mkBoostInc".
+
+url: https://www.boost.org/
+]])
+
+setenv("mkBoostPrefix", "$dstdir")
+setenv("mkBoostLib", "$dstdir/lib")
+setenv("mkBoostInc", "$dstdir/include")
+
+prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+EOF
+  fi
+}
