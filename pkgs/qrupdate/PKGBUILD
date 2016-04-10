@@ -14,7 +14,7 @@ build() {
   pushd $pkgname-$pkgver
     cat > Makeconf << EOF
 FC=gfortran
-FFLAGS=-fimplicit-none -O2 -DNDEBUG -funroll-loops
+FFLAGS=$CFLAGS -fimplicit-none -funroll-loops
 FPICFLAGS=-fPIC
 VERSION=${pkgver%.*}
 MAJOR=${pkgver%%.*}

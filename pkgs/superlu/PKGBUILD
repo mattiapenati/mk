@@ -44,7 +44,7 @@ ARCH        = ar
 ARCHFLAGS   = cr
 RANLIB      = ranlib
 CC          = cc
-CFLAGS      = -DPRNTlevel=0 -O2 -fPIC -DNDEBUG -DAdd_
+CFLAGS      = -DPRNTlevel=0 $CFLAGS -fPIC -DAdd_
 NOOPTS      = -fPIC
 FORTRAN     = gfortran
 LOADER      = \$(CC)
@@ -67,10 +67,10 @@ ARCHFLAGS  = cr
 RANLIB     = ranlib
 PREDEFS    = -D__PTHREAD
 CC         = cc
-CFLAGS     = \$(PREDEFS) -O2 -fPIC -DNDEBUG
+CFLAGS     = \$(PREDEFS) $CFLAGS -fPIC
 NOOPTS     = -O0 -fPIC
 FORTRAN    = gfortran
-FFLAGS     = -O2 -fPIC -DNDEBUG
+FFLAGS     = $CFLAGS -fPIC
 LOADER     = \$(CC)
 LOADOPTS   = -pthread
 CDEFS      = -DAdd_
@@ -95,10 +95,10 @@ ARCH         = ar
 ARCHFLAGS    = cr
 RANLIB       = ranlib
 CC           = mpicc
-CFLAGS       = -O2 -std=c99 -fPIC -DNDEBUG \$(I_PARMETIS) -DDEBUGlevel=0 -DPRNTlevel=0 -DPROFlevel=0
+CFLAGS       = $CFLAGS -std=c99 -fPIC \$(I_PARMETIS) -DDEBUGlevel=0 -DPRNTlevel=0 -DPROFlevel=0
 NOOPTS       = -O0 -std=c99 -fPIC
 FORTRAN      = mpifort
-F90FLAGS     = -O2 -std=c99 -fPIC -DNDEBUG
+F90FLAGS     = $CFLAGS -std=c99 -fPIC
 LOADER       = \$(CC)
 LOADOPTS     =
 CDEFS        = -DAdd_
