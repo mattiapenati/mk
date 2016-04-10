@@ -16,12 +16,12 @@ package() {
   module load suitesparse
   module load fftw
 
-  message "Compiling $pkgname"
-
+  message "Compiling cython"
   pip install --verbose --install-option="--prefix=$dstdir" cython
   export PATH="$dstdir"/bin:$PATH
   export PYTHONPATH="$dstdir"/lib/python2.7/site-packages:$PYTHONPATH
 
+  message "Compiling numpy"
   pushd numpy-$pkgver
     cat > site.cfg << EOF
 [DEFAULT]
@@ -51,8 +51,11 @@ EOF
     python setup.py config_fc --fcompiler=gfortran install --prefix=$dstdir --optimize=1
   popd
 
+  message "Compiling sympy"
   pip install --verbose --install-option="--prefix=$dstdir" sympy
+  message "Compiling pandas"
   pip install --verbose --install-option="--prefix=$dstdir" pandas
+  message "Compiling scipy"
   pip install --verbose --install-option="--prefix=$dstdir" scipy
 
   # module
@@ -70,6 +73,10 @@ url: http://www.scipy.org
 ]])
 
 setenv("mkScipyPrefix", "$dstdir")
+
+load("fftw")
+load("openblas")
+load("suitesparse")
 
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("MANPATH", "$dstdir/share/man")
