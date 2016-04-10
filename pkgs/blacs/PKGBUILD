@@ -34,12 +34,12 @@ BLACSDEFS = \$(DEFS1) \$(SENDIS) \$(BUFF) \$(TRANSCOMM) \$(WHATMPI) \$(SYSERRORS
 
 F77            = mpif77
 F77NO_OPTFLAGS =
-F77FLAGS       = \$(F77NO_OPTFLAGS) -O2 -fPIC
+F77FLAGS       = \$(F77NO_OPTFLAGS) $CFLAGS -fPIC
 F77LOADER      = \$(F77)
 F77LOADFLAGS   =
 
 CC             = mpicc
-CCFLAGS        = -O2 -DNDEBUG -fPIC
+CCFLAGS        = $CFLAGS -fPIC
 CCLOADER       = \$(CC)
 CCLOADFLAGS    =
 
