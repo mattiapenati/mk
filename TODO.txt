@@ -2,13 +2,6 @@
  * fix pax-utils, lddtree does not work properly with shared libraries, it does
    not detect the proper dynamic loader
 
- * scipy stack package
-    * cython
-    * numpy (openblas + suitesparse + fftw + cython)
-    * scipy (numpy)
-    * pandas (scipy)
-    * sympy
-
  * hdf5 package (scipy)
  * netcdf package (hdf5 + scipy)
 
