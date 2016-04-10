@@ -62,7 +62,7 @@ if [[ -n "$mkToolchain" ]]; then
   mkLoadedToolchain="$mkToolchain"
   module purge
 fi
-export PATH=/usr/bin:/bin
+export PATH=$mkPrefix/bin:/usr/bin:/bin
 export LD_LIBRARY_PATH=
 export PKG_CONFIG_PATH=
 if [[ -n "$mkLoadedToolchain" ]]; then
