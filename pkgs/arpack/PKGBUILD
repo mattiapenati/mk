@@ -32,6 +32,7 @@ build() {
 
 package() {
   make -C $pkgname-ng-$pkgver install
+  strip "$dstdir"/lib
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname

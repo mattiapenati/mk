@@ -75,6 +75,8 @@ package() {
   rm -rf "$dstdir"/share
   reset_rpath "$dstdir"/bin
   reset_rpath "$dstdir"/lib
+  strip "$dstdir"/bin
+  strip "$dstdir"/lib
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
