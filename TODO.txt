@@ -7,8 +7,6 @@
 
  * pastix package (openblas + scotch)
 
- * arpack package
-
  * petsc package
  * trilinos package
 
