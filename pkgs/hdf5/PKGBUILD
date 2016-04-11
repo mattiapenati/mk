@@ -1,0 +1,80 @@
+#!/bin/bash
+
+pkgname=hdf5
+pkgver=1.8.16
+archive=$pkgname-$pkgver.tar.bz2
+sum=a7b631778cb289edec670f665d2c3265983a0d53
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+szipver=2.1
+sziparchive=szip-$szipver.tar.gz
+szipsum=d241c9acc26426a831765d660b683b853b83c131
+
+package() {
+  download http://www.hdfgroup.org/ftp/HDF5/current/src/$archive
+  download http://www.hdfgroup.org/ftp/lib-external/szip/$szipver/src/$sziparchive
+
+  check $archive $sum
+  check $sziparchive $szipsum
+
+  extract $archive
+  extract $sziparchive
+
+  # szip
+  pushd szip-$szipver
+    message "Configuring szip"
+    ./configure --prefix="$dstdir" \
+                --enable-shared \
+                --disable-static
+    message "Building szip"
+    make
+    message "Installing szip"
+    make install
+  popd
+
+  # hdf5
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --disable-silent-rules \
+                --prefix="$dstdir" \
+                --enable-shared \
+                --disable-sharedlib-rpath \
+                --disable-static \
+                --enable-fortran \
+                --enable-parallel=yes \
+                --enable-production=yes \
+                --with-zlib \
+                --with-szlib="$dstdir/lib"
+    message "Compiling $pkgname"
+    make
+    message "Installing $pkgname"
+    make install
+  popd
+
+  # cleaning
+  rm -rf "$dstdir"/share
+  reset_rpath "$dstdir"/bin
+  reset_rpath "$dstdir"/lib
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("HDF5 is a data model, library, and file format for storing and managing data")
+help([[
+The HDF5 library is installed in "\$mkHdf5Prefix" directory, the dynamic
+libraries are located in "\$mkHdf5Lib" directory and header files in
+"\$mkHdf5Inc".
+
+url: https://www.hdfgroup.org/HDF5/
+]])
+
+setenv("mkHdf5Prefix", "$dstdir")
+setenv("mkHdf5Lib", "$dstdir/lib")
+setenv("mkHdf5Inc", "$dstdir/include")
+
+prepend_path("PATH", "$dstdir/bin")
+prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+EOF
+  fi
+}
