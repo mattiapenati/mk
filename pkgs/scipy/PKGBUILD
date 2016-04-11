@@ -57,6 +57,8 @@ EOF
   pip install --verbose --install-option="--prefix=$dstdir" pandas
   message "Compiling scipy"
   pip install --verbose --install-option="--prefix=$dstdir" scipy
+  message "Compiling mpi4py"
+  pip install --verbose --install-option="--prefix=$dstdir" mpi4py
 
   # module
   if [[ "$mkTest" = "no" ]]; then
@@ -66,8 +68,8 @@ EOF
 whatis("Python-based ecosystem for mathematics, science, and engineering")
 help([[
 This package contains all the libraries that are part of Python-based ecosystem
-for scientific computing. It contains numpy, scipy, pandas, sympy and cython.
-It is enough to load the package for using it.
+for scientific computing. It contains numpy, scipy, pandas, sympy, cython and
+mpi4py. It is enough to load the package for using it.
 
 url: http://www.scipy.org
 ]])
