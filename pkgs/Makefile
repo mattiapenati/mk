@@ -30,5 +30,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) eigen
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) lis
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cgal
-	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hdf5
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scipy
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hdf5
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) netcdf

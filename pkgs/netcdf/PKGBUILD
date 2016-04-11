@@ -1,0 +1,66 @@
+#!/bin/bash
+
+pkgname=netcdf
+pkgver=4.4.0
+archive=$pkgname-$pkgver.tar.gz
+sum=cb7de8f14ddeef5e66cbc688e0a127a405d580af
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+build() {
+  download ftp://ftp.unidata.ucar.edu/pub/netcdf/$archive
+  check $archive $sum
+  extract $archive
+
+  module load hdf5
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    CPPFLAGS="-I$mkHdf5Inc $CPPFLAGS" \
+    LDFLAGS="-L$mkHdf5Lib $LDFLAGS" \
+    ./configure --prefix="$dstdir" \
+                --enable-shared \
+                --disable-static \
+                --enable-netcdf-4 \
+                --enable-dap-netcdf
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+
+  strip "$dstdir"/bin
+  strip "$dstdir"/lib
+
+  reset_rpath "$dstdir"/bin
+  reset_rpath "$dstdir"/lib
+
+  compress_doc "$dstdir"/share/man
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("Array-oriented data access and corresponding library")
+help([[
+The NetCDF library is installed in "\$mkNetcdfPrefix" directory, the dynamic
+libraries are located in "\$mkNetcdfLib" directory and header files in
+"\$mkNetcdfInc".
+
+url: http://www.unidata.ucar.edu/software/netcdf/
+]])
+
+load("hdf5")
+
+setenv("mkNetcdfPrefix", "$dstdir")
+setenv("mkNetcdfLib", "$dstdir/lib")
+setenv("mkNetcdfInc", "$dstdir/include")
+
+prepend_path("PATH", "$dstdir/bin")
+prepend_path("MANPATH", "$dstdir/share/man")
+prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
+EOF
+  fi
+}
