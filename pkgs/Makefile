@@ -27,6 +27,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) suitesparse
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) mumps
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) superlu
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hypre
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) eigen
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) lis
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) cgal
