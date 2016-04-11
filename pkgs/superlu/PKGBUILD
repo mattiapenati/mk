@@ -149,6 +149,8 @@ package() {
     rm libsuperlu_dist.a *.o
   popd
 
+  strip "$dstdir"/lib
+
   # module
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname

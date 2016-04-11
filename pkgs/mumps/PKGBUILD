@@ -108,6 +108,8 @@ package() {
     done
   popd
 
+  strip "$dstdir"/lib
+
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
     cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF

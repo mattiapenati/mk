@@ -31,6 +31,7 @@ EOF
 package() {
   make -C $pkgname-$pkgver install
 	rm -f "$dstdir"/lib/libqrupdate.a
+  strip "$dstdir"/lib
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname

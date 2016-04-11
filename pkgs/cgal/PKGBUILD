@@ -41,6 +41,7 @@ package() {
 
   rm -rf "$dstdir"/share/doc
   compress_doc "$dstdir"/share/man
+  strip "$dstdir"/lib
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname

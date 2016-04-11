@@ -29,6 +29,9 @@ package() {
 
   compress_doc "$dstdir"/share/man
 
+  strip "$dstdir"/bin
+  strip "$dstdir"/lib
+
   reset_rpath "$dstdir"/bin
   reset_rpath "$dstdir"/lib
 

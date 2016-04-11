@@ -28,6 +28,9 @@ package() {
   install -d -m0755 "$dstdir"/include/glpk
   ln -sf ../glpk.h "$dstdir"/include/glpk/glpk.h
 
+  strip "$dstdir"/bin
+  strip "$dstdir"/lib
+
   reset_rpath "$dstdir"/bin
   reset_rpath "$dstdir"/lib
 
