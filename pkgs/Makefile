@@ -17,6 +17,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openblas
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) blacs
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) scalapack
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) arpack
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) fftw
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) glpk
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) qhull
