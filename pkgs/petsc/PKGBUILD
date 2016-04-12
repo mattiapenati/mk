@@ -38,7 +38,7 @@ package() {
 
   # petsc
   pushd $pkgname-$pkgver
-    message "Configuring $pkgname"
+    message "Configuring PETSc"
     ./configure --prefix="$dstdir" \
                 --with-petsc-arch=arch-linux-opt \
                 --with-fortran=1 \
@@ -71,22 +71,27 @@ package() {
                 #   --with-superlu_mt-include="$mkSuperluInc" \
                 #   --with-superlu_mt-lib="$mkSuperluLib/libsuperlu_mt.so" \
 
-    message "Compiling $pkgname"
+    message "Compiling PETSc"
     command make MAKE_NP=$pkgJobs PETSC_DIR=$PWD PETSC_ARCH=arch-linux-opt all
+    message "Installing PETSc"
     command make PETSC_DIR=$PWD PETSC_ARCH=arch-linux-opt install
   popd
 
   # slepc
   pushd slepc-$pkgver
+    message "Configuring SLEPc"
     ./configure --prefix="$dstdir" \
                 --with-arpack=1 \
                 --with-arpack-dir="$mkArpackPrefix" \
                 --with-arpack-flags="-L$mkArpackLib,-larpack,-lparpack"
+    message "Compiling SLEPc"
     command make MAKE_NP=$pkgJobs SLEPC_DIR=$PWD PETSC_DIR="$dstdir"
+    message "Installing SLEPc"
     command make SLEPC_DIR=$PWD PETSC_DIR="$dstdir" install
   popd
 
   # python bindings
+  message "Installing Python bindings"
   PETSC_DIR="$dstdir" \
     pip install --verbose --install-option="--prefix=$dstdir" petsc4py
   PYTHONPATH=$dstdir/lib/python2.7/site-packages:$PYTHONPATH \
