@@ -61,7 +61,7 @@ build() {
 package() {
   make -C $pkgname-$pkgver install
 
-  rm -rf "$dstdir"/share/{appdata,applications}
+  rm -rf "$dstdir"/share/{appdata,applications,icons}
 
   strip "$dstdir/bin"
   strip "$dstdir/lib"
