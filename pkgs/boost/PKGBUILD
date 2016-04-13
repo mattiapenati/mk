@@ -24,11 +24,12 @@ package() {
  pushd ${pkgname}_${pkgver//./_}
    ./b2 --prefix="$dstdir" \
          --user-config=user-config.jam \
-         --layout=tagged \
+         --layout=system \
          -d2 -j$pkgJobs \
          link=shared \
-         threading=single,multi \
+         threading=multi \
          variant=release \
+         debug-symbols=off \
          install
   popd
 
