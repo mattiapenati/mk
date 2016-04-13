@@ -11,5 +11,4 @@
  * dealii package
  * fenics package
 
- * octave package
  * R package
