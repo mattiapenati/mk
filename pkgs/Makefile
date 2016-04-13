@@ -35,4 +35,5 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hdf5
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) netcdf
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) petsc
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) p4est
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) octave
