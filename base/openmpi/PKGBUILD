@@ -20,7 +20,7 @@ build() {
     ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
                 --enable-mpi-fortran=all --with-threads=posix --enable-ipv6 \
                 --enable-smp-locks --enable-pretty-print-stacktrace \
-                --without-x --with-hwloc="$mkToolchainBase" \
+                --disable-mpi-cxx --without-x --with-hwloc="$mkToolchainBase" \
                 --with-libltdl="$mkToolchainBase" $VALGRIND
     message "Compiling $pkgname"
     make
