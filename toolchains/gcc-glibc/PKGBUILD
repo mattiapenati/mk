@@ -252,6 +252,8 @@ run() {
 
   message "Installing Bison"
   pushd $bisondir
+    # a simple workaround for M4 check in bison configuration
+    M4="m4 -F conftest.m4f" \
     ./configure --prefix="$tmpdir/tools"; make install
   popd
 
@@ -353,6 +355,8 @@ run() {
     #   Customize the information.
     # --with-headers="$prefix/include" --enable-kernel=$linux
     #   Compiles the GLibc using the headers just installed.
+    # --disable-werror
+    #   Disable fail on warning.
     # --enable-add-ons
     #   Compiles the extensions.
     # --disable-profile
@@ -367,7 +371,7 @@ run() {
                            --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" \
                            --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL" \
                            --with-headers="$prefix/include" --enable-kernel=$linux \
-                           --disable-nls \
+                           --disable-werror --disable-nls \
                            --enable-add-ons --disable-profile --enable-obsolete-rpc \
                            libc_cv_ssp=no libc_cv_ssp_strong=no libc_cv_forced_unwind=yes
     make
@@ -421,26 +425,20 @@ run() {
     #   Install binutils programs in '$prefix' directory.
     # --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL"
     #   Customize the information.
-    # --enable-ld --enable-gold --enable-plugins
-    #   Enables both the standard and Google linker, and also the plugins.
-    # --disable-werror
-    #   It does not convert warning to error.
+    # --enable-ld --disable-gold
+    #   Enable the standard linker and disable gold.
     CC="$TARGET-gcc -isystem $prefix/include -B$prefix/lib" \
     CXX="$TARGET-g++ -isystem $prefix/include -B$prefix/lib" \
     AS="$TARGET-as" AR="$TARGET-ar" \
-   ../$binutilsdir/configure --build=$TARGET \
-                             --prefix="$prefix" --with-lib-path="$prefix/lib:$base/lib" \
-                             --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL" \
-                             --disable-nls --disable-multilib \
-                             --enable-ld --enable-gold --enable-plugins \
-                             --disable-werror
+    ../$binutilsdir/configure --build=$TARGET \
+                              --prefix="$prefix" --with-lib-path="$prefix/lib:$base/lib" \
+                              --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL" \
+                              --disable-nls --disable-multilib \
+                              --enable-ld --disable-gold
     make
     make install
   popd
   rm -rf binutils-build
-  rm -rf $binutilsdir
-
-  rm "$prefix"/bin/ld; ln -s ld.bfd "$prefix"/bin/ld
 
   ln -s ../../lib/crt1.o $prefix/$TARGET/lib/crt1.o
   ln -s ../../lib/crti.o $prefix/$TARGET/lib/crti.o
@@ -489,6 +487,35 @@ run() {
   rm -rf gcc-build
   rm -rf $gccdir
   rm -rf $libelfdir $cloogdir $isldir $mpcdir $mpfrdir $gmpdir
+
+  # this last step is required to install properly gold linker, with the
+  # previous version ld.gold is bugged
+  message "Compile the native compiler [Binutils]"
+  mkdir binutils-build
+  pushd binutils-build
+    # --build=$TARGET
+    #   Built for the given target.
+    # --prefix="$prefix" --with-lib-path="$prefix/lib:$base/lib"
+    #   Install binutils programs in '$prefix' directory.
+    # --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL"
+    #   Customize the information.
+    # --enable-ld --enable-gold --enable-plugins
+    #   Enables both the standard and Google linker, and also the plugins.
+    # --disable-werror
+    #   It does not convert warning to error.
+    ../$binutilsdir/configure --build=$TARGET \
+                              --prefix="$prefix" --with-lib-path="$prefix/lib:$base/lib" \
+                              --with-pkgversion="$PKGVERSION" --with-bugurl="$BUGURL" \
+                              --disable-nls --disable-multilib \
+                              --enable-ld --enable-gold --enable-plugins \
+                              --disable-werror
+    make
+    make install
+  popd
+  rm -rf binutils-build
+  rm -rf $binutilsdir
+
+  rm "$prefix"/bin/ld; ln -s ld.bfd "$prefix"/bin/ld
 
   # finishing the installation
   rm "$prefix"/bin/$TARGET-gcc; ln -s $TARGET-gcc-$gccver "$prefix"/bin/$TARGET-gcc
