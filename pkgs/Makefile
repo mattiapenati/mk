@@ -37,4 +37,5 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) netcdf
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) matio
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) petsc
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) trilinos
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) octave

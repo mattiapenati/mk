@@ -5,8 +5,6 @@
 
  * pastix package (openblas + scotch)
 
- * trilinos package
-
  * getfem package
  * dealii package
  * fenics package
