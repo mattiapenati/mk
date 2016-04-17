@@ -25,4 +25,5 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
+  ln -sf make "$dstdir/bin/gmake"
 }
