@@ -515,7 +515,7 @@ run() {
   rm -rf binutils-build
   rm -rf $binutilsdir
 
-  rm "$prefix"/bin/ld; ln -s ld.bfd "$prefix"/bin/ld
+  rm "$prefix"/bin/ld; ln -s ld.gold "$prefix"/bin/ld
 
   # finishing the installation
   rm "$prefix"/bin/$TARGET-gcc; ln -s $TARGET-gcc-$gccver "$prefix"/bin/$TARGET-gcc
