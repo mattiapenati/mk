@@ -37,9 +37,7 @@ package() {
   # linker cache is not updated
   export LD_LIBRARY_PATH="$dstdir"/lib
 
-  # installing setuptools and pip
-  download https://bootstrap.pypa.io/ez_setup.py ez_setup.py
-  "$dstdir"/bin/python ez_setup.py
+  # installing pip (will also install setuptools and wheel)
   download https://bootstrap.pypa.io/get-pip.py get-pip.py
   "$dstdir"/bin/python get-pip.py
 
