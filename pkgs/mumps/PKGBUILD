@@ -5,6 +5,7 @@ pkgver=5.0.1
 archive=MUMPS_$pkgver.tar.gz
 sum=33262835a4fc5e753e2a92ef66009d8e9a031fca
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+mkParallelBuild=no
 
 build() {
   download http://mumps.enseeiht.fr/$archive
