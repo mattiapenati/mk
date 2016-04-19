@@ -1,0 +1,33 @@
+diff -Naur a/cmake/modules/FindNETCDF.cmake b/cmake/modules/FindNETCDF.cmake
+--- a/cmake/modules/FindNETCDF.cmake	2016-04-07 15:26:51.000000000 +0000
++++ b/cmake/modules/FindNETCDF.cmake	2016-04-18 20:01:52.729113825 +0000
+@@ -25,7 +25,7 @@
+ SET(NETCDF_DIR "" CACHE PATH "An optional hint to a NETCDF installation")
+ SET_IF_EMPTY(NETCDF_DIR "$ENV{NETCDF_DIR}")
+ 
+-DEAL_II_FIND_PATH(NETCDF_INCLUDE_DIR netcdfcpp.h
++DEAL_II_FIND_PATH(NETCDF_INCLUDE_DIR netcdf
+   HINTS ${NETCDF_DIR}
+   PATH_SUFFIXES netcdf include
+   )
+@@ -37,7 +37,7 @@
+ # - separate C++ and C library search
+ #
+ 
+-DEAL_II_FIND_LIBRARY(NETCDF_CPLUSPLUS_LIBRARY NAMES netcdf_c++ netcdf_cpp
++DEAL_II_FIND_LIBRARY(NETCDF_CPLUSPLUS_LIBRARY NAMES netcdf_c++4 netcdf_cpp4
+   HINTS ${NETCDF_DIR}
+   PATH_SUFFIXES lib${LIB_SUFFIX} lib64 lib
+   )
+diff -Naur a/source/grid/grid_in.cc b/source/grid/grid_in.cc
+--- a/source/grid/grid_in.cc	2016-04-07 15:26:51.000000000 +0000
++++ b/source/grid/grid_in.cc	2016-04-18 19:59:37.853108167 +0000
+@@ -31,7 +31,7 @@
+ 
+ 
+ #ifdef DEAL_II_WITH_NETCDF
+-#include <netcdfcpp.h>
++#include <netcdf>
+ #endif
+ 
+ 

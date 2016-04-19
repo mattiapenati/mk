@@ -6,7 +6,6 @@
  * pastix package (openblas + scotch)
 
  * getfem package
- * dealii package
  * fenics package
 
  * R package
