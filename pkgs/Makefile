@@ -39,3 +39,4 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) petsc
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) trilinos
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) octave
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) dealii
