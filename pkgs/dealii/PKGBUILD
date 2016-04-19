@@ -70,7 +70,6 @@ package() {
   rm "$dstdir/LICENSE"
   rm "$dstdir/README.md"
 
-  strip "$dstdir/lib"
   reset_rpath "$dstdir/lib"
 
   if [[ "$mkTest" = "no" ]]; then
