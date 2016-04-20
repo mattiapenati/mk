@@ -43,7 +43,7 @@ build() {
           -D Trilinos_ENABLE_ALL_PACKAGES=ON \
           -D Trilinos_ENABLE_Piro=OFF \
           -D Trilinos_ENABLE_PyTrilinos=OFF \
-          -D Trilinos_ENABLE_STKDoc_tests=OFF \
+          -D Trilinos_ENABLE_STK=OFF \
           -D Trilinos_ENABLE_Zoltan2=OFF \
           -D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES=ON \
           -D Trilinos_ENABLE_TESTS=OFF \
