@@ -36,10 +36,11 @@ package() {
 
   # linker cache is not updated
   export LD_LIBRARY_PATH="$dstdir"/lib
+  export PATH="$dstdir/bin:$PATH"
 
   # installing pip (will also install setuptools and wheel)
   download https://bootstrap.pypa.io/get-pip.py get-pip.py
-  "$dstdir"/bin/python get-pip.py
+  python get-pip.py
 
   rm -vf "$dstdir"/bin/pip
   rm -vf "$dstdir"/bin/pip${pkgver%%.*}
@@ -48,4 +49,6 @@ package() {
 
   rm -vf "$dstdir"/bin/easy_install
   ln -svf easy_install-${pkgver%.*} "$dstdir"/bin/easy_install
+
+  pip install six
 }
