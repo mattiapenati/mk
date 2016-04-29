@@ -1,0 +1,176 @@
+#!/bin/bash
+
+pkgname=fenics
+pkgver=1.6.0
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+
+uflarchive=ufl-$pkgver.tar.gz
+uflsum=799883baf7da1d1528712e7d2efbfe40a0afe99d
+
+fiatarchive=fiat-$pkgver.tar.gz
+fiatsum=7e0dc10a16b0015d8986cff8690ad8bb1e253179
+
+ffcarchive=ffc-$pkgver.tar.gz
+ffcsum=cecfa76a7a6477ee79b754fefac264be89957c38
+
+dolfinarchive=dolfin-$pkgver.tar.gz
+dolfinsum=b8c7c27b65d54b367bd2ca1f9725f32ef7dbe363
+
+mshrarchive=mshr-$pkgver.tar.gz
+mshrsum=d2c559ba4996cf91cc9979f6b9fbb1b03a86008e
+
+package() {
+  download https://bitbucket.org/fenics-project/ufl/downloads/$uflarchive
+  download https://bitbucket.org/fenics-project/fiat/downloads/$fiatarchive
+  download https://bitbucket.org/fenics-project/ffc/downloads/$ffcarchive
+  download https://bitbucket.org/fenics-project/dolfin/downloads/$dolfinarchive
+  download https://bitbucket.org/fenics-project/mshr/downloads/$mshrarchive
+
+  check $uflarchive $uflsum
+  check $fiatarchive $fiatsum
+  check $ffcarchive $ffcsum
+  check $dolfinarchive $dolfinsum
+  check $mshrarchive $mshrsum
+
+  extract $uflarchive
+  extract $fiatarchive
+  extract $ffcarchive
+  extract $dolfinarchive
+  extract $mshrarchive
+
+  module load boost
+  module load eigen
+  module load hdf5
+  module load metis
+  module load openblas
+  module load petsc
+  module load scipy
+  module load scotch
+  module load suitesparse
+  module load trilinos
+
+  # required python packages
+  pip install ply
+
+  # make python happy
+  export PATH="$dstdir/bin:$PATH"
+  export PYTHONPATH="$dstdir/lib/python2.7/site-packages:$PYTHONPATH"
+
+  # installing UFL
+  pushd ufl-$pkgver
+    message "Installing UFL"
+    python setup.py build
+    python setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing FIAT
+  pushd fiat-$pkgver
+    message "Installing FIAT"
+    python setup.py build
+    python setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing FFC
+  pushd ffc-$pkgver
+    message "Installing FFC"
+    python setup.py build
+    python setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing dolfin
+  mkdir build
+  pushd build
+    message "Configuring dolfin"
+    HDF5_ROOT="$mkHdf5Prefix" \
+    cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
+          -D CMAKE_SKIP_INSTALL_RPATH=ON \
+          -D CMAKE_SKIP_RPATH=ON \
+          -D BUILD_SHARED_LIBS=ON \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D BLAS_LIBRARIES="$mkOpenblasLib/libopenblas.so" \
+          -D LAPACK_LIBRARIES="$mkOpenblasLib/libopenblas.so" \
+          -D UFC_DIR="$dstdir" \
+          -D AMD_DIR="$mkSuitesparsePrefix" \
+          -D BOOST_ROOT="$mkBoostPrefix" \
+          -D CHOLMOD_DIR="$mkSuitesparsePrefix" \
+          -D DOLFIN_ENABLE_PASTIX=OFF \
+          -D DOLFIN_ENABLE_QT=OFF \
+          -D DOLFIN_ENABLE_VTK=OFF \
+          -D EIGEN3_INCLUDE_DIR="$mkEigenInc" \
+          -D PETSC_DIR="$mkPetscPrefix" \
+          -D PARMETIS_DIR="$mkMetisPrefix" \
+          -D SCOTCH_DIR="$mkScotchPrefix" \
+          -D TRILINOS_DIR="$mkTrilinosPrefix" \
+          -D UMFPACK_DIR="$mkSuitesparsePrefix" \
+          ../dolfin-$pkgver
+    message "Compiling dolfin"
+    make VERBOSE=1
+    message "Installing dolfin"
+    make install
+  popd
+
+  # installing mshr
+  pushd mshr-$pkgver
+    [[ -r "$srcdir/mshr-$pkgver.patch" ]] && \
+      patch -p1 -i "$srcdir/mshr-$pkgver.patch"
+  popd
+  pushd build
+    rm -rf *
+    message "Configuring mshr"
+    cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
+          -D CMAKE_SKIP_INSTALL_RPATH=ON \
+          -D CMAKE_SKIP_RPATH=ON \
+          -D BUILD_SHARED_LIBS=ON \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D BOOST_ROOT="$mkBoostPrefix" \
+          -D DOLFIN_DIR="$dstdir" \
+          ../mshr-$pkgver
+    message "Compiling mshr"
+    command make VERBOSE=1
+    message "Installing mshr"
+    make install
+  popd
+
+  strip "$dstdir/bin"
+  strip "$dstdir/lib"
+
+  reset_rpath "$dstdir/bin"
+  reset_rpath "$dstdir/lib"
+
+  compress_doc "$dstdir/share/man"
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("A collection of software components for the automated solution of differential equations.")
+help([[
+The Fenics is installed in "\$mkFenicsPrefix" directory, the dynamic libraries
+are located in "\$mkFenicsLib" directory and header files in "\$mkFenicsInc".
+
+url: http://fenicsproject.org
+]])
+
+load("boost")
+load("eigen")
+load("hdf5")
+load("metis")
+load("openblas")
+load("petsc")
+load("scipy")
+load("scotch")
+load("suitesparse")
+load("trilinos")
+
+setenv("mkFenicsPrefix", "$dstdir")
+setenv("mkFenicsLib", "$dstdir/lib")
+setenv("mkFenicsInc", "$dstdir/include")
+
+prepend_path("PATH", "$dstdir/bin")
+prepend_path("MANPATH", "$dstdir/share/man")
+prepend_path("PYTHONPATH", "$dstdir/lib/python2.7/site-packages")
+prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
+prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
+EOF
+  fi
+}
