@@ -1,0 +1,63 @@
+#!/bin/bash
+
+pkgname=R
+pkgver=3.3.0
+archive=$pkgname-$pkgver.tar.gz
+sum=166a25a7996150c9c83cdafcc89bfcd81578a887
+dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+mirror=http://cran.mirror.garr.it/mirrors/CRAN
+
+build() {
+  download $mirror/src/base/R-${pkgver%%.*}/$archive
+  check $archive $sum
+  extract $archive
+
+  module load openblas
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --prefix="$dstdir" \
+                --libdir="$dstdir/lib" \
+                --with-ICU \
+                --disable-nls \
+                --disable-java \
+                --with-x=no \
+                --with-blas="$mkOpenblasLib/libopenblas.so" \
+                --with-lapack="$mkOpenblasLib/libopenblas.so"
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+
+  # install packages
+  message "Installing Rmpi"
+  RMPI_TYPE=OPENMPI \
+  "$dstdir/bin/R" -e "install.packages(\"Rmpi\", repos=\"$mirror\")"
+
+  strip "$dstdir/bin"
+  strip "$dstdir/lib"
+
+  compress_doc "$dstdir/share/man"
+
+  if [[ "$mkTest" = "no" ]]; then
+    install -vd $mkToolchainModules/$pkgname
+    cat > $mkToolchainModules/$pkgname/$pkgver.lua << EOF
+-- -*- lua -*-
+whatis("A free software environment for statistical computing and graphics")
+help([[
+R is installed in "\$mkRPrefix" directory.
+
+url: https://www.r-project.org
+]])
+
+load("openblas")
+
+setenv("mkRPrefix", "$dstdir")
+
+prepend_path("PATH", "$dstdir/bin")
+EOF
+  fi
+}

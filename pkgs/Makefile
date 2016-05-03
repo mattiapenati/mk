@@ -39,4 +39,6 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) petsc
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) trilinos
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) octave
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) R
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) dealii
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) fenics
