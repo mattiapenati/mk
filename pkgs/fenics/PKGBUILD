@@ -13,6 +13,9 @@ fiatsum=7e0dc10a16b0015d8986cff8690ad8bb1e253179
 ffcarchive=ffc-$pkgver.tar.gz
 ffcsum=cecfa76a7a6477ee79b754fefac264be89957c38
 
+instantarchive=instant-$pkgver.tar.gz
+instantsum=308953204a284875ff686ae5250004d11c07c3a1
+
 dolfinarchive=dolfin-$pkgver.tar.gz
 dolfinsum=b8c7c27b65d54b367bd2ca1f9725f32ef7dbe363
 
@@ -23,18 +26,21 @@ package() {
   download https://bitbucket.org/fenics-project/ufl/downloads/$uflarchive
   download https://bitbucket.org/fenics-project/fiat/downloads/$fiatarchive
   download https://bitbucket.org/fenics-project/ffc/downloads/$ffcarchive
+  download https://bitbucket.org/fenics-project/instant/downloads/$instantarchive
   download https://bitbucket.org/fenics-project/dolfin/downloads/$dolfinarchive
   download https://bitbucket.org/fenics-project/mshr/downloads/$mshrarchive
 
   check $uflarchive $uflsum
   check $fiatarchive $fiatsum
   check $ffcarchive $ffcsum
+  check $instantarchive $instantsum
   check $dolfinarchive $dolfinsum
   check $mshrarchive $mshrsum
 
   extract $uflarchive
   extract $fiatarchive
   extract $ffcarchive
+  extract $instantarchive
   extract $dolfinarchive
   extract $mshrarchive
 
@@ -73,6 +79,13 @@ package() {
   # installing FFC
   pushd ffc-$pkgver
     message "Installing FFC"
+    python setup.py build
+    python setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing instant
+  pushd instant-$pkgver
+    message "Installing instant"
     python setup.py build
     python setup.py install --prefix="$dstdir" --optimize=1
   popd
