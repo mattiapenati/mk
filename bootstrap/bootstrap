@@ -259,7 +259,7 @@ pushd $pkgname-$pkgver
   install -vm 0755 busybox $PREFIX/bin/busybox
 popd
 
-for bin in less sha1sum md5sum realpath patch; do
+for bin in less sha1sum md5sum realpath patch basename expr tr ps; do
   ln -sv busybox $PREFIX/bin/$bin
 done
 
