@@ -2,6 +2,7 @@
 
 pkgname=petsc
 pkgver=3.6.3
+pestc4pyver=3.6.0
 sum=d10e2705ae2a7d095c8a9ba7d82993d0a303b077
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
@@ -95,10 +96,10 @@ package() {
   # python bindings
   message "Installing Python bindings"
   PETSC_DIR="$dstdir" \
-    pip install --verbose --install-option="--prefix=$dstdir" petsc4py
+    pip install --verbose --install-option="--prefix=$dstdir" petsc4py==$petsc4pyver
   PYTHONPATH=$dstdir/lib/python2.7/site-packages:$PYTHONPATH \
   PETSC_DIR="$dstdir" SLEPC_DIR="$dstdir" \
-    pip install --verbose --install-option="--prefix=$dstdir" slepc4py
+    pip install --verbose --install-option="--prefix=$dstdir" slepc4py==$petsc4pyver
 
   # cleaning
   find "$dstdir"/include -name \*html -exec rm {} \;
