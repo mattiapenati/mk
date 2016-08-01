@@ -85,6 +85,9 @@ dependencies:
 
   (recompile gawk because of circular dependency gawk <> readline)
 
+  bash: readline
+    The Bash package contains the Bourne-Again SHell.
+
   automake: perl, autoconf
     Automake is a tool for automatically generating Makefile.in files compliant
     with the GNU Coding Standards.

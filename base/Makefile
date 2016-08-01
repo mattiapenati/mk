@@ -10,6 +10,7 @@ clean:
 	@rm -vf */*.{tar.{bz2,gz,xz},zip,tgz}
 	@find . -name \*.log -exec rm -v '{}' \;
 	@rm -vf readline/readline??-???
+	@rm -vf bash/bash??-???
 	@rm -vf openssl/certdata.txt
 
 install:
@@ -35,6 +36,7 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) ncurses
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) readline
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) gawk
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) bash
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) automake
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) zlib
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) gzip
