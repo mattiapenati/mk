@@ -229,7 +229,9 @@ pkgver=$chrpath_version
 download https://alioth.debian.org/frs/download.php/latestfile/813/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CFLAGS="-Os" LDFLAGS="-static" ./configure
+  CC=$TMPDIR/bin/musl-gcc \
+  CFLAGS="-Os" LDFLAGS="-static" \
+  ./configure
   make
   strip --strip-unneeded chrpath
   install -vm 0755 chrpath $PREFIX/bin/chrpath
@@ -322,6 +324,7 @@ pkgver=$lmod_version
 download https://github.com/TACC/Lmod/archive/$pkgver.tar.gz
 extract $pkgver.tar.gz
 pushd $pkgname-$pkgver
+  [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   PATH=$PREFIX/bin:$PATH \
   ./configure --prefix=$PREFIX --without-tcl \
               --with-lua_include=$TMPDIR/src/lua/include \
