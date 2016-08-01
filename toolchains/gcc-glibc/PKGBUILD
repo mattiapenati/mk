@@ -122,6 +122,7 @@ run() {
       linux=3.10
       linuxver=3.10.80
       linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
+      linuxsum=e056a1b9dddab514e31ecf0b59d18608b78cde03
       ;;
     3.12* | 3.13*)
       linux=3.12
