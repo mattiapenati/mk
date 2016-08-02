@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=openmpi
-pkgver=1.10.2
+pkgver=2.0.0
 archive=$pkgname-$pkgver.tar.bz2
-sum=03934fc0a2dd0d0d2d0459d714a976eabca938fb
+sum=a34f07a0e94af4ccd8080d74827befd61824c6c3
 dstdir=$mkToolchainBase
 
 build() {
@@ -11,17 +11,22 @@ build() {
   check $archive $sum
   extract $archive
 
+  # checking for valgrind
   [[ -x "$mkToolchainBase"/bin/valgrind ]] && \
-    VALGRIND="--with-valgrind --enable-memchecker"
+    with_valgrind="--with-valgrind --enable-memchecker"
+
+  # checking for InfiniBand
+  [[ -r "$mkToolchainBase"/lib/libibverbs.so ]] && \
+    with_ib="--with-verbs=$mkToolchainBase --enable-openib-rdmacm"
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
     LIBS=-ldl \
     ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
-                --enable-mpi-fortran=all --with-threads=posix --enable-ipv6 \
-                --enable-smp-locks --enable-pretty-print-stacktrace \
-                --disable-mpi-cxx --without-x --with-hwloc="$mkToolchainBase" \
-                --with-libltdl="$mkToolchainBase" $VALGRIND
+                --enable-mpi-fortran=all --enable-ipv6 --without-x \
+                --enable-pretty-print-stacktrace $with_valgrind $with_ib \
+                --with-hwloc="$mkToolchainBase" \
+                --with-libltdl="$mkToolchainBase"
     message "Compiling $pkgname"
     make
   popd

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+pkgname=libnl
+pkgver=3.2.27
+archive=$pkgname-${pkgver}.tar.gz
+sum=cec19f941b79a38d9eb92dbc171d6dbd
+
+dstdir=$mkToolchainBase
+
+build() {
+  download https://github.com/thom311/libnl/releases/download/$pkgname${pkgver//./_}/$archive
+  check $archive $sum
+  extract $archive
+
+  pushd $pkgname-$pkgver
+    message "Configuring $pkgname"
+    ./configure --build=$TARGET --prefix="$dstdir" \
+                --disable-silent-rules --disable-static
+    message "Compiling $pkgname"
+    make
+  popd
+}
+
+package() {
+  make -C $pkgname-$pkgver install
+}
