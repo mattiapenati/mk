@@ -72,6 +72,9 @@ install:
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) tmux
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) htop
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) gdb
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libnl
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) libibverbs
+	@"${mkPrefix}"/bin/mkpkg $(mkFlags) librdmacm
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) hwloc
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) openmpi
 	@"${mkPrefix}"/bin/mkpkg $(mkFlags) valgrind

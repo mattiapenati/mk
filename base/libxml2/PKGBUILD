@@ -15,7 +15,7 @@ build() {
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
     ./configure --build=$TARGET --prefix="$dstdir" --disable-static \
-                --with-thread --with-icu --with-history
+                --with-thread --with-icu --with-history --without-python
     message "Compiling $pkgname"
     make
   popd
@@ -23,4 +23,7 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
+  pushd $pkgname-$pkgver/python
+    python setup.py install --prefix="$dstdir"
+  popd
 }

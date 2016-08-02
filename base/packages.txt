@@ -2,8 +2,6 @@ This file contains the list of the packages contained in the base setup of each
 toolchain. The packages are listed in the order of installation, with its own
 dependencies:
 
-  (bash: is assumed to be installed)
-
   make: no dependencies
     GNU Make is a tool which controls the generation of executables and other
     non-source files of a program from the program's source files.
@@ -229,11 +227,24 @@ dependencies:
   gdb: expat, ncurses, python, texinfo, zlib
     The GNU Debugger.
 
+  (The following 3 libraries are required for the InfiniBand)
+
+  libnl: no dependencies
+    Library for applications dealing with netlink sockets.
+    ATTENTION: do not upgrade to version 3.2.28
+
+  libibverbs: libnl
+    OpenFabrics Alliance RDMA (remote direct memory access) InfiniBand verbs
+    library.
+
+  librdmacm: libibverbs
+    OpenFabrics Alliance datagram transfers over RDMA for InfiniBand and iWARP.
+
   hwloc: icu, libtool, libxml2, xz, zlib
     Portable Hardware Locality is a portable abstraction of hierarchical
     architectures.
 
-  openmpi: hwloc, libtool, valgrind
+  openmpi: hwloc, libibverbs, librdmacm, libtool, valgrind
     The Open MPI Project is an open source Message Passing Interface
     implementation that is developed and maintained by a consortium of
     academic, research, and industry partners.
