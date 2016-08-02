@@ -1,3 +1,4 @@
+#!/gpfs/work/agi_devel/a06ptm02/modules/bin/bash
 # Copyright (c) 2015, Mattia Penati <mattia.penati@gmail.com>
 # All rights reserved.
 #
@@ -599,7 +600,16 @@ reset_rpath_() {
     case $filetype in
       executable | library )
         log "Reset the RAPTH of '$file'"
-        "$mkPrefix"/bin/chrpath --delete $file
+        # we need to manage the case when find command find itself:
+        #   open: Text file busy
+        if [[ "$(basename "$file")" = "find" ]]; then
+          cp "$file" "$file.new"
+          "$mkPrefix"/bin/chrpath --delete "$file.new"
+          rm "$file"
+          mv "$file.new" "$file"
+        else
+          "$mkPrefix"/bin/chrpath --delete $file
+        fi
         ;;
       none) ;;
       *) error "Internal error"; exit 1

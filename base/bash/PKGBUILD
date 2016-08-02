@@ -31,5 +31,27 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver.$patchlevel install
-  ln -sv bash $dstdir/bin/sh
+  ln -sfv bash $dstdir/bin/sh
+
+  # replace shabang
+  if [[ "$mkTest" = "no" ]]; then
+    for file in c89 c99 catchsegv; do
+      [[ -e "$mkToolchainPrefix"/bin/$file ]] &&
+        sed -i "1s:^.*$:#!$mkToolchainBase/bin/sh:g" "$mkToolchainPrefix"/bin/$file
+    done
+    for file in ldd sotruss tzselect; do
+      [[ -e "$mkToolchainPrefix"/bin/$file ]] &&
+        sed -i "1s:^.*$:#!$mkToolchainBase/bin/bash:g" "$mkToolchainPrefix"/bin/$file
+    done
+    for file in $(find "$mkToolchainBase"/bin -type f); do
+      if [[ "$(file --mime-type -b $file)" = "text/x-shellscript" ]]; then
+        case $(head -n1 $file) in
+          *bash) sed -i "1s:^.*$:#!$mkToolchainBase/bin/bash:g" $file;;
+          *sh)   sed -i "1s:^.*$:#!$mkToolchainBase/bin/sh:g" $file;;
+          # bashbug (wtf?)
+          *)     sed -i "1s:^.*$:#!$mkToolchainBase/bin/sh -:g" $file;;
+        esac
+      fi
+    done
+  fi
 }
