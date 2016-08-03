@@ -90,6 +90,7 @@ alias rmdir="command rmdir -v"
 #   OS           the operating system
 #   CFLAGS       the common flags for C compiler
 #   CXXFLAGS     the common flags for C++ compiler
+#   FCFLAGS      the common flags for Fortran compiler
 source $mkPrefix/etc/mk.config
 
 if [[ ! $(realpath "$mkPrefix") = $(realpath "$PREFIX") ]]; then
@@ -123,6 +124,7 @@ case "$ARCH" in
   "x86_64")
     CFLAGS="$CFLAGS -fPIC"
     CXXFLAGS="$CXXFLAGS -fPIC"
+    FCFLAGS="$FCFLAGS -fPIC"
     ;;
   *)
     echo "Unsupported architecture '$ARCH'"
@@ -314,6 +316,7 @@ if [[ "$mkConfiguration" = "yes" ]]; then
   plain "TARGET           $TARGET"
   plain "CFLAGS           $CFLAGS"
   plain "CXXFLAGS         $CXXFLAGS"
+  plain "FCFLAGS          $FCFLAGS"
   plain "PATH             $PATH"
   plain "LD_LIBRARY_PATH  $LD_LIBRARY_PATH"
   plain "PKG_CONFIG_PATH  $PKG_CONFIG_PATH"
