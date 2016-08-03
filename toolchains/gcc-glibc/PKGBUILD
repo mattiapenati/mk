@@ -69,8 +69,7 @@ run() {
   binutilsver=2.27
   binutilsdir=binutils-$binutilsver
   binutilsarchive=binutils-$binutilsver.tar.bz2
-  #binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
-  binutilsurl=http://ftp.gnu.org/gnu/binutils/$binutilsarchive
+  binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
   binutilssum=6e472ddae565a2b1447e6f2393809bb8799982cf
 
   gmpver=6.1.1
