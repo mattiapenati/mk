@@ -66,17 +66,18 @@ run() {
   texinfourl=http://ftpmirror.gnu.org/texinfo/$texinfoarchive
   texinfosum=d39c2e35ddb0aff6ebdd323ce53729bd215534fa
 
-  binutilsver=2.26
+  binutilsver=2.27
   binutilsdir=binutils-$binutilsver
   binutilsarchive=binutils-$binutilsver.tar.bz2
-  binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
-  binutilssum=a637508cffeb2323b14bc8dd65378819768ad4ff
+  #binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
+  binutilsurl=http://ftp.gnu.org/gnu/binutils/$binutilsarchive
+  binutilssum=6e472ddae565a2b1447e6f2393809bb8799982cf
 
-  gmpver=6.1.0
+  gmpver=6.1.1
   gmpdir=gmp-$gmpver
   gmparchive=gmp-${gmpver}.tar.bz2
   gmpurl=http://ftpmirror.gnu.org/gmp/$gmparchive
-  gmpsum=db38c7b67f8eea9f2e5b8a48d219165b2fdab11f
+  gmpsum=757d672e66d8e0afe60ca04735ab11c00d9346e4
 
   mpfrver=3.1.4
   mpfrdir=mpfr-$mpfrver
@@ -365,6 +366,10 @@ run() {
     # --enable-obsolete-rpc
     #   This installs NIS and RPC related headers that are not installed by
     #   default. They are required to build other libraries.
+    # --with-tls --with-__thread
+    #   Enable the TLS.
+    # --enable-bind-now
+    #   Disable the lazy binding at linking.
     # libc_cv_ssp=no libc_cv_forced_unwind=yes
     #   https://sourceware.org/ml/libc-alpha/2012-09/msg00093.html
     #   Seems to be required to bootstrap a cross compiler.
@@ -374,6 +379,7 @@ run() {
                            --with-headers="$prefix/include" --enable-kernel=$linux \
                            --disable-werror --disable-nls \
                            --enable-add-ons --disable-profile --enable-obsolete-rpc \
+                           --with-tls --with-__thread --enable-bind-now \
                            libc_cv_ssp=no libc_cv_ssp_strong=no libc_cv_forced_unwind=yes
     make
     make install
