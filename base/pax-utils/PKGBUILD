@@ -1,9 +1,10 @@
 #!/bin/bash
 
 pkgname=pax-utils
-pkgver=1.0.5
+#pkgver=1.0.5
+pkgver=1.1.6
 archive=$pkgname-$pkgver.tar.xz
-sum=e3de243098c510570541f90012f753e8bd2a6886
+sum=8cde770d675f1a846fc385d67569c8e89d3207a0
 
 dstdir=$mkToolchainBase
 
@@ -14,17 +15,15 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
+    [[ -r "$srcdir"/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
     ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
-                --with-python
+                --without-python
     message "Compiling $pkgname"
     make
   popd
 }
 
 package() {
-  pip install --install-option="--prefix=$dstdir" pyelftools
   make -C $pkgname-$pkgver install
-  sed -e "1s:/usr/bin/python:$mkToolchainBase/bin/python:" \
-      -e "s:@GENTOO_PORTAGE_EPREFIX@:$mkToolchainPrefix:g" \
-      -i "$dstdir"/bin/lddtree
 }

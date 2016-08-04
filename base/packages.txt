@@ -227,27 +227,19 @@ dependencies:
   gdb: expat, ncurses, python, texinfo, zlib
     The GNU Debugger.
 
-  (The following 3 libraries are required for the InfiniBand)
-
   libnl: no dependencies
     Library for applications dealing with netlink sockets.
     ATTENTION: do not upgrade to version 3.2.28
-
-  libibverbs: libnl
-    OpenFabrics Alliance RDMA (remote direct memory access) InfiniBand verbs
-    library.
-
-  librdmacm: libibverbs
-    OpenFabrics Alliance datagram transfers over RDMA for InfiniBand and iWARP.
 
   hwloc: icu, libtool, libxml2, xz, zlib
     Portable Hardware Locality is a portable abstraction of hierarchical
     architectures.
 
-  openmpi: hwloc, libibverbs, librdmacm, libtool, valgrind
+  openmpi: hwloc, libnl, libtool, valgrind
     The Open MPI Project is an open source Message Passing Interface
     implementation that is developed and maintained by a consortium of
     academic, research, and industry partners.
+    It contains the support for job schedulers and Inifiband hardware.
 
   valgrind: gdb, openmpi, perl
     Valgrind is an instrumentation framework for building dynamic analysis

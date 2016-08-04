@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=make
-pkgver=4.1
+pkgver=4.2
 archive=$pkgname-$pkgver.tar.gz
-sum=6379dc729d757971e31c8267bd5e51f6d598090e
+sum=0ae8f44ad73e66d8f7b91e7e2e39ed8a8f2c7428
 
 dstdir=$mkToolchainBase
 

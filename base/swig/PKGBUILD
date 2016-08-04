@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=swig
-pkgver=3.0.8
+pkgver=3.0.10
 archive=$pkgname-$pkgver.tar.gz
-sum=c96a1d5ecb13d38604d7e92148c73c97
+sum=bb4ab8047159469add7d00910e203124
 dstdir=$mkToolchainBase
 
 build() {
