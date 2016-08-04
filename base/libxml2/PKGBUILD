@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=libxml2
-pkgver=2.9.3
+pkgver=2.9.4
 archive=$pkgname-$pkgver.tar.gz
-sum=0301ce933637e0ceda049047dbefd18714f59b6e
+sum=958ae70baf186263a4bd801a81dd5d682aedd1db
 
 dstdir=$mkToolchainBase
 

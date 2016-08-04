@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=tcl
-pkgver=8.6.5
+pkgver=8.6.6
 archive=$pkgname$pkgver-src.tar.gz
-sum=c3a50ea58dac00a3c7e83cb4a4651c40d0f55160
+sum=169dd1589cad62c9fac4257c113db245da502cd0
 dstdir=$mkToolchainBase
 
 build() {
@@ -37,7 +37,7 @@ package() {
       -e "s#$tmpdir/tcl$pkgver/pkgs/$tdbcver#$dstdir/include#" \
       -i "$dstdir/lib/$tdbcver/tdbcConfig.sh"
 
-  itclver=itcl4.0.4
+  itclver=itcl4.0.5
   sed -e "s#$tmpdir/tcl$pkgver/unix/pkgs/$itclver#$dstdir/lib/$itclver#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver/generic#$dstdir/include#" \
       -e "s#$tmpdir/tcl$pkgver/pkgs/$itclver#$dstdir/include#" \

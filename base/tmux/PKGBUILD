@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=tmux
-pkgver=2.1
+pkgver=2.2
 archive=$pkgname-$pkgver.tar.gz
-sum=7b9a63f1d029498705e6a7bb980bc2f554d9d258
+sum=5ed1430bc7ef44c227e64e9401c686573dd0791a
 dstdir=$mkToolchainBase
 
 build() {

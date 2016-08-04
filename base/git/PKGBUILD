@@ -1,10 +1,11 @@
 #!/bin/bash
 
 pkgname=git
-pkgver=2.7.4
+pkgver=2.9.2
 archive=$pkgname-$pkgver.tar.xz
-sum=a4198b668ec85d569fc088072c49e1d4172e6d66
+sum=095afe5c098b98e0d36e505fd059244e59be6cec
 dstdir=$mkToolchainBase
+mkParallelBuild=no
 
 build() {
   download https://www.kernel.org/pub/software/scm/git/$archive

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=htop
-pkgver=2.0.1
+pkgver=2.0.2
 archive=$pkgname-$pkgver.tar.gz
-sum=ef9adab68b0218a16936c306f635e7fce227b7e6
+sum=201f793f13dce2448e36047079875b9bd5bba75a
 
 dstdir=$mkToolchainBase
 

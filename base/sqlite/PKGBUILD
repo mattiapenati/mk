@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=sqlite
-pkgver=3110100
+pkgver=3130000
 archive=$pkgname-autoconf-$pkgver.tar.gz
-sum=c4b4dcd735a4daf5a2e2bb90f374484c8d4dad29
+sum=f6f76e310389e3f510b23826f805850449ae8653
 
 dstdir=$mkToolchainBase
 

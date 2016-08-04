@@ -91,6 +91,9 @@ alias rmdir="command rmdir -v"
 #   CFLAGS       the common flags for C compiler
 #   CXXFLAGS     the common flags for C++ compiler
 #   FCFLAGS      the common flags for Fortran compiler
+#   TM           the name of job scheduler
+#   TMPREFIX     the installation prefix of job scheduler
+#   INFINIBAND   the list of the required Infiniband drivers
 source $mkPrefix/etc/mk.config
 
 if [[ ! $(realpath "$mkPrefix") = $(realpath "$PREFIX") ]]; then
@@ -320,6 +323,13 @@ if [[ "$mkConfiguration" = "yes" ]]; then
   plain "PATH             $PATH"
   plain "LD_LIBRARY_PATH  $LD_LIBRARY_PATH"
   plain "PKG_CONFIG_PATH  $PKG_CONFIG_PATH"
+  if [[ -n "$TM" ]]; then
+    plain "TM               $TM"
+    plain "TMPREFIX         $TMPREFIX"
+  fi
+  if [[ -n "$INFINIBAND" ]]; then
+    plain "INFINIBAND       ${INFINIBAND[*]}"
+  fi
   exit 0
 fi
 
