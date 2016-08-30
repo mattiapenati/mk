@@ -1,6 +1,6 @@
 diff -Naur a/init/profile.in b/init/profile.in
 --- a/init/profile.in	2016-07-26 22:59:23.000000000 +0200
-+++ b/init/profile.in	2016-08-01 15:21:47.199400000 +0200
++++ b/init/profile.in	2016-08-05 00:31:18.455293000 +0200
 @@ -38,14 +38,6 @@
      export MANPATH=$(@PKG@/libexec/addto MANPATH @PKG@/share/man)
    fi
@@ -16,29 +16,19 @@ diff -Naur a/init/profile.in b/init/profile.in
    EXPR_CMD=@expr@
    if [ ! -x $EXPR_CMD ]; then
        if   [ -x /usr/bin/expr ]; then
-@@ -54,23 +46,12 @@
-           EXPR_CMD=/bin/expr
-       fi
+@@ -64,13 +56,12 @@
    fi
--  BASENAME_CMD=@basename@
--  if [ ! -x $BASENAME_CMD ]; then
--      if   [ -x /bin/basename ]; then
--          BASENAME_CMD=/bin/basename
--      elif [ -x /usr/bin/basename ]; then
--          BASENAME_CMD=/usr/bin/basename
--      fi
--  fi
--
+ 
  
 -  my_shell=$($PS_CMD -p $$ -ocomm=)
 -  my_shell=$($EXPR_CMD    "$my_shell" : '-*\(.*\)')
--  my_shell=$($BASENAME_CMD $my_shell)
 +  my_shell=$($EXPR_CMD    "$0" : '-*\(.*\)')
+   my_shell=$($BASENAME_CMD $my_shell)
    if [ -f @PKG@/init/$my_shell ]; then
       .    @PKG@/init/$my_shell >/dev/null # Module Support
    else
       .    @PKG@/init/sh        >/dev/null # Module Support
    fi
 -  unset my_shell PS_CMD EXPR_CMD BASENAME_CMD
-+  unset my_shell EXPR_CMD
++  unset my_shell EXPR_CMD BASENAME_CMD
  fi
