@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=matio
-pkgver=1.5.6
+pkgver=1.5.8
 archive=$pkgname-$pkgver.tar.gz
-sum=86f7636daa4160a01060ecfc4bf2f84c9fcd39e9
+sum=9c549709b6d3adb2ab09013bad47f55cfea5f5af
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

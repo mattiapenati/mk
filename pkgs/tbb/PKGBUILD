@@ -2,8 +2,9 @@
 
 pkgname=tbb
 pkgver=4.4
-archive=tbb44_20160128oss_src_0.tgz
-sum=80707e277f69d9b20eeebdd7a5f5331137868ce1
+_pkgver=44_20160526
+archive=tbb${_pkgver}oss_src_0.tgz
+sum=d6737ce2aa16e1d6729bb15ae067b139d0842533
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 url=https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source
 
@@ -12,7 +13,7 @@ build() {
   check $archive $sum
   extract $archive
 
-  pushd tbb44_20160128oss
+  pushd tbb${_pkgver}oss
     message "Compiling $pkgname"
     make cpp0x=1 tbb_build_prefix=BUILDPREFIX
   popd
@@ -21,13 +22,13 @@ build() {
 package() {
   install -vd $dstdir/{include,lib}
 
-  install -v tbb44_20160128oss/build/BUILDPREFIX_release/*.so.2 $dstdir/lib
+  install -v tbb${_pkgver}oss/build/BUILDPREFIX_release/*.so.2 $dstdir/lib
   strip $dstdir/lib
   for name in tbb tbbmalloc tbbmalloc_proxy; do
     ln -sv lib$name.so.2 $dstdir/lib/lib$name.so
   done
 
-  pushd tbb44_20160128oss/include
+  pushd tbb${_pkgver}oss/include
     tar -cf - tbb | (cd $dstdir/include && tar -xf -)
   popd
 

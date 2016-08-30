@@ -83,7 +83,7 @@ dependencies:
 
   (recompile gawk because of circular dependency gawk <> readline)
 
-  bash: readline
+  bash: ncurses, readline
     The Bash package contains the Bourne-Again SHell.
 
   automake: perl, autoconf
