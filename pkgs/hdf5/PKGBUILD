@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=hdf5
-pkgver=1.8.16
+pkgver=1.8.17
 archive=$pkgname-$pkgver.tar.bz2
-sum=a7b631778cb289edec670f665d2c3265983a0d53
+sum=640f1a46cb1b353339695355b4fca42df05be765
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 szipver=2.1
@@ -15,7 +15,7 @@ h5pyarchive=$h5pyver.tar.gz
 h5pysum=fb2b687eaa2600f218f5cf24aa67e35c8c91089e
 
 package() {
-  download http://www.hdfgroup.org/ftp/HDF5/current/src/$archive
+  download http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$pkgver/src/$archive
   download http://www.hdfgroup.org/ftp/lib-external/szip/$szipver/src/$sziparchive
   download https://github.com/h5py/h5py/archive/$h5pyarchive
 
