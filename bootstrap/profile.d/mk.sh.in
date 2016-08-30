@@ -3,7 +3,12 @@
 
 # Reset
 # =============================================================================
-export PATH=/usr/bin:/bin
+export mkPrefix=%PREFIX%
+PATH=/usr/bin:/bin
+if [[ "$0" == "$mkPrefix/bin/bash" ]]; then
+  PATH="$mkPrefix/bin:$mkPrefix/sbin:$PATH"
+fi
+export PATH
 export LD_LIBRARY_PATH=
 
 export MANPATH=
@@ -16,7 +21,6 @@ export LANG=C
 
 # Modules
 # =============================================================================
-export mkPrefix=%PREFIX%
 source $mkPrefix/lmod/lmod/init/profile
 export MODULEPATH=
 for dir in $(find $mkPrefix/modules -mindepth 1 -maxdepth 1 -type d); do
@@ -41,11 +45,4 @@ if [[ $(tput colors 2> /dev/null) -ge 8 ]]; then
 else
   export PS1='\u@\h \W \$ '
   export LMOD_COLORIZE=NO
-fi
-
-
-# Bash options
-# =============================================================================
-if [[ "$SHELL" == "/bin/bash" ]]; then
-  shopt -s checkwinsize
 fi
