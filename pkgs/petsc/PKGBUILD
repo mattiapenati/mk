@@ -2,15 +2,17 @@
 
 pkgname=petsc
 pkgver=3.6.3
-pestc4pyver=3.6.0
-sum=d10e2705ae2a7d095c8a9ba7d82993d0a303b077
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
-petscarchive=$pkgname-$pkgver.tar.gz
+petscver=$pkgver
+petscarchive=$pkgname-$petscver.tar.gz
 petscsum=d10e2705ae2a7d095c8a9ba7d82993d0a303b077
 
-slepcarchive=slepc-$pkgver.tar.gz
+slepcver=$pkgver
+slepcarchive=slepc-$slepcver.tar.gz
 slepcsum=e7ad595fb0494e01b2cece9fb6111bc31b0a5207
+
+petsc4pyver=3.6.0
 
 package() {
   download http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/$petscarchive
@@ -39,7 +41,7 @@ package() {
   # module load superlu
 
   # petsc
-  pushd $pkgname-$pkgver
+  pushd $pkgname-$petscver
     message "Configuring PETSc"
     ./configure --prefix="$dstdir" \
                 --with-petsc-arch=arch-linux-opt \
@@ -81,7 +83,7 @@ package() {
   popd
 
   # slepc
-  pushd slepc-$pkgver
+  pushd slepc-$slepcver
     message "Configuring SLEPc"
     ./configure --prefix="$dstdir" \
                 --with-arpack=1 \

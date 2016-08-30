@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=trilinos
-pkgver=12.6.1
+pkgver=12.6.3
 archive=$pkgname-$pkgver-Source.tar.bz2
-sum=e917b2cf17c7bae19e48bfbd04bc4d2cbb07accc
+sum=ce12da91d80a3120ee9b233938da6eb93fb125b7
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -29,8 +29,8 @@ build() {
   module load tbb
 
   pushd $pkgname-$pkgver-Source
-    [[ -r $srcdir/$pkgname-$pkgver.patch ]] && \
-      patch -p1 -i $srcdir/$pkgname-$pkgver.patch
+    [[ -r "$srcdir"/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
   popd
 
   mkdir build
