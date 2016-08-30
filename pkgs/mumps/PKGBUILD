@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=mumps
-pkgver=5.0.1
+pkgver=5.0.2
 archive=MUMPS_$pkgver.tar.gz
-sum=33262835a4fc5e753e2a92ef66009d8e9a031fca
+sum=ff296b05ad3205a9d091e14af813728bbb2b3407
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 mkParallelBuild=no
 
@@ -56,9 +56,9 @@ LIBOTHERS = -lpthread
 
 CDEFS   = -DAdd_
 
-OPTF   = -fPIC -O2 -DNDEBUG -DALLOW_NON_INIT
+OPTF   = ${FCFLAGS} -DALLOW_NON_INIT
 OPTL   = -fPIC -O2 -DNDEBUG
-OPTC   = -fPIC -O2 -DNDEBUG
+OPTC   = ${CFLAGS}
 
 INCS = \$(INCPAR)
 LIBS = \$(LIBPAR)
