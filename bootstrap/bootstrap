@@ -255,19 +255,13 @@ popd
 
 pkgname=bash
 pkgver=$bash_version
-_pkgver=${pkgver%.*}
 download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  for patch in {31..46}; do
-    patchfile=$pkgname${_pkgver//.}-$(printf "%03d" $patch)
-    download http://ftpmirror.gnu.org/$pkgname/$pkgname-$_pkgver-patches/$patchfile
-    patch -p0 -i $patchfile
-  done
   _cflags=( \
     -DDEFAULT_PATH_VALUE=\'\"${PREFIX}/bin:/usr/bin:/bin\"\' \
     -DSYS_BASHRC=\'\"${PREFIX}/etc/bash.bashrc\"\' \
-    -DSYS_BASH_LOGOUT=\'\"${PREIFX}/etc/bash.bash_logout\"\'
+    -DSYS_BASH_LOGOUT=\'\"${PREFIX}/etc/bash.bash_logout\"\'
   )
   CC="$TMPDIR/bin/musl-gcc -L$PREFIX/lib" \
   CFLAGS="-Os ${_cflags[@]}" \
