@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=python
-pkgver=2.7.12
+pkgver=2.7.13
 archive=Python-$pkgver.tar.xz
-sum=05360b8ade117b35e266b2004a7f1f11250c6dcd
+sum=18a8f30a0356c751b8d0ea6f76e764cab13ee046
 
 dstdir=$mkToolchainBase
 
@@ -13,6 +13,10 @@ build() {
   extract $archive
 
   pushd Python-$pkgver
+    # Python 2.7.13 - issue #29188 - https://bugs.python.org/issue29188
+    [[ -r "$srcdir"/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
+
     # ensure to use system libraries
     rm -rf Modules/{expat,zlib,_ctypes/{darwin,libffi}*}
     # fixing the system paths
@@ -22,10 +26,13 @@ build() {
     # --with-dbmliborder=bdb:gdbm
     #   Use this switch if you want to build Python DBM Module against Berkeley
     #   DB instead of GDBM
+    # --enable-optimizations
+    #   A release build with all optimizations active
     ./configure --build=$TARGET --prefix="$dstdir" --enable-shared \
                 --with-threads --enable-ipv6 --enable-unicode=ucs4 \
                 --with-system-expat --with-system-ffi --without-ensurepip \
-                --with-dbmliborder=bdb:gdbm:ndbm
+                --with-dbmliborder=bdb:gdbm:ndbm \
+                --enable-optimizations
     message "Compiling $pkgname"
     make
   popd

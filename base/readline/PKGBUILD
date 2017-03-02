@@ -1,10 +1,9 @@
 #!/bin/bash
 
 pkgname=readline
-pkgver=6.3
-patchlevel=8
+pkgver=7.0
 archive=$pkgname-$pkgver.tar.gz
-sum=017b92dc7fd4e636a2b5c9265a77ccc05798c9e1
+sum=d9095fa14a812495052357e1d678b3f2ac635463
 
 dstdir=$mkToolchainBase
 
@@ -17,7 +16,7 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Applying patches to $pkgname"
-    for patch in {1..8}; do
+    for patch in {1..3}; do
       patchfile=$pkgname${pkgver//.}-$(printf "%03d" $patch)
       download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver-patches/$patchfile
       patch -p0 -i "$srcdir"/$patchfile

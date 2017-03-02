@@ -1,10 +1,9 @@
 #!/bin/bash
 
 pkgname=bash
-pkgver=4.3
-patchlevel=30
-archive=$pkgname-$pkgver.$patchlevel.tar.gz
-sum=33b1bcc5dca1b72f28b2baeca6efa0d422097964
+pkgver=4.4
+archive=$pkgname-$pkgver.tar.gz
+sum=8de012df1e4f3e91f571c3eb8ec45b43d7c747eb
 
 dstdir=$mkToolchainBase
 
@@ -13,10 +12,10 @@ build() {
   check $archive $sum
   extract $archive
 
-  pushd $pkgname-$pkgver.$patchlevel
+  pushd $pkgname-$pkgver
     # download and apply the patch
     message "Applying patches to $pkgname"
-    for patch in {31..46}; do
+    for patch in {1..12}; do
       patchfile=$pkgname${pkgver//.}-$(printf "%03d" $patch)
       download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver-patches/$patchfile
       patch -p0 -i "$srcdir"/$patchfile
@@ -30,7 +29,7 @@ build() {
 }
 
 package() {
-  make -C $pkgname-$pkgver.$patchlevel install
+  make -C $pkgname-$pkgver install
   ln -sfv bash $dstdir/bin/sh
 
   # replace shabang

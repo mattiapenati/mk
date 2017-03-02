@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=hwloc
-pkgver=1.11.3
+pkgver=1.11.6
 archive=$pkgname-$pkgver.tar.bz2
-sum=66e71c50dbbd483c0c1cdac4dbced6ce19fcbcb3
+sum=7508710be4f9920b46936f6b975cab379298ebdd
 
 dstdir=$mkToolchainBase
 

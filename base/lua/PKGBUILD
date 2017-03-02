@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=lua
-pkgver=5.3.3
+pkgver=5.3.4
 archive=$pkgname-$pkgver.tar.gz
-sum=a0341bc3d1415b814cc738b2ec01ae56045d64ef
+sum=79790cfd40e09ba796b01a571d4d63b52b1cd950
 dstdir=$mkToolchainBase
 
 build() {
