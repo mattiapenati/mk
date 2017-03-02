@@ -1,14 +1,10 @@
 #!/bin/bash
 
 pkgname=vim
-pkgver=7.4.2152
+pkgver=8.0.0397
 archive=v$pkgver.tar.gz
-sum=afcc1a57ff4cd35323ee5502c6c214e2acdc50ea
+sum=81c4f262cff4749604050e1f7fb59bc632ddb706
 dstdir=$mkToolchainBase
-
-pagerver=2.06
-pagerarchive=$pagerver.tar.gz
-pagersum=4aa7feed1843e0b2554dd5110fbf031ba0889f9d
 
 build() {
   download https://github.com/vim/vim/archive/$archive
@@ -29,14 +25,12 @@ build() {
     make
   popd
 
-  download https://github.com/rkitover/vimpager/archive/$pagerarchive
-  check $pagerarchive $pagersum
-  extract $pagerarchive
+  git clone https://github.com/rkitover/vimpager.git
 }
 
 package() {
   make -C $pkgname-$pkgver install
-  make -C vimpager-$pagerver PREFIX="$dstdir" SYSCONFDIR="$dstdir"/etc install
+  make -C vimpager PREFIX="$dstdir" SYSCONFDIR="$dstdir"/etc install
   sed -i "s:/usr/bin/nawk:$mkToolchainBase/bin/nawk:g" \
-    "$dstdir"/share/vim/vim74/tools/mve.awk
+    "$dstdir"/share/vim/vim80/tools/mve.awk
 }

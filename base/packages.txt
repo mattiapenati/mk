@@ -124,6 +124,8 @@ dependencies:
     Grep searches one or more input files for lines containing a match to a
     specified pattern.
 
+  (recompile libtool because of circular dependency libtool <> grep)
+
   libffi: libtool
     The libffi library provides a portable, high level programming interface to
     various calling conventions. This allows a programmer to call any function
@@ -205,7 +207,7 @@ dependencies:
   sharutils: texinfo
     Makes so-called shell archives out of many files.
 
-  vim: lua, python, sharutils, tcl
+  vim: git, lua, python, sharutils, tcl
     Vim is an advanced text editor that seeks to provide the power of the
     de-facto Unix editor 'Vi', with a more complete feature set.
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=libnl
-pkgver=3.2.27
+pkgver=3.2.29
 archive=$pkgname-${pkgver}.tar.gz
-sum=cec19f941b79a38d9eb92dbc171d6dbd
+sum=a8ba62a5c4f883f4e493a46d1f3733fe
 
 dstdir=$mkToolchainBase
 

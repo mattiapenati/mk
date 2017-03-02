@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=openmpi
-pkgver=1.10.3
+pkgver=1.10.6
 archive=$pkgname-$pkgver.tar.bz2
-sum=a3355a5c1c96cf9298ef48061d9db8c2fbd014ea
+sum=cbb3121d30869ee89b5484af274b6b477d8ac72f
 dstdir=$mkToolchainBase
 
 install_ofed() {
@@ -87,11 +87,13 @@ package() {
   fi
 
   # checking for InfiniBand driver
-  message "Installing InfiniBand drivers: ${INFINIBAND[*]}"
   if [[ -n "${INFINIBAND[*]}" ]]; then
+    message "Installing InfiniBand drivers: ${INFINIBAND[*]}"
     install_inifipath
     install_libibverbs
     with_ib="--with-verbs=$dstdir --with-psm=$dstdir --enable-openib-rdmacm"
+  else
+    message "InfiniBand drivers are not requested"
   fi
   for driver in "${INFINIBAND[@]}"; do
     case $driver in

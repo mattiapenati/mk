@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=gdb
-pkgver=7.11
+pkgver=7.12.1
 archive=$pkgname-$pkgver.tar.xz
-sum=466208d771d97d3dfcf965d5c835a669cff8d847
+sum=ef77c5345d6f9fdcdf7a5d8503301242b701936e
 dstdir=$mkToolchainBase
 
 build() {

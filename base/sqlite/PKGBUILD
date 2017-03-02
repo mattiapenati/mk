@@ -1,14 +1,14 @@
 #!/bin/bash
 
 pkgname=sqlite
-pkgver=3130000
+pkgver=3170000
 archive=$pkgname-autoconf-$pkgver.tar.gz
-sum=f6f76e310389e3f510b23826f805850449ae8653
+sum=7bcff1c158ed9e2c0e159c1b4b6c36d4d65dff8c
 
 dstdir=$mkToolchainBase
 
 build() {
-  download https://www.sqlite.org/2016/$archive
+  download https://www.sqlite.org/2017/$archive
   check $archive $sum
   extract $archive
 

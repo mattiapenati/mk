@@ -23,7 +23,9 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  pushd $pkgname-$pkgver/python
-    python setup.py install --prefix="$dstdir"
-  popd
+  # TODO Python binding is disabled, it requires iconv and the configuration
+  # script point to the system headers directly.
+  # pushd $pkgname-$pkgver/python
+  #   python setup.py install --prefix="$dstdir"
+  # popd
 }

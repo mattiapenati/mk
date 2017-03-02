@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=zlib
-pkgver=1.2.8
+pkgver=1.2.11
 archive=$pkgname-$pkgver.tar.gz
-sum=44d667c142d7cda120332623eab69f40
+sum=1c9f62f0778697a09d36121ead88e08e
 
 dstdir=$mkToolchainBase
 

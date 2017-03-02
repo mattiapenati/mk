@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=openssl
-pkgver=1.0.2h
+pkgver=1.1.0e
 archive=$pkgname-$pkgver.tar.gz
-sum=577585f5f5d299c44dd3c993d3c0ac7a219e4949
+sum=8bbbaf36feffadd3cb9110912a8192e665ebca4b
 
 dstdir=$mkToolchainBase
 
@@ -30,20 +30,16 @@ package() {
   # installing certificates
   if [[ ! "$mkTest" = "no" ]]; then
     export LD_LIBRARY_PATH="$dstdir"/lib
+  else
+    update_linker_cache
   fi
   install -d "$dstdir"/libexec/ssl
   sed -e "s:%PREFIX%:$dstdir:g" "$srcdir"/make-ca > "$dstdir"/libexec/ssl/make-ca
-  sed -e "s:%PREFIX%:$dstdir:g" "$srcdir"/make-cert > "$dstdir"/libexec/ssl/make-cert
-  sed -e "s:%PREFIX%:$dstdir:g" "$srcdir"/remove-expired-certs > "$dstdir"/libexec/ssl/remove-expired-certs
-  chmod 0755 "$dstdir"/libexec/ssl/{make-ca,make-cert,remove-expired-certs}
-  sed -i "1s:/usr/bin/perl:$(which perl):" "$dstdir"/libexec/ssl/make-cert
-  download http://anduin.linuxfromscratch.org/sources/other/certdata.txt
-  ln -sf "$srcdir"/certdata.txt
-  "$dstdir"/libexec/ssl/make-ca
-  "$dstdir"/libexec/ssl/remove-expired-certs certs
-  install -d "$dstdir"/etc/ssl/certs
-  cp -v certs/*.pem "$dstdir"/etc/ssl/certs
-  "$dstdir"/bin/c_rehash
-  install BLFS-ca-bundle*.crt "$dstdir"/etc/ssl/ca-bundle.crt
-  ln -sf ../ca-bundle.crt "$dstdir"/etc/ssl/certs/ca-certificates.crt
+  chmod 0755 "$dstdir"/libexec/ssl/make-ca
+  sed -i "1s:/bin/bash:$(which bash):" "$dstdir"/libexec/ssl/make-ca
+
+  download http://anduin.linuxfromscratch.org/BLFS/other/certdata.txt
+  "$dstdir"/libexec/ssl/make-ca -f -C "$srcdir"/certdata.txt
+  ln -s ../ca-bundle.crt "$dstdir"/etc/ssl/certs/ca-bundle.crt
+  ln -s ca-bundle.crt "$dstdir"/etc/ssl/certs/ca-certificates.crt
 }

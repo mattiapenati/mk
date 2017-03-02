@@ -17,13 +17,6 @@ run() {
 
   # getting the versions
   case $pkgver in
-    4.8)
-      gccver=4.8.5
-      gccsum=de144b551f10e23d82f30ecd2d6d0e18c26f8850
-      islver=0.11.1
-      islsum=d7936929c3937e03f09b64c3c54e49422fa8ddb3
-      cloog=yes
-      ;;
     4.9)
       gccver=4.9.3
       gccsum=2e6490a908eac8b2b56b73679bd7c2a5237df1f8
@@ -38,9 +31,16 @@ run() {
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
       cloog=no
       ;;
+    6)
+      gccver=6.3.0
+      gccsum=928ab552666ee08eed645ff20ceb49d139205dea
+      islver=0.18
+      islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
+      cloog=no
+      ;;
     *)
       if [[ -z "$pkgver" ]]; then
-        error "Specify a valid version (4.8|4.9|5) for gcc"
+        error "Specify a valid version (4.9|5|6) for gcc"
       else
         error "Unsupported version '$pkgver'"
       fi
@@ -48,11 +48,11 @@ run() {
       ;;
   esac
 
-  m4ver=1.4.17
+  m4ver=1.4.18
   m4dir=m4-$m4ver
   m4archive=m4-$m4ver.tar.xz
   m4url=http://ftpmirror.gnu.org/m4/$m4archive
-  m4sum=74ad71fa100ec8c13bc715082757eb9ab1e4bbb0
+  m4sum=228604686ca23f42e48b98930babeb5d217f1899
 
   bisonver=3.0.4
   bisondir=bison-$bisonver
@@ -60,11 +60,11 @@ run() {
   bisonurl=http://ftpmirror.gnu.org/bison/$bisonarchive
   bisonsum=8270497aad88c7dd4f2c317298c50513fb0c3c8e
 
-  texinfover=6.1
+  texinfover=6.3
   texinfodir=texinfo-$texinfover
   texinfoarchive=texinfo-$texinfover.tar.xz
   texinfourl=http://ftpmirror.gnu.org/texinfo/$texinfoarchive
-  texinfosum=d39c2e35ddb0aff6ebdd323ce53729bd215534fa
+  texinfosum=64568f2791d1309aaccc22e63758458fd249ec8b
 
   binutilsver=2.27
   binutilsdir=binutils-$binutilsver
@@ -72,17 +72,17 @@ run() {
   binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
   binutilssum=6e472ddae565a2b1447e6f2393809bb8799982cf
 
-  gmpver=6.1.1
+  gmpver=6.1.2
   gmpdir=gmp-$gmpver
   gmparchive=gmp-${gmpver}.tar.bz2
   gmpurl=http://ftpmirror.gnu.org/gmp/$gmparchive
-  gmpsum=757d672e66d8e0afe60ca04735ab11c00d9346e4
+  gmpsum=366ded6a44cd108ba6b3f5b9a252eab3f3a95cdf
 
-  mpfrver=3.1.4
+  mpfrver=3.1.5
   mpfrdir=mpfr-$mpfrver
   mpfrarchive=mpfr-$mpfrver.tar.bz2
   mpfrurl=http://ftpmirror.gnu.org/mpfr/$mpfrarchive
-  mpfrsum=e3b0af77f18505184410d621fe0aae179e229dba
+  mpfrsum=874e84bb5959fd5a19c032cfb5d673dded4b5cff
 
   mpcver=1.0.3
   mpcdir=mpc-$mpcver
@@ -94,11 +94,11 @@ run() {
   islarchive=isl-$islver.tar.bz2
   islurl=http://isl.gforge.inria.fr/$islarchive
 
-  cloogver=0.18.1
+  cloogver=0.18.4
   cloogdir=cloog-$cloogver
   cloogarchive=cloog-$cloogver.tar.gz
   cloogurl=http://www.bastoul.net/cloog/pages/download/$cloogarchive
-  cloogsum=2dc70313e8e2c6610b856d627bce9c9c3f848077
+  cloogsum=8f7568ca1873f8d55bb694c8b9b83f7f4c6c1aa5
 
   libelfver=0.8.13
   libelfdir=libelf-$libelfver
@@ -130,6 +130,12 @@ run() {
       linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
       linuxsum=32bba2bbecab9e0eac1e6e5386440f2e57ebf55a
       ;;
+    3.16*)
+      linux=3.16
+      linuxver=3.16.40
+      linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
+      linuxsum=666b246355c4d4d9201d8c279d7b0a5b11e6e6e2
+      ;;
     *)
       error "Unsupported version of kernel '$linuxver'"
       exit 1
@@ -138,11 +144,11 @@ run() {
   linuxarchive=linux-$linuxver.tar.xz
   linuxurl=$linuxurl/$linuxarchive
 
-  glibcver=2.23
+  glibcver=2.25
   glibcdir=glibc-$glibcver
   glibcarchive=glibc-$glibcver.tar.xz
   glibcurl=http://ftpmirror.gnu.org/glibc/$glibcarchive
-  glibcsum=29f5b672b042ebf799051c00d9c7e2c43344e68a
+  glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
 
   # cleaning and creating the directories hierarchy
   dstdir=$PREFIX/pkgs/toolchains/$pkgname/$pkgver
@@ -319,17 +325,22 @@ run() {
     # --disable-libcilkrts --disable-libgomp --disable-libitm
     # --disable-libmudflap --disable-libquadmath --disable-libsanitizer
     # --disable-libssp --disable-libvtv --disable-libstdc__-v3
+    # --disable-libmpx [from GCC6 MPX support is enabled by default]
     #   Disable support for unused libraries for the bootstrap.
+    case $pkgver in
+      5 | 6) disabled_libraries="--disable-libmpx" ;;
+    esac
     ../$gccdir/configure --build=$BUILD --host=$BUILD --target=$TARGET \
                          --prefix="$tmpdir/tools" \
                          --with-native-system-header-dir="$prefix/include" \
                          --disable-nls --disable-multilib --disable-shared \
                          --with-newlib --without-headers \
-                         --enable-languages=c,c++ \
+                         --enable-languages=c,c++ --disable-bootstrap \
                          --disable-threads --disable-decimal-float --disable-libatomic \
                          --disable-libcilkrts --disable-libgomp --disable-libitm \
                          --disable-libmudflap --disable-libquadmath --disable-libsanitizer \
-                         --disable-libssp --disable-libvtv --disable-libstdc__-v3
+                         --disable-libssp --disable-libvtv --disable-libstdc__-v3 \
+                         ${disabled_libraries}
     make
     make install
   popd
@@ -386,7 +397,6 @@ run() {
   rm -rf glibc-build
   rm -rf $glibcdir
 
-  # TODO fix ldd script RTLDLIST="$prefix/lib/ld-linux-x86-64.so.2"
   # fix ldd script
   case $ARCH in
     x86_64) sed -e "s:RTLDLIST=.*:RTLDLIST=\"$prefix/lib/ld-linux-x86-64.so.2\":" \
@@ -453,9 +463,11 @@ run() {
   message "Compile the native compiler [GCC]"
   mkdir gcc-build
   pushd gcc-build
-    # CC="$TARGET-gcc -isystem $prefix/include -B$prefix/lib"
-    # CXX="$TARGET-g++ -isystem $prefix/include -B$prefix/lib"
+    # CC="$TARGET-gcc -idirafter $prefix/include -B$prefix/lib"
+    # CXX="$TARGET-g++ -idirafter $prefix/include -B$prefix/lib"
     #   Use the just installed compilers with the new libraries.
+    #   Flag -idirafter is used to fix the bug:
+    #     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70129
     # --build=$TARGET
     #   Built for the given target.
     # --prefix="$prefix" --with-local-prefix="$base"
@@ -472,8 +484,8 @@ run() {
     #   Enable a complete bootstrap for the compiler.
     # --enable-languages=c,c++,fortran
     #   This option ensures that only the C, C++ and Fortran compilers are built.
-    CC="$TARGET-gcc -isystem $prefix/include -B$prefix/lib" \
-    CXX="$TARGET-g++ -isystem $prefix/include -B$prefix/lib" \
+    CC="$TARGET-gcc -idirafter $prefix/include -B$prefix/lib" \
+    CXX="$TARGET-g++ -idirafter $prefix/include -B$prefix/lib" \
     ../$gccdir/configure --build=$TARGET \
                          --prefix="$prefix" --with-local-prefix="$base" \
                          --with-native-system-header-dir="$prefix/include" \
@@ -619,9 +631,6 @@ EOF
   compress_doc $prefix/share/{man,info}
 
   case $pkgver in
-    4.8) for lib in asan gfortran tsan; do
-           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
-         done;;
     4.9) for lib in asan cilkrts gfortran lsan tsan ubsan; do
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
          done;;
@@ -629,5 +638,14 @@ EOF
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
          done
          reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?;;
+    6)   for lib in asan cc1 cilkrts gfortran lsan tsan ubsan; do
+           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+         done
+         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so;;
   esac
+
+  # Install locale
+  mkdir -p "$prefix"/lib/locale
+  "$prefix"/bin/localedef -i en_US -f ISO-8859-1 en_US
+  "$prefix"/bin/localedef -i en_US -f UTF-8 en_US.UTF-8
 }

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=unrar
-pkgver=5.4.4
+pkgver=5.4.5
 archive=${pkgname}src-$pkgver.tar.gz
-sum=10f6e559e1ba58743e315901fb571b9c56745193
+sum=1590aec535792def68710dad7b73d5522e50c971
 
 dstdir=$mkToolchainBase
 

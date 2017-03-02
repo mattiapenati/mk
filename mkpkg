@@ -137,6 +137,7 @@ esac
 # exporting the environment variables
 export CFLAGS
 export CXXFLAGS
+export FCFLAGS
 
 # Check the environment variables used by mkpkg command
 [[ -z "$mkUseColor" ]] && mkUseColor=auto

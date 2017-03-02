@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=diffutils
-pkgver=3.3
+pkgver=3.5
 archive=$pkgname-$pkgver.tar.xz
-sum=6463cce7d3eb73489996baefd0e4425928ecd61e
+sum=1169cce8eaaf7290dc087d65db7ed75de0dceb93
 
 dstdir=$mkToolchainBase
 

@@ -23,6 +23,7 @@ build() {
     # PKG_CONFIG_LIBDIR=$mkToolchainBase/lib/pkgconfig
     #   Specify where to put .pc files.
     PKG_CONFIG_LIBDIR="$dstdir"/lib/pkgconfig \
+    CPPFLAGS="-P $CPPFLAGS" \
     ./configure --build=$TARGET --prefix="$dstdir" --mandir="$dstdir"/share/man \
                 --with-cxx --with-cxx-binding --without-ada \
                 --with-pkg-config=$(which pkg-config) --enable-pc-files \
