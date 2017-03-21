@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=lis
-pkgver=1.5.66
+pkgver=1.7.28
 archive=$pkgname-$pkgver.tar.gz
-sum=d4319605c6c35ada97196c6c28bf175c90863617
+sum=f929c4a1734fb0894ba47bc03b47a9244136814b
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

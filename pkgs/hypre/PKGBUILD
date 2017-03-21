@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=hypre
-pkgver=2.11.0
+pkgver=2.11.2
 archive=v$pkgver.tar.gz
-sum=839ac2284b233076ca223bbd2f6681741e5fa4e7
+sum=e20c0132f85978a1a0fe19332e6f920978e6c2bc
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=cgal
-pkgver=4.8.1
+pkgver=4.9
 archive=CGAL-$pkgver.tar.xz
-sum=4ce40e8a669c212df5c4ec0c5fa2f24c70402789
+sum=206e67701b881565134623ebf88d61f9d5f0360b
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
