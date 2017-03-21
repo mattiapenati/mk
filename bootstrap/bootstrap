@@ -259,8 +259,8 @@ download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
   for patch in {1..12}; do
-    patchfile=$pkgname${_pkgver//.}-$(printf "%03d" $patch)
-    download http://ftpmirror.gnu.org/$pkgname/$pkgname-$_pkgver-patches/$patchfile
+    patchfile=$pkgname${pkgver//.}-$(printf "%03d" $patch)
+    download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver-patches/$patchfile
     patch -p0 -i $patchfile
   done
   _cflags=( \
