@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=scipy
-pkgver=1.11.1
+pkgver=1.12.1
 archive=v$pkgver.tar.gz
-sum=ccb5bed5d868a9f97caf2a294ddbf00d77af80bd
+sum=d7664803ffcbb07db9275d08cf9e0a55dad327d3
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 

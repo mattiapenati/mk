@@ -1,14 +1,15 @@
 #!/bin/bash
 
 pkgname=R
-pkgver=3.3.0
+pkgver=3.3.3
 archive=$pkgname-$pkgver.tar.gz
-sum=166a25a7996150c9c83cdafcc89bfcd81578a887
+sum=9e205a817970578ecd80384f397bae35b46f13b9
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
+url=https://cran.r-project.org/src/base/R-3
 mirror=http://cran.mirror.garr.it/mirrors/CRAN
 
 build() {
-  download $mirror/src/base/R-${pkgver%%.*}/$archive
+  download $url/$archive
   check $archive $sum
   extract $archive
 

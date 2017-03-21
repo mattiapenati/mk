@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=netcdf
-pkgver=4.4.1
+pkgver=4.4.1.1
 archive=v$pkgver.tar.gz
-sum=1cae39472930a25d6ab1bdf6af2a0d85d09aedf9
+sum=61628f45c267db747cdca88bc3359a0954070ef7
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 fortranver=4.4.4
@@ -14,9 +14,9 @@ cxxver=4.3.0
 cxxarchive=v$cxxver.tar.gz
 cxxsum=c3290c514cfb414b5316a03e9cee1a48440d373c
 
-pythonver=1.2.4rel
+pythonver=1.2.7rel
 pythonarchive=v$pythonver.tar.gz
-pythonsum=a06140e12b28f58edc662fb904c4aaf9905d6f25
+pythonsum=d1c013b13aceca7e4890a9e07700c616f825f7b5
 
 package() {
   download https://github.com/Unidata/netcdf-c/archive/$archive

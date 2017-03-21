@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=octave
-pkgver=4.0.1
+pkgver=4.2.1
 archive=$pkgname-$pkgver.tar.gz
-sum=cdfcba30c80bc9b962ab85e9a010a3458cd27659
+sum=3d60e860d97c2497ec42de67f85a1eea2c79cdfd
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

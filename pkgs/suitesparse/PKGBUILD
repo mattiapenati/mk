@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=suitesparse
-pkgver=4.5.3
+pkgver=4.5.4
 archive=SuiteSparse-$pkgver.tar.gz
-sum=2403007be38266e3607edfbf3833bee7f6bcb0f1
+sum=33fb47e3140f1dd8cae10847a9344439d4aa66b2
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

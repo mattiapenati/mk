@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=eigen
-pkgver=3.2.9
+pkgver=3.3.3
 archive=$pkgver.tar.bz2
-sum=59ab81212f8eb2534b1545a9b42c38bf618a0d71
+sum=b676f3f58549104e4f233e1b21354d8be435d8fd
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -32,7 +32,7 @@ build() {
           -D UMFPACK_LIBRARIES="$mkSuitesparseLib"/libumfpack.so \
           -D SUPERLU_INCLUDES="$mkSuperluInc" \
           -D SUPERLU_LIBRARIES="$mkSuperluLib"/libsuperlu.so \
-          ../eigen-eigen-dc6cfdf9bcec
+          ../eigen-eigen-67e894c6cd8f
     # make check || true
   popd
 }
