@@ -7,4 +7,4 @@
  * getfem package
  * fenics package (missing PASTIX, QT, VTK)
 
- * R package
+ * R packages
