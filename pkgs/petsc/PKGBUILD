@@ -148,6 +148,8 @@ load("scipy")
 load("suitesparse")
 
 setenv("mkPetscPrefix", "$dstdir")
+setenv("PETSC_DIR", "$dstdir")
+setenv("SLEPC_DIR", "$dstdir")
 
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
