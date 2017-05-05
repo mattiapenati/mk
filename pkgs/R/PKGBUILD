@@ -40,7 +40,7 @@ package() {
 
   PKGS="classInt gpclib gstat MASS maps mapdata mvnormtest mvtnorm sp spatstat"
   PKGS="$PKGS spgwr VGAM vioplot tm snowballC twitteR biclust maptools"
-  PKGS="$PKGS RSQLite SDMTools sp spacetime gstat RandomFields frailtypack"
+  PKGS="$PKGS RSQLite SDMTools sp spacetime RandomFields frailtypack"
   PKGS="$PKGS fdatest readr readxl haven purrr lubridate broom cmaes fda"
   PKGS="$PKGS data.table reshape2 dplyr pryr stringr msm msmtools flexsurv"
   PKGS="$PKGS survival bigmemory biglm car afex lme4 nlme fastcluster"

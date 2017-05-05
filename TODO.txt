@@ -8,3 +8,6 @@
  * fenics package (missing PASTIX, QT, VTK)
 
  * R packages
+
+ * clang toolchain
+ * texlive package
