@@ -53,7 +53,7 @@ if test ! -d $mkPrefix; then
   echo "  mkPrefix='$mkPrefix'" >&2
   exit 1
 fi
-if test ! -r $mkPrefix/etc/mk.config; then
+if test ! -r "$mkPrefix/etc/mk.config"; then
   echo "Unable to read the configuration file '$mkPrefix/etc/mk.config'" >&2
   exit 1
 fi
@@ -565,7 +565,7 @@ get_filetype() {
 strip_() {
   local file=
   for file in $@; do
-    local filetype=$(get_filetype $file)
+    local filetype=$(get_filetype "$file")
 
     # we need to manage the case when strip command strips itself.
     if [[ $filetype = "executable" && "$(basename "$file")" = "strip" ]]; then
@@ -638,9 +638,9 @@ reset_rpath() {
   local file=
   for file in $@; do
     if [[ -d $file ]]; then
-      find $file -type f -print0 | while IFS= read -r -d '' file; do reset_rpath_ $file; done
+      find "$file" -type f -print0 | while IFS= read -r -d '' file; do reset_rpath_ "$file"; done
     else
-      reset_rpath_ $file
+      reset_rpath_ "$file"
     fi
   done
 }
@@ -723,7 +723,7 @@ run() {
   fi
   # the toolchain base dir cannot be cleared (otherwise it fails)
   if [[ -d "$dstdir" && ! "$dstdir" = "$mkToolchainBase" ]]; then
-    rm -rf "$dstdir"/*
+    rm -rf "${dstdir:?}/*"
   fi
   message "Building the package"
   build $@
@@ -742,15 +742,15 @@ set +h
 # ERR trap is inherited by functions
 set -E
 # reset log file
-> $mkLogFile
+> "$mkLogFile"
 # managing verbosity
 if [[ "$mkVerbose" = "yes" ]]; then
   # 1 and 2 are redirected to tee, tee writes in $mkLogFile then to the real output
-  exec 1> >(tee -a $mkLogFile >&3)
-  exec 2> >(tee -a $mkLogFile >&4)
+  exec 1> >(tee -a "$mkLogFile" >&3)
+  exec 2> >(tee -a "$mkLogFile" >&4)
 else
   # 1 and 2 are redirected directly to log file
-  exec 1>>$mkLogFile 2>&1
+  exec 1>>"$mkLogFile" 2>&1
 fi
 # debugging
 [[ "$mkDebug" = "yes" ]] && set -x
@@ -767,8 +767,8 @@ message "Running the build script '$pkgScript'"
 [[ -n "$pkgOptions" ]] && plain "options > $pkgOptions"
 message "Running in '$tmpdir'"
 source "$pkgScript"
-pushd $tmpdir
-run $pkgOptions
+pushd "$tmpdir"
+run "$pkgOptions"
 popd
 
 # cleanup

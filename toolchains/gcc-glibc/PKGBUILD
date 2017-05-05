@@ -38,9 +38,16 @@ run() {
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
       ;;
+    7)
+      gccver=7.1.0
+      gccsum=9f1e907f27eadefe7d5f7567c09e17805d9c8837
+      islver=0.18
+      islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
+      cloog=no
+      ;;
     *)
       if [[ -z "$pkgver" ]]; then
-        error "Specify a valid version (4.9|5|6) for gcc"
+        error "Specify a valid version (4.9|5|6|7) for gcc"
       else
         error "Unsupported version '$pkgver'"
       fi
@@ -113,28 +120,47 @@ run() {
   linuxver=$(uname -r)
   case $linuxver in
     2.6.32*)
+      warning "Too old linux version, it is no longer supported (last update March 2016)"
       linux=2.6.32
-      linuxver=2.6.32.66
+      linuxver=2.6.32.71
       linuxurl=https://www.kernel.org/pub/linux/kernel/v2.6/longterm/v2.6.32
-      linuxsum=a22b5875a673586566e1b0c89d26fe12d6f41237
+      linuxsum=bbce5984437bb5efa3a3e3aae368d3bc8bcbbbbe
       ;;
     3.10* | 3.11*)
       linux=3.10
-      linuxver=3.10.80
+      linuxver=3.10.105
       linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
-      linuxsum=e056a1b9dddab514e31ecf0b59d18608b78cde03
+      linuxsum=de6e10e6c141c74b212d8042720decfe5ca40b9b
       ;;
     3.12* | 3.13*)
       linux=3.12
-      linuxver=3.12.43
+      linuxver=3.12.73
       linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
-      linuxsum=32bba2bbecab9e0eac1e6e5386440f2e57ebf55a
+      linuxsum=5cbaf84a4de6e9d42ce902767a10c14f49167fa2
       ;;
     3.16*)
       linux=3.16
-      linuxver=3.16.40
+      linuxver=3.16.43
       linuxurl=https://www.kernel.org/pub/linux/kernel/v3.x
-      linuxsum=666b246355c4d4d9201d8c279d7b0a5b11e6e6e2
+      linuxsum=bb21f8f3ef26f5b49b83e517d7519e510927c658
+      ;;
+    4.1*)
+      linux=4.1
+      linuxver=4.1.39
+      linuxurl=https://www.kernel.org/pub/linux/kernel/v4.x
+      linuxsum=26874692c37dcc14b6de990523009a1f5638afb3
+      ;;
+    4.4*)
+      linux=4.4
+      linuxver=4.4.64
+      linuxurl=https://www.kernel.org/pub/linux/kernel/v4.x
+      linuxsum=4554451ee0b50e55674795f5d760fdbc72df7bf3
+      ;;
+    4.9*)
+      linux=4.9
+      linuxver=4.9.25
+      linuxurl=https://www.kernel.org/pub/linux/kernel/v4.x
+      linuxsum=af03c7630a24c2350e211142bd7d795558ddcc02
       ;;
     *)
       error "Unsupported version of kernel '$linuxver'"
@@ -328,7 +354,7 @@ run() {
     # --disable-libmpx [from GCC6 MPX support is enabled by default]
     #   Disable support for unused libraries for the bootstrap.
     case $pkgver in
-      5 | 6) disabled_libraries="--disable-libmpx" ;;
+      5 | 6 | 7) disabled_libraries="--disable-libmpx" ;;
     esac
     ../$gccdir/configure --build=$BUILD --host=$BUILD --target=$TARGET \
                          --prefix="$tmpdir/tools" \
@@ -420,7 +446,8 @@ run() {
     CXX="$TARGET-g++ -isystem $prefix/include -B$prefix/lib" \
     ../$gccdir/libstdc++-v3/configure \
       --build=$BUILD --host=$TARGET \
-      --prefix=$prefix --with-gxx-include-dir=$tmpdir/tools/$TARGET/include/c++/$gccver \
+      --prefix"=$prefix" \
+      --with-gxx-include-dir="$tmpdir/tools/$TARGET/include/c++/$gccver" \
       --disable-nls --disable-multilib --disable-libstdcxx-pch
     make
     make install
@@ -633,15 +660,18 @@ EOF
   case $pkgver in
     4.9) for lib in asan cilkrts gfortran lsan tsan ubsan; do
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
-         done;;
+         done
+         ;;
     5)   for lib in asan cc1 cilkrts gfortran gomp-plugin-host_nonshm lsan tsan ubsan; do
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
          done
-         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?;;
-    6)   for lib in asan cc1 cilkrts gfortran lsan tsan ubsan; do
+         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?
+         ;;
+    6|7) for lib in asan cc1 cilkrts gfortran lsan tsan ubsan; do
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
          done
-         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so;;
+         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so
+         ;;
   esac
 
   # Install locale
