@@ -151,7 +151,7 @@ fi
 
 # download and install the requested components
 # =============================================================================
-dialog --checklist "Choose toolchains:" 10 60 4 \
+dialog --checklist "Choose toolchains:" 11 60 4 \
   "gcc-glibc-4.9" "304MB + 650MB" off \
   "gcc-glibc-5"   "320MB + 657MB" on  \
   "gcc-glibc-6"   "330MB + 661MB" off \
