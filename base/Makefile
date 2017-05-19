@@ -32,12 +32,12 @@ install:
 	@mkpkg $(mkFlags) mpc
 	@mkpkg $(mkFlags) gawk
 	@mkpkg $(mkFlags) autoconf
+	@mkpkg $(mkFlags) automake
 	@mkpkg $(mkFlags) pkgconf
 	@mkpkg $(mkFlags) ncurses
 	@mkpkg $(mkFlags) readline
 	@mkpkg $(mkFlags) gawk
 	@mkpkg $(mkFlags) bash
-	@mkpkg $(mkFlags) automake
 	@mkpkg $(mkFlags) zlib
 	@mkpkg $(mkFlags) gzip
 	@mkpkg $(mkFlags) bzip2

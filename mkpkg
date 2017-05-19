@@ -1,4 +1,4 @@
-#!/gpfs/work/agi_devel/a06ptm02/modules/bin/bash
+#!/u/sw/bin/bash
 # Copyright (c) 2015, Mattia Penati <mattia.penati@gmail.com>
 # All rights reserved.
 #
@@ -128,6 +128,8 @@ case "$ARCH" in
     CFLAGS="$CFLAGS -fPIC"
     CXXFLAGS="$CXXFLAGS -fPIC"
     FCFLAGS="$FCFLAGS -fPIC"
+    ;;
+  "ppc64")
     ;;
   *)
     echo "Unsupported architecture '$ARCH'"
