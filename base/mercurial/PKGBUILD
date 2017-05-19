@@ -4,13 +4,18 @@ dstdir=$mkToolchainBase
 
 package() {
   pip install --install-option="--prefix=$dstdir" mercurial
-  SVN_PREFIX=$mkToolchainBase pip install --install-option="--prefix=$dstdir" subvertpy
-  pip install --install-option="--prefix=$dstdir" hg+https://mattiapenati@bitbucket.org/durin42/hgsubversion
-  pip install --install-option="--prefix=$dstdir" hg-git
 
   # mercurial configuration file with svn and git extensions
   install -dm755 "$dstdir"/etc/mercurial
-  echo "[extensions]" > "$dstdir"/etc/mercurial/hgrc
+  echo "[web]" > "$dstdir"/etc/mercurial/hgrc
+  echo "cacerts = $dstdir/etc/ssl/ca-bundle.crt" >> "$dstdir"/etc/mercurial/hgrc
+
+  SVN_PREFIX=$mkToolchainBase pip install --install-option="--prefix=$dstdir" subvertpy
+  pip install --install-option="--prefix=$dstdir" hg+https://bitbucket.org/durin42/hgsubversion
+  pip install --install-option="--prefix=$dstdir" hg-git
+
+  # mercurial configuration file with svn and git extensions
+  echo "[extensions]" >> "$dstdir"/etc/mercurial/hgrc
   echo "hgsubversion =" >> "$dstdir"/etc/mercurial/hgrc
   echo "hggit =" >> "$dstdir"/etc/mercurial/hgrc
 }

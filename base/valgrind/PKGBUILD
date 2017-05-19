@@ -12,6 +12,9 @@ build() {
   extract $archive
 
   pushd $pkgname-$pkgver
+    # (3.12.0) https://bugs.kde.org/show_bug.cgi?id=376729
+    [[ -r "$srcdir"/$pkgname-$pkgver.patch ]] &&
+      patch -Np1 -i "$srcdir"/$pkgname-$pkgver.patch
     message "Configuring $pkgname"
     ./configure --build=$TARGET --prefix="$dstdir" --disable-silent-rules \
                 --mandir="$dstdir"/share/man --with-mpicc=$(which mpicc)

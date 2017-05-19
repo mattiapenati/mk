@@ -667,6 +667,11 @@ setenv("mkToolchainPrefix", "$prefix")
 setenv("mkToolchainBase", "$base")
 setenv("mkToolchainModules", "$dstdir/modules")
 setenv("mkToolchainPkgs", "$dstdir/pkgs")
+
+-- compilers
+setenv("CC", "$prefix/bin/gcc")
+setenv("CXX", "$prefix/bin/g++")
+setenv("FC", "$prefix/bin/gfortran")
 EOF
 
   # cleaning

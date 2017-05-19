@@ -68,7 +68,11 @@ dependencies:
     Autoconf is an extensible package of M4 macros that produce shell scripts
     to automatically configure software source code packages.
 
-  pkgconf: autoconf
+  automake: perl, autoconf
+    Automake is a tool for automatically generating Makefile.in files compliant
+    with the GNU Coding Standards.
+
+  pkgconf: automake
     pkgconf is a program which helps to configure compiler and linker flags for
     development frameworks. It is similar to pkg-config, but was written from
     scratch in the summer of 2011 to replace pkg-config.
@@ -85,10 +89,6 @@ dependencies:
 
   bash: ncurses, readline
     The Bash package contains the Bourne-Again SHell.
-
-  automake: perl, autoconf
-    Automake is a tool for automatically generating Makefile.in files compliant
-    with the GNU Coding Standards.
 
   zlib: no dependencies
     The zlib compression library provides in-memory compression and

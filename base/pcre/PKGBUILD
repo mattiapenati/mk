@@ -8,7 +8,7 @@ sum=12f338719b8b028a2eecbf9192fcc00a13fc04f6
 dstdir=$mkToolchainBase
 
 build() {
-  download ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/$archive
+  download https://ftp.pcre.org/pub/pcre/$archive
   check $archive $sum
   extract $archive
 

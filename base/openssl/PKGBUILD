@@ -14,6 +14,7 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
+    KERNEL_BITS=64 \
     ./config --prefix="$dstdir" --openssldir="$dstdir"/etc/ssl --libdir=lib \
              shared zlib-dynamic
     message "Compiling $pkgname"

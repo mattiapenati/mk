@@ -8,7 +8,7 @@ sum=958ae70baf186263a4bd801a81dd5d682aedd1db
 dstdir=$mkToolchainBase
 
 build() {
-  download ftp://xmlsoft.org/libxml2/$archive
+  download http://xmlsoft.org/sources/$archive
   check $archive $sum
   extract $archive
 
