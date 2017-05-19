@@ -150,7 +150,7 @@ run() {
       linuxurl=https://www.kernel.org/pub/linux/kernel/v4.x
       linuxsum=26874692c37dcc14b6de990523009a1f5638afb3
       ;;
-    4.4*)
+    4.4* | 4.8*)
       linux=4.4
       linuxver=4.4.64
       linuxurl=https://www.kernel.org/pub/linux/kernel/v4.x
@@ -252,6 +252,11 @@ run() {
     [[ -r $srcdir/binutils-$binutilsver.patch ]] && \
       patch -p1 -i $srcdir/binutils-$binutilsver.patch
   popd
+  pushd $gccdir
+    # (5.4) https://www.mail-archive.com/gcc-patches@gcc.gnu.org/msg159613.html
+    [[ -r $srcdir/gcc-$gccver.patch ]] && \
+      patch -p1 -i $srcdir/gcc-$gccver.patch
+  popd
   make -C $linuxdir mrproper
   [[ -d $gmpdir ]] && ln -vs ../$gmpdir $gccdir/gmp
   [[ -d $mpfrdir ]] && ln -vs ../$mpfrdir $gccdir/mpfr
@@ -269,6 +274,15 @@ run() {
              echo "#define STANDARD_STARTFILE_PREFIX_2 \"$base/lib\"" \
                >> $gccdir/gcc/config/i386/linux64.h
              ;;
+    ppc64)  sed -i "/m64=/s/lib64/lib/" \
+              $gccdir/gcc/config/rs6000/t-linux64
+            sed -i "s:lib64:lib:g;s:/lib:$prefix/lib:g" \
+              $gccdir/gcc/config/rs6000/linux64.h
+            echo "#define STANDARD_STARTFILE_PREFIX_1 \"$prefix/lib\"" \
+              >> $gccdir/gcc/config/rs6000/linux64.h
+            echo "#define STANDARD_STARTFILE_PREFIX_2 \"$base/lib\"" \
+              >> $gccdir/gcc/config/rs6000/linux64.h
+            ;;
   esac
 
   # fix CFLAGS and CXXFLAGS environment variables
@@ -375,7 +389,11 @@ run() {
   # install linux header files and compile the C standard library
   message "Installing the Linux headers"
   pushd $linuxdir
-    make ARCH="$ARCH" INSTALL_HDR_PATH="$prefix" headers_install
+    case $ARCH in
+      ppc64) _ARCH=powerpc;;
+      *)     _ARCH=$ARCH;;
+    esac
+    make ARCH="$_ARCH" INSTALL_HDR_PATH="$prefix" headers_install
   popd
   rm -rf $linuxdir
 
@@ -426,6 +444,8 @@ run() {
   # fix ldd script
   case $ARCH in
     x86_64) sed -e "s:RTLDLIST=.*:RTLDLIST=\"$prefix/lib/ld-linux-x86-64.so.2\":" \
+                -i "$prefix"/bin/ldd;;
+    ppc64)  sed -e "/RTLDLIST=/s/lib64/lib/" \
                 -i "$prefix"/bin/ldd;;
   esac
 
