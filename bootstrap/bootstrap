@@ -207,13 +207,14 @@ pushd "$TMPDIR/src"
 # setting the default compiler
 # =============================================================================
 if [ -z ${CC+x} ]; then
-	CC=gcc
+  CC=gcc
 fi
+ARCH=$(uname -m)
 
 # check if the -static flag is accepted
 # =============================================================================
 echo "int main() { return 0; }" | $CC -o hello -x c - &> /dev/null
-if [ $? -ne 0 ]; then
+if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
   # install the muslc for static linking
   # =====================================================================
   pkgname=musl
@@ -230,7 +231,7 @@ if [ $? -ne 0 ]; then
   download https://github.com/sabotage-linux/$pkgname/archive/v$pkgver.tar.gz
   extract v$pkgver.tar.gz
   pushd $pkgname-$pkgver
-    make ARCH=$(uname -m) prefix="$TMPDIR" install
+    make ARCH=$ARCH prefix="$TMPDIR" install
   popd
 
   CC="$TMPDIR/bin/musl-gcc"
@@ -355,14 +356,12 @@ cat > lua/include/config.h << EOF
 #define HAVE_SYS_STATVFS_H 1
 EOF
 
-#define HAVE_CRYPT 1
-#define HAVE_CRYPT_H 1
-
 CFLAGS="-O2 -Wall -DLUA_USE_POSIX -DLUA_COMPAT_5_2 -DLUA_USE_LINENOISE"
 CPPFLAGS="-I$(pwd)/lua/include"
 LDFLAGS="-Wl,-s -Wl,-E -static -lc -lm"
 pushd lua/src
-  [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
+  [[ -r $DIR/$pkgname-$pkgver.patch ]] && \
+    patch -p1 -i $DIR/$pkgname-$pkgver.patch
   for file in $(ls -A); do
     $CC $CPPFLAGS $CFLAGS -c $file
   done
