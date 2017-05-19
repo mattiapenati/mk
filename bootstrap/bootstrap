@@ -204,23 +204,39 @@ TMPDIR=$(mktmpdir)
 install -d "$TMPDIR/src"
 pushd "$TMPDIR/src"
 
-# install the muslc for static linking
+# setting the default compiler
 # =============================================================================
-pkgname=musl
-pkgver=$musl_version
-download http://www.musl-libc.org/releases/$pkgname-$pkgver.tar.gz
-extract $pkgname-$pkgver.tar.gz
-pushd $pkgname-$pkgver
-  CFLAGS="-O2" ./configure --prefix="$TMPDIR" --disable-shared; make install
-popd
+if [ -z ${CC+x} ]; then
+	CC=gcc
+fi
 
-pkgname=kernel-headers
-pkgver=$kernel_version
-download https://github.com/sabotage-linux/$pkgname/archive/v$pkgver.tar.gz
-extract v$pkgver.tar.gz
-pushd $pkgname-$pkgver
-  make ARCH=$(uname -m) prefix="$TMPDIR" install
-popd
+# check if the -static flag is accepted
+# =============================================================================
+echo "int main() { return 0; }" | $CC -o hello -x c - &> /dev/null
+if [ $? -ne 0 ]; then
+  # install the muslc for static linking
+  # =====================================================================
+  pkgname=musl
+  pkgver=$musl_version
+  download http://www.musl-libc.org/releases/$pkgname-$pkgver.tar.gz
+  extract $pkgname-$pkgver.tar.gz
+  pushd $pkgname-$pkgver
+    # Power64 patch
+    CFLAGS="-O2" ./configure --prefix="$TMPDIR" --disable-shared; make install
+  popd
+
+  pkgname=kernel-headers
+  pkgver=$kernel_version
+  download https://github.com/sabotage-linux/$pkgname/archive/v$pkgver.tar.gz
+  extract v$pkgver.tar.gz
+  pushd $pkgname-$pkgver
+    make ARCH=$(uname -m) prefix="$TMPDIR" install
+  popd
+
+  CC="$TMPDIR/bin/musl-gcc"
+fi
+rm -f hello
+
 
 # install the administration tools: chrpath, bash, busybox
 # =============================================================================
@@ -229,7 +245,7 @@ pkgver=$chrpath_version
 download https://alioth.debian.org/frs/download.php/latestfile/813/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CC="$TMPDIR/bin/musl-gcc" \
+  CC="$CC" \
   CFLAGS="-Os" LDFLAGS="-static" \
   ./configure
   make
@@ -242,7 +258,7 @@ pkgver=$ncurses_version
 download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CC="$TMPDIR/bin/musl-gcc" \
+  CC="$CC" \
   CFLAGS="-Os" LDFLAGS="-static" \
   ./configure --prefix="$PREFIX" \
               --without-cxx --without-cxx-binding --without-ada \
@@ -268,7 +284,7 @@ pushd $pkgname-$pkgver
     -DSYS_BASHRC=\'\"${PREFIX}/etc/bash.bashrc\"\' \
     -DSYS_BASH_LOGOUT=\'\"${PREFIX}/etc/bash.bash_logout\"\'
   )
-  CC="$TMPDIR/bin/musl-gcc -L$PREFIX/lib" \
+  CC="$CC -L$PREFIX/lib" \
   CFLAGS="-Os ${_cflags[@]}" \
   LDFLAGS="-static" \
   ./configure --prefix="$PREFIX" --without-bash-malloc \
@@ -295,7 +311,7 @@ pushd $pkgname-$pkgver
   # see http://www.openwall.com/lists/musl/2012/10/08/2
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   cp -v $DIR/$pkgname-$pkgver.config .config
-  make V=1 CC="$TMPDIR/bin/musl-gcc"
+  make V=1 CC="$CC" LDFLAGS="-static"
   install -vm 0755 busybox "$PREFIX/bin/busybox"
 popd
 
@@ -335,22 +351,23 @@ sed -e "s:/usr/local:$PREFIX:g" -i lua/include/luaconf.h
 sed '13,17d' -i lua/include/lua52compat.h
 cat > lua/include/config.h << EOF
 #define VERSION "5.1.20"
-#define HAVE_CRYPT 1
-#define HAVE_CRYPT_H 1
 #define HAVE_STATVFS 1
 #define HAVE_SYS_STATVFS_H 1
 EOF
 
+#define HAVE_CRYPT 1
+#define HAVE_CRYPT_H 1
+
 CFLAGS="-O2 -Wall -DLUA_USE_POSIX -DLUA_COMPAT_5_2 -DLUA_USE_LINENOISE"
 CPPFLAGS="-I$(pwd)/lua/include"
-LDFLAGS="-Wl,-s -Wl,-E"
+LDFLAGS="-Wl,-s -Wl,-E -static -lc -lm"
 pushd lua/src
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   for file in $(ls -A); do
-    $TMPDIR/bin/musl-gcc $CPPFLAGS $CFLAGS -c $file
+    $CC $CPPFLAGS $CFLAGS -c $file
   done
-  $TMPDIR/bin/musl-gcc $(ls *.o | grep -v ^luac.o) $LDFLAGS -o lua
-  $TMPDIR/bin/musl-gcc $(ls *.o | grep -v ^lua.o) $LDFLAGS -o luac
+  $CC $(ls *.o | grep -v ^luac.o) $LDFLAGS -o lua
+  $CC $(ls *.o | grep -v ^lua.o) $LDFLAGS -o luac
   install -m 0755 lua "$PREFIX/bin/lua"
   install -m 0755 luac "$PREFIX/bin/luac"
 popd
