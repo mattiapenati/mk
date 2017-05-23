@@ -14,11 +14,16 @@ build() {
   pushd OpenBLAS-$pkgver
     make clean
     message "Compiling $pkgname"
-    make USE_THREAD=1 USE_OPENMP=0 DYNAMIC_ARCH=1 libs netlib shared
-    cc -o openblas_corename $srcdir/openblas_corename.c cpuid.S cpuid_x86.c
-    cc -o openblas_numcores $srcdir/openblas_numcores.c cpuid.S cpuid_x86.c
+    # (ppc64) does not support DYNAMIC_ARCH
+    # https://github.com/xianyi/OpenBLAS/issues/48
+    case $ARCH in
+      ppc64) DYNAMIC_ARCH=0;;
+      *)     DYNAMIC_ARCH=1;;
+    esac
+    make USE_THREAD=1 USE_OPENMP=0 DYNAMIC_ARCH=$DYNAMIC_ARCH libs netlib shared
+    cc -I. -o openblas_corename $srcdir/openblas_corename.c cpuid.S
+    cc -I. -o openblas_numcores $srcdir/openblas_numcores.c cpuid.S
   popd
-
 }
 
 package() {

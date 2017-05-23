@@ -108,6 +108,7 @@ package() {
           -D CHOLMOD_DIR="$mkSuitesparsePrefix" \
           -D DOLFIN_ENABLE_PASTIX=OFF \
           -D DOLFIN_ENABLE_QT=OFF \
+          -D DOLFIN_ENABLE_UNIT_TESTS=OFF \
           -D DOLFIN_ENABLE_VTK=OFF \
           -D EIGEN3_INCLUDE_DIR="$mkEigenInc" \
           -D PETSC_DIR="$mkPetscPrefix" \

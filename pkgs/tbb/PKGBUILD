@@ -25,7 +25,7 @@ package() {
   install -v tbb-${_pkgver}/build/BUILDPREFIX_release/*.so.2 $dstdir/lib
   strip $dstdir/lib
   for name in tbb tbbmalloc tbbmalloc_proxy; do
-    ln -sv lib$name.so.2 $dstdir/lib/lib$name.so
+    ln -sfv lib$name.so.2 $dstdir/lib/lib$name.so
   done
 
   pushd tbb-${_pkgver}/include
