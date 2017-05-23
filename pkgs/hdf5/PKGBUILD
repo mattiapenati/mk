@@ -43,6 +43,8 @@ package() {
   # hdf5
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
+    CC=mpicc \
+    FC=mpifort \
     ./configure --disable-silent-rules \
                 --prefix="$dstdir" \
                 --enable-shared \

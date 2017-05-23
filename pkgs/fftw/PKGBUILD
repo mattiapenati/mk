@@ -14,13 +14,16 @@ build() {
 
   local conflags="--prefix=$dstdir --enable-mpi --enable-threads"
   conflags="$conflags --enable-shared --disable-static --disable-debug"
+  case $ARCH in
+    x86_64) conflags="$conflags --enable-sse2";;
+  esac
 
   install -vd dstdir
   local prefix=$(pwd)/dstdir
 
   pushd $pkgname-$_pkgver
     message "Configuring single precision $pkgname"
-    ./configure $conflags --enable-single --enable-sse2
+    ./configure $conflags --enable-single
     message "Compiling single precision $pkgname"
     make
     make install DESTDIR=$prefix
@@ -28,7 +31,7 @@ build() {
     make clean
 
     message "Configuring double precision $pkgname"
-    ./configure $conflags --enable-sse2
+    ./configure $conflags
     message "Compiling double precision $pkgname"
     make
     make install DESTDIR=$prefix
