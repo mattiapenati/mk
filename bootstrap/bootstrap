@@ -281,7 +281,7 @@ pkgver=$bash_version
 download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  for patch in {1..12}; do
+  for patch in {1..19}; do
     patchfile=$pkgname${pkgver//.}-$(printf "%03d" $patch)
     download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver-patches/$patchfile
     patch -p0 -i $patchfile
