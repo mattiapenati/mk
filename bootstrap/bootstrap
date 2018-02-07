@@ -291,9 +291,9 @@ pushd $pkgname-$pkgver
     -DSYS_BASHRC=\'\"${PREFIX}/etc/bash.bashrc\"\' \
     -DSYS_BASH_LOGOUT=\'\"${PREFIX}/etc/bash.bash_logout\"\'
   )
-  CC="$CC -L$PREFIX/lib" LD="$LD -L$PREFIX/lib" \
+  CC="$CC -L$PREFIX/lib" LD="$LD" \
   CFLAGS="-Os ${_cflags[@]}" \
-  LDFLAGS="-static" \
+  LDFLAGS="-static -L$PREFIX/lib" \
   ./configure --prefix="$PREFIX" --without-bash-malloc \
     --disable-nls --enable-readline --with-curses
   make
@@ -318,7 +318,7 @@ pushd $pkgname-$pkgver
   # see http://www.openwall.com/lists/musl/2012/10/08/2
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   cp -v $DIR/$pkgname-$pkgver.config .config
-  make V=1 CC="$CC" LDFLAGS="-static" LD="$LD"
+  make V=1 CC="$CC -L$PREFIX/lib" LDFLAGS="-static -L$PREFIX/lib" LD="$LD"
   install -vm 0755 busybox "$PREFIX/bin/busybox"
 popd
 
