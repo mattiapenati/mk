@@ -222,8 +222,9 @@ if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
   download http://www.musl-libc.org/releases/$pkgname-$pkgver.tar.gz
   extract $pkgname-$pkgver.tar.gz
   pushd $pkgname-$pkgver
-    # Power64 patch
-    CFLAGS="-O2" ./configure --prefix="$TMPDIR" --disable-shared; make install
+    CFLAGS="-O2" \
+    ./configure --prefix="$TMPDIR" --disable-shared --enable-wrapper
+    make install
   popd
 
   pkgname=kernel-headers
@@ -234,7 +235,12 @@ if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
     make ARCH=$ARCH prefix="$TMPDIR" install
   popd
 
-  CC="$TMPDIR/bin/musl-gcc"
+  if [[ -e "$TMPDIR/bin/ld.musl-$CC" ]]; then
+    LD="$TMPDIR/bin/ld.musl-$CC"
+  else
+    LD=$(which ld)
+  fi
+  CC="$TMPDIR/bin/musl-$CC"
 fi
 rm -f hello
 
@@ -246,7 +252,7 @@ pkgver=$chrpath_version
 download https://alioth.debian.org/frs/download.php/latestfile/813/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CC="$CC" \
+  CC="$CC" LD="$LD" \
   CFLAGS="-Os" LDFLAGS="-static" \
   ./configure
   make
@@ -259,7 +265,7 @@ pkgver=$ncurses_version
 download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CC="$CC" \
+  CC="$CC" LD="$LD" \
   CFLAGS="-Os" LDFLAGS="-static" \
   ./configure --prefix="$PREFIX" \
               --without-cxx --without-cxx-binding --without-ada \
@@ -285,7 +291,7 @@ pushd $pkgname-$pkgver
     -DSYS_BASHRC=\'\"${PREFIX}/etc/bash.bashrc\"\' \
     -DSYS_BASH_LOGOUT=\'\"${PREFIX}/etc/bash.bash_logout\"\'
   )
-  CC="$CC -L$PREFIX/lib" \
+  CC="$CC -L$PREFIX/lib" LD="$LD -L$PREFIX/lib" \
   CFLAGS="-Os ${_cflags[@]}" \
   LDFLAGS="-static" \
   ./configure --prefix="$PREFIX" --without-bash-malloc \
@@ -312,7 +318,7 @@ pushd $pkgname-$pkgver
   # see http://www.openwall.com/lists/musl/2012/10/08/2
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   cp -v $DIR/$pkgname-$pkgver.config .config
-  make V=1 CC="$CC" LDFLAGS="-static"
+  make V=1 CC="$CC" LDFLAGS="-static" LD="$LD"
   install -vm 0755 busybox "$PREFIX/bin/busybox"
 popd
 
