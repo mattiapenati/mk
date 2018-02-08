@@ -105,6 +105,19 @@ UPDATE=no
 USER=$(id -un)
 GROUP=$(id -gn)
 
+# checking the system
+# =============================================================================
+ALPINE_LINUX=no
+if [[ -e /etc/alpine-release ]]; then
+  ALPINE_LINUX=yes
+fi
+
+COMPILE_MUSL_LIBC=yes
+# alpine linux can already create static executable without strange issues
+if [[ $ALPINE_LINUX = "yes" ]]; then
+  COMPILE_MUSL_LIBC=no
+fi
+
 # parse command line arguments
 # =============================================================================
 if [[ -z "$@" ]]; then
@@ -214,7 +227,7 @@ ARCH=$(uname -m)
 # check if the -static flag is accepted
 # =============================================================================
 echo "int main() { return 0; }" | $CC -o hello -x c - &> /dev/null
-if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
+if [ $COMPILE_MUSL_LIBC = "yes" -a \( $? -ne 0 -o $ARCH == "x86_64" \) ]; then
   # install the muslc for static linking
   # =====================================================================
   pkgname=musl
@@ -222,9 +235,8 @@ if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
   download http://www.musl-libc.org/releases/$pkgname-$pkgver.tar.gz
   extract $pkgname-$pkgver.tar.gz
   pushd $pkgname-$pkgver
-    CFLAGS="-O2" \
-    ./configure --prefix="$TMPDIR" --disable-shared --enable-wrapper
-    make install
+    # Power64 patch
+    CFLAGS="-O2" ./configure --prefix="$TMPDIR" --disable-shared; make install
   popd
 
   pkgname=kernel-headers
@@ -235,12 +247,7 @@ if [ $? -ne 0 -o $ARCH == "x86_64" ]; then
     make ARCH=$ARCH prefix="$TMPDIR" install
   popd
 
-  if [[ -e "$TMPDIR/bin/ld.musl-$CC" ]]; then
-    LD="$TMPDIR/bin/ld.musl-$CC"
-  else
-    LD=$(which ld)
-  fi
-  CC="$TMPDIR/bin/musl-$CC"
+  CC="$TMPDIR/bin/musl-gcc"
 fi
 rm -f hello
 
@@ -252,7 +259,7 @@ pkgver=$chrpath_version
 download https://alioth.debian.org/frs/download.php/latestfile/813/$pkgname-$pkgver.tar.gz
 extract $pkgname-$pkgver.tar.gz
 pushd $pkgname-$pkgver
-  CC="$CC" LD="$LD" \
+  CC="$CC" \
   CFLAGS="-Os" LDFLAGS="-static" \
   ./configure
   make
@@ -260,21 +267,15 @@ pushd $pkgname-$pkgver
   install -vm 0755 chrpath "$PREFIX/bin/chrpath"
 popd
 
-pkgname=ncurses
-pkgver=$ncurses_version
-download http://ftpmirror.gnu.org/$pkgname/$pkgname-$pkgver.tar.gz
-extract $pkgname-$pkgver.tar.gz
+pkgname=netbsd-curses
+pkgver=$curses_version
+download http://ftp.barfooze.de/pub/sabotage/tarballs/$pkgname-$pkgver.tar.xz 
+extract $pkgname-$pkgver.tar.xz
 pushd $pkgname-$pkgver
-  CC="$CC" LD="$LD" \
-  CFLAGS="-Os" LDFLAGS="-static" \
-  ./configure --prefix="$PREFIX" \
-              --without-cxx --without-cxx-binding --without-ada \
-              --without-pkg-config --disable-pc-files \
-              --without-shared --without-debug \
-              --enable-widec
-  make install
-  ln -sf libncursesw.a "$PREFIX/lib/libncurses.a"
+  echo "PREFIX=$TMPDIR" > config.mak
+  make CC=$CC CFLAGS="-Os" LDFLAGS="-static" all-static install-static
 popd
+install -vm 0755 "$TMPDIR/bin/tput" "$PREFIX/bin/tput"
 
 pkgname=bash
 pkgver=$bash_version
@@ -291,11 +292,17 @@ pushd $pkgname-$pkgver
     -DSYS_BASHRC=\'\"${PREFIX}/etc/bash.bashrc\"\' \
     -DSYS_BASH_LOGOUT=\'\"${PREFIX}/etc/bash.bash_logout\"\'
   )
-  CC="$CC -L$PREFIX/lib" LD="$LD" \
-  CFLAGS="-Os ${_cflags[@]}" \
-  LDFLAGS="-static -L$PREFIX/lib" \
+  CC="$CC -L$TMPDIR/lib" \
+  CFLAGS="-Os -static ${_cflags[@]}" \
+  LDFLAGS="-static -L$TMPDIR/lib" \
+  LIBS="-lterminfo" \
   ./configure --prefix="$PREFIX" --without-bash-malloc \
-    --disable-nls --enable-readline --with-curses
+    --disable-nls --enable-readline --with-curses --enable-static-link
+  # This avoid the usage of the dynamic linker in alpine linux
+  if [ $ALPINE_LINUX = "yes" ]; then
+    sed -e "s:-rdynamic::g" -i Makefile
+    sed -e "s:-rdynamic::g" -i builtins/Makefile
+  fi
   make
   strip --strip-unneeded bash
   install -vm 0755 bash "$PREFIX/bin/bash"
@@ -318,7 +325,7 @@ pushd $pkgname-$pkgver
   # see http://www.openwall.com/lists/musl/2012/10/08/2
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && patch -p1 -i $DIR/$pkgname-$pkgver.patch
   cp -v $DIR/$pkgname-$pkgver.config .config
-  make V=1 CC="$CC -L$PREFIX/lib" LDFLAGS="-static -L$PREFIX/lib" LD="$LD"
+  make V=1 CC="$CC" LDFLAGS="-static"
   install -vm 0755 busybox "$PREFIX/bin/busybox"
 popd
 
@@ -365,6 +372,9 @@ EOF
 CFLAGS="-O2 -Wall -DLUA_USE_POSIX -DLUA_COMPAT_5_2 -DLUA_USE_LINENOISE"
 CPPFLAGS="-I$(pwd)/lua/include"
 LDFLAGS="-Wl,-s -Wl,-E -static -lc -lm"
+if [ $ALPINE_LINUX = yes ]; then
+  LDFLAGS="-static"
+fi
 pushd lua/src
   [[ -r $DIR/$pkgname-$pkgver.patch ]] && \
     patch -p1 -i $DIR/$pkgname-$pkgver.patch
@@ -398,14 +408,13 @@ popd
 # cleaning up
 # =============================================================================
 popd
-rm -f  "$PREFIX"/bin/ncursesw6-config
 rm -rf "$PREFIX"/share/{cmake,man,pkgconfig}
 rm -rf "$PREFIX"/{lib,include}
 rm -rf "$TMPDIR"
 
 # configuration scripts
 # =============================================================================
-for src in $(find "$DIR" -name \*.in -printf '%P\n'); do
+for src in $(find "$DIR" -name \*.in | sed "s#$DIR/##"); do
   echo "Installing $PREFIX/etc/${src%.*}"
   sed -e "s:%PREFIX%:$PREFIX:g" "$DIR"/$src > "$PREFIX"/etc/${src%.*}
 done
