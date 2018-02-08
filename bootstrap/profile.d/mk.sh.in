@@ -6,7 +6,7 @@
 export mkPrefix=%PREFIX%
 PATH=/usr/bin:/bin
 if [[ "$0" == "$mkPrefix/bin/bash" ]]; then
-  PATH="$mkPrefix/bin:$mkPrefix/sbin:$PATH"
+  PATH="$mkPrefix/bin:$PATH"
 fi
 export PATH
 export LD_LIBRARY_PATH=
