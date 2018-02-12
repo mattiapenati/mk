@@ -1,9 +1,14 @@
 #!/bin/bash
 
 # Build dependencies:
-#   m4       used by bison and old versions of M4 are buggy
 #   bison    used by gold in binutils
+#   m4       used by bison and old versions of M4 are buggy
 #   texinfo  used to build the documentation
+#
+#   c/c++    used to compile the gcc the first time
+#   file     used during binutils configuration
+#   gawk     used by glibc
+#   openssl  used for downloading
 
 # All the packages are build using these common flags:
 #   --disable-nls
@@ -284,6 +289,14 @@ run() {
               >> $gccdir/gcc/config/rs6000/linux64.h
             ;;
   esac
+  # glibc-2.25 must be fixed to bu compiled in alpine linux
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=21604
+  if [[ -e /etc/alpine-release ]]; then
+    pushd $glibcdir
+      [[ -r $srcdir/glibc-$glibcver-alpine.patch ]] && \
+        patch -p1 -i $srcdir/glibc-$glibcver-alpine.patch
+    popd
+  fi
 
   # fix CFLAGS and CXXFLAGS environment variables
   # `-DNDEBUG` disables the assertions, but it generates some warnings in GCC

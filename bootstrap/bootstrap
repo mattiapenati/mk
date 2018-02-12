@@ -219,7 +219,7 @@ pushd "$TMPDIR/src"
 
 # setting the default compiler
 # =============================================================================
-if [ -z ${CC+x} ]; then
+if [[ -z ${CC+x} ]]; then
   CC=gcc
 fi
 ARCH=$(uname -m)
@@ -227,7 +227,7 @@ ARCH=$(uname -m)
 # check if the -static flag is accepted
 # =============================================================================
 echo "int main() { return 0; }" | $CC -o hello -x c - &> /dev/null
-if [ $COMPILE_MUSL_LIBC = "yes" -a \( $? -ne 0 -o $ARCH == "x86_64" \) ]; then
+if [[ $COMPILE_MUSL_LIBC = "yes" -a \( $? -ne 0 -o $ARCH == "x86_64" \) ]]; then
   # install the muslc for static linking
   # =====================================================================
   pkgname=musl
@@ -299,7 +299,7 @@ pushd $pkgname-$pkgver
   ./configure --prefix="$PREFIX" --without-bash-malloc \
     --disable-nls --enable-readline --with-curses --enable-static-link
   # This avoid the usage of the dynamic linker in alpine linux
-  if [ $ALPINE_LINUX = "yes" ]; then
+  if [[ $ALPINE_LINUX = "yes" ]]; then
     sed -e "s:-rdynamic::g" -i Makefile
     sed -e "s:-rdynamic::g" -i builtins/Makefile
   fi
@@ -372,7 +372,7 @@ EOF
 CFLAGS="-O2 -Wall -DLUA_USE_POSIX -DLUA_COMPAT_5_2 -DLUA_USE_LINENOISE"
 CPPFLAGS="-I$(pwd)/lua/include"
 LDFLAGS="-Wl,-s -Wl,-E -static -lc -lm"
-if [ $ALPINE_LINUX = yes ]; then
+if [[ $ALPINE_LINUX = yes ]]; then
   LDFLAGS="-static"
 fi
 pushd lua/src
