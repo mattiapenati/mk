@@ -1,4 +1,4 @@
-SHELL=/bin/bash
+SHELL?=/u/sw/bin/bash
 mkFlags?=
 
 help:
