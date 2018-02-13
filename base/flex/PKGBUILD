@@ -8,7 +8,7 @@ sum=cfe10b5de4893ced356adc437e78018e715818c3
 dstdir=$mkToolchainBase
 
 build() {
-  download http://prdownloads.sourceforge.net/$pkgname/$archive
+  download https://github.com/westes/flex/archive/v$pkgver.tar.gz
   check $archive $sum
   extract $archive
 
