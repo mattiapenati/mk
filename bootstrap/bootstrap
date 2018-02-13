@@ -227,7 +227,7 @@ ARCH=$(uname -m)
 # check if the -static flag is accepted
 # =============================================================================
 echo "int main() { return 0; }" | $CC -o hello -x c - &> /dev/null
-if [[ $COMPILE_MUSL_LIBC = "yes" -a \( $? -ne 0 -o $ARCH == "x86_64" \) ]]; then
+if [[ $COMPILE_MUSL_LIBC = "yes" && ( $? -ne 0 || $ARCH == "x86_64" ) ]]; then
   # install the muslc for static linking
   # =====================================================================
   pkgname=musl
