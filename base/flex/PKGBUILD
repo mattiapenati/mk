@@ -2,8 +2,8 @@
 
 pkgname=flex
 pkgver=2.6.0
-archive=$pkgname-$pkgver.tar.gz
-sum=cfe10b5de4893ced356adc437e78018e715818c3
+archive=v$pkgver.tar.gz
+sum=a5884fbbc09c0e2b9241fe84e5ca93e7392b3bf1
 
 dstdir=$mkToolchainBase
 
