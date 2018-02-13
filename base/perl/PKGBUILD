@@ -25,7 +25,10 @@ build() {
                 -Dlddlflags="-shared $LDFLAGS" -Dldflags="$LDFLAGS" \
                 -Dprefix="$dstdir" -Dvendorprefix="$dstdir" \
                 -Dman1dir="$dstdir/share/man/man1" -Dman1ext=1perl \
-                -Dman3dir="$dstdir/share/man/man3" -Dman3ext=3perl
+                -Dman3dir="$dstdir/share/man/man3" -Dman3ext=3perl \
+                -Dlocincpth="${mkToolchainPrefix}/include ${mkToolchainBase}/include" \
+                -Dloclibpth="${mkToolchainPrefix}/lib ${mkToolchainBase}/lib"
+
     message "Compiling $pkgname"
     make
   popd
