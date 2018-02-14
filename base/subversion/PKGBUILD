@@ -9,9 +9,9 @@ aprutilarchive=apr-util-$aprutilver.tar.bz2
 aprutilsum=2202b18f269ad606d70e1864857ed93c
 
 pkgname=subversion
-pkgver=1.9.5
+pkgver=1.9.7
 archive=$pkgname-$pkgver.tar.gz
-sum=ac9f8ee235f1b667dd6506864af8035aaedfc2d9
+sum=1a5f48acf9d0faa60e8c7aea96a9b29ab1d4dcac
 dstdir=$mkToolchainBase
 mkParallelBuild=no
 
