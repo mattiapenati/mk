@@ -14,7 +14,6 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    ./autogen.sh
     ./configure --build=$TARGET --prefix="$dstdir" --disable-nls --disable-shared
     message "Compiling $pkgname"
     make
