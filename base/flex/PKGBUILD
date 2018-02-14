@@ -1,14 +1,14 @@
 #!/bin/bash
 
 pkgname=flex
-pkgver=2.6.0
-archive=v$pkgver.tar.gz
-sum=a5884fbbc09c0e2b9241fe84e5ca93e7392b3bf1
+pkgver=2.6.4
+archive=$pkgname-$pkgver.tar.gz
+sum=fafece095a0d9890ebd618adb1f242d8908076e1
 
 dstdir=$mkToolchainBase
 
 build() {
-  download https://github.com/westes/flex/archive/v$pkgver.tar.gz
+  download https://github.com/westes/flex/releases/download/v$pkgver/$archive
   check $archive $sum
   extract $archive
 
