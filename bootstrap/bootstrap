@@ -343,6 +343,7 @@ pushd $pkgname-$pkgver
   LDFLAGS="-static" \
   ./configure --prefix="$PREFIX" --disable-shared --enable-static
   AM_LDFLAGS="-all-static" make
+  strip --strip-unneeded src/file
   install -vm 0755 src/file "$PREFIX/bin/file"
   install -vm 0755 -d "$PREFIX/share/misc"
   install -vm 0644 magic/magic.mgc "$PREFIX/share/misc/magic.mgc"
