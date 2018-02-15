@@ -252,7 +252,7 @@ fi
 rm -f hello
 
 
-# install the administration tools: chrpath, bash, busybox
+# install the administration tools: chrpath, bash, busybox and file
 # =============================================================================
 pkgname=chrpath
 pkgver=$chrpath_version
@@ -332,6 +332,22 @@ popd
 for bin in basename sha1sum md5sum realpath patch expr tr; do
   ln -sv busybox "$PREFIX/bin/$bin"
 done
+
+pkgname=file
+pkgver=$file_version
+download ftp://ftp.astron.com/pub/file/$pkgname-$pkgver.tar.gz
+extract $pkgname-$pkgver.tar.gz
+pushd $pkgname-$pkgver
+  CC="$CC" \
+  CFLAGS="-Os" \
+  LDFLAGS="-static" \
+  ./configure --prefix="$PREFIX" --disable-shared --enable-static
+  AM_LDFLAGS="-all-static" make
+  install -vm 0755 src/file "$PREFIX/bin/file"
+  install -vm 0755 -d "$PREFIX/share/misc"
+  install -vm 0644 magic/magic.mgc "$PREFIX/share/misc/magic.mgc"
+popd
+
 
 # compose the lua source (static)
 # =============================================================================
