@@ -43,7 +43,7 @@ package() {
   PKGS="$PKGS RSQLite SDMTools sp spacetime RandomFields frailtypack"
   PKGS="$PKGS fdatest readr readxl haven purrr lubridate broom cmaes fda"
   PKGS="$PKGS data.table reshape2 dplyr pryr stringr msm msmtools flexsurv"
-  PKGS="$PKGS survival bigmemory biglm car afex lme4 nlme fastcluster"
+  PKGS="$PKGS survival bigmemory biglm afex lme4 nlme fastcluster"
   PKGS="$PKGS clusterCrit randomForest ROCR foreach doParallel Rcpp"
   PKGS="$PKGS RcppArmadillo devtools profvis testthat knitr roxygen2 rmarkdown"
   for pkg in $PKGS; do
