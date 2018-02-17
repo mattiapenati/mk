@@ -4,7 +4,7 @@ pkgname=tbb
 pkgver=2017
 _pkgver=2017_U5
 archive=${_pkgver}.tar.gz
-sum=26f720729d322913912e99d1e4a36bd10625d3ca
+sum=1fd776afdf7dd89fcf38565938060ea0fb91ef6f
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 url=https://github.com/01org/tbb/archive/
 
