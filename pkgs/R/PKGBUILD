@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=R
-pkgver=3.3.3
+pkgver=3.4.3
 archive=$pkgname-$pkgver.tar.gz
-sum=9e205a817970578ecd80384f397bae35b46f13b9
+sum=537d481888f20d385b3039f2f2b0c49b7b0fb5de
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 url=https://cran.r-project.org/src/base/R-3
 mirror=http://cran.mirror.garr.it/mirrors/CRAN
@@ -43,7 +43,7 @@ package() {
   PKGS="$PKGS RSQLite SDMTools sp spacetime RandomFields frailtypack"
   PKGS="$PKGS fdatest readr readxl haven purrr lubridate broom cmaes fda"
   PKGS="$PKGS data.table reshape2 dplyr pryr stringr msm msmtools flexsurv"
-  PKGS="$PKGS survival bigmemory biglm afex lme4 nlme fastcluster"
+  PKGS="$PKGS survival bigmemory biglm car afex lme4 nlme fastcluster"
   PKGS="$PKGS clusterCrit randomForest ROCR foreach doParallel Rcpp"
   PKGS="$PKGS RcppArmadillo devtools profvis testthat knitr roxygen2 rmarkdown"
   for pkg in $PKGS; do
