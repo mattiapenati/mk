@@ -30,21 +30,21 @@ run() {
       cloog=yes
       ;;
     5)
-      gccver=5.4.0
+      gccver=5.5.0
       gccsum=07524df2b4ab9070bad9c49ab668da72237b8115
       islver=0.14.1
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
       cloog=no
       ;;
     6)
-      gccver=6.3.0
+      gccver=6.4.0
       gccsum=928ab552666ee08eed645ff20ceb49d139205dea
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
       ;;
     7)
-      gccver=7.1.0
+      gccver=7.3.0
       gccsum=9f1e907f27eadefe7d5f7567c09e17805d9c8837
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
@@ -72,13 +72,13 @@ run() {
   bisonurl=http://ftpmirror.gnu.org/bison/$bisonarchive
   bisonsum=8270497aad88c7dd4f2c317298c50513fb0c3c8e
 
-  texinfover=6.3
+  texinfover=6.5
   texinfodir=texinfo-$texinfover
   texinfoarchive=texinfo-$texinfover.tar.xz
   texinfourl=http://ftpmirror.gnu.org/texinfo/$texinfoarchive
-  texinfosum=64568f2791d1309aaccc22e63758458fd249ec8b
+  texinfosum=0f8e69781e28ec102b6a9487b093c440f5bb8545
 
-  binutilsver=2.27
+  binutilsver=2.30
   binutilsdir=binutils-$binutilsver
   binutilsarchive=binutils-$binutilsver.tar.bz2
   binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
@@ -90,17 +90,17 @@ run() {
   gmpurl=http://ftpmirror.gnu.org/gmp/$gmparchive
   gmpsum=366ded6a44cd108ba6b3f5b9a252eab3f3a95cdf
 
-  mpfrver=3.1.5
+  mpfrver=4.0.1
   mpfrdir=mpfr-$mpfrver
   mpfrarchive=mpfr-$mpfrver.tar.bz2
   mpfrurl=http://ftpmirror.gnu.org/mpfr/$mpfrarchive
-  mpfrsum=874e84bb5959fd5a19c032cfb5d673dded4b5cff
+  mpfrsum=655e3cf416a0cc9530d9cb3c38dc8839504f0e98
 
-  mpcver=1.0.3
+  mpcver=1.1.0
   mpcdir=mpc-$mpcver
   mpcarchive=mpc-$mpcver.tar.gz
   mpcurl=http://ftpmirror.gnu.org/mpc/$mpcarchive
-  mpcsum=b8be66396c726fdc36ebb0f692ed8a8cca3bcc66
+  mpcsum=b019d9e1d27ec5fb99497159d43a3164995de2d0
 
   isldir=isl-$islver
   islarchive=isl-$islver.tar.bz2
@@ -119,7 +119,7 @@ run() {
   libelfsum=c1d6ac5f182d19dd685c4dfd74eedbfe3992425d
 
   gccdir=gcc-$gccver
-  gccarchive=gcc-$gccver.tar.bz2
+  gccarchive=gcc-$gccver.tar.xz
   gccurl=http://ftpmirror.gnu.org/gcc/gcc-$gccver/$gccarchive
 
   linuxver=$(uname -r)
@@ -175,11 +175,11 @@ run() {
   linuxarchive=linux-$linuxver.tar.xz
   linuxurl=$linuxurl/$linuxarchive
 
-  glibcver=2.25
+  glibcver=2.27
   glibcdir=glibc-$glibcver
   glibcarchive=glibc-$glibcver.tar.xz
   glibcurl=http://ftpmirror.gnu.org/glibc/$glibcarchive
-  glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
+  glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
 
   # cleaning and creating the directories hierarchy
   dstdir=$PREFIX/pkgs/toolchains/$pkgname/$pkgver
