@@ -76,7 +76,7 @@ run() {
   texinfodir=texinfo-$texinfover
   texinfoarchive=texinfo-$texinfover.tar.xz
   texinfourl=http://ftpmirror.gnu.org/texinfo/$texinfoarchive
-  texinfosum=0f8e69781e28ec102b6a9487b093c440f5bb8545
+  texinfosum=72a06b48862911c638787cc3307871b990a59726
 
   binutilsver=2.30
   binutilsdir=binutils-$binutilsver
