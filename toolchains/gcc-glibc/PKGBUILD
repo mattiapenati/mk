@@ -31,21 +31,21 @@ run() {
       ;;
     5)
       gccver=5.5.0
-      gccsum=07524df2b4ab9070bad9c49ab668da72237b8115
+      gccsum=0d985aaf6d63598916933a690cb902d47d385bea
       islver=0.14.1
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
       cloog=no
       ;;
     6)
       gccver=6.4.0
-      gccsum=928ab552666ee08eed645ff20ceb49d139205dea
+      gccsum=f237974b2d3af0f60936ce6a2f35b912a91e0239
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
       ;;
     7)
       gccver=7.3.0
-      gccsum=9f1e907f27eadefe7d5f7567c09e17805d9c8837
+      gccsum=9689b9cae7b2886fdaa08449a26701f095c04e48
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
@@ -82,7 +82,7 @@ run() {
   binutilsdir=binutils-$binutilsver
   binutilsarchive=binutils-$binutilsver.tar.bz2
   binutilsurl=http://ftpmirror.gnu.org/binutils/$binutilsarchive
-  binutilssum=6e472ddae565a2b1447e6f2393809bb8799982cf
+  binutilssum=33d807f7fa680b00439eb5560acd0c2ef645e5f9
 
   gmpver=6.1.2
   gmpdir=gmp-$gmpver
@@ -94,7 +94,7 @@ run() {
   mpfrdir=mpfr-$mpfrver
   mpfrarchive=mpfr-$mpfrver.tar.bz2
   mpfrurl=http://ftpmirror.gnu.org/mpfr/$mpfrarchive
-  mpfrsum=655e3cf416a0cc9530d9cb3c38dc8839504f0e98
+  mpfrsum=fcbbafb37c683898e585b926608d540ed037609e
 
   mpcver=1.1.0
   mpcdir=mpc-$mpcver
