@@ -312,8 +312,6 @@ run() {
 
   message "Installing Bison"
   pushd $bisondir
-    # a simple workaround for M4 check in bison configuration
-    M4="m4 -F conftest.m4f" \
     ./configure --prefix="$tmpdir/tools"; make install
   popd
 
