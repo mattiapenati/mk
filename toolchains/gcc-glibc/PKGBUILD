@@ -30,8 +30,6 @@ run() {
       islver=0.12.2
       islsum=ca98a91e35fb3ded10d080342065919764d6f928
       cloog=yes
-      glibcver=2.25
-      glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
       ;;
     5)
       gccver=5.5.0
@@ -40,20 +38,14 @@ run() {
       islver=0.14.1
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
       cloog=no
-      glibcver=2.27
-      glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
       ;;
     6)
-      # wait for 6.5.0 version to move to glic-2.27
-      # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81712
       gccver=6.4.0
       gccarchive=gcc-$gccver.tar.xz
       gccsum=f237974b2d3af0f60936ce6a2f35b912a91e0239
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
-      glibcver=2.25
-      glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
       ;;
     7)
       gccver=7.3.0
@@ -61,8 +53,6 @@ run() {
       gccsum=9689b9cae7b2886fdaa08449a26701f095c04e48
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
-      glibcver=2.27
-      glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
       cloog=no
       ;;
     *)
@@ -189,9 +179,11 @@ run() {
   linuxarchive=linux-$linuxver.tar.xz
   linuxurl=$linuxurl/$linuxarchive
 
+  glibcver=2.27
   glibcdir=glibc-$glibcver
   glibcarchive=glibc-$glibcver.tar.xz
   glibcurl=http://ftpmirror.gnu.org/glibc/$glibcarchive
+  glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
 
   # cleaning and creating the directories hierarchy
   dstdir=$PREFIX/pkgs/toolchains/$pkgname/$pkgver
@@ -271,6 +263,7 @@ run() {
   popd
   pushd $gccdir
     # (5.4) https://www.mail-archive.com/gcc-patches@gcc.gnu.org/msg159613.html
+    # (6.4.0) https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81712
     [[ -r $srcdir/gcc-$gccver.patch ]] && \
       patch -p1 -i $srcdir/gcc-$gccver.patch
   popd
