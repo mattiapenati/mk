@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=emacs
-pkgver=25.1
+pkgver=25.3
 archive=$pkgname-$pkgver.tar.xz
-sum=983e457971e3e3c8964d039c113033f98132b8a8
+sum=1cb4f39e9c0a3305fd62f936c7c95ff8e2924323
 dstdir=$mkToolchainBase
 
 build() {

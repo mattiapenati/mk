@@ -1,9 +1,10 @@
 #!/bin/bash
 
 pkgname=automake
-pkgver=1.15
+pkgver=1.15.1
+_pkgver=${pkgver%.*}  # Remove only patch the patch level if required
 archive=$pkgname-$pkgver.tar.gz
-sum=b5a840c7ec4321e78fdc9472e476263fa6614ca1
+sum=d3cd5fc9bbea9f977b51799180cde5d253dcba96
 
 dstdir=$mkToolchainBase
 
@@ -22,11 +23,11 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm -f "$dstdir"/bin/aclocal; ln -sf aclocal-$pkgver "$dstdir"/bin/aclocal
-  rm -f "$dstdir"/bin/automake; ln -sf automake-$pkgver "$dstdir"/bin/automake
+  rm -f "$dstdir"/bin/aclocal; ln -sf aclocal-$_pkgver "$dstdir"/bin/aclocal
+  rm -f "$dstdir"/bin/automake; ln -sf automake-$_pkgver "$dstdir"/bin/automake
   if [[ -d "$dstdir"/share/aclocal ]]; then
-    mv -v "$dstdir"/share/aclocal/* "$dstdir"/share/aclocal-$pkgver/
+    mv -v "$dstdir"/share/aclocal/* "$dstdir"/share/aclocal-$_pkgver/
     rmdir "$dstdir"/share/aclocal
   fi
-  ln -svf aclocal-$pkgver "$dstdir"/share/aclocal
+  ln -svf aclocal-$_pkgver "$dstdir"/share/aclocal
 }

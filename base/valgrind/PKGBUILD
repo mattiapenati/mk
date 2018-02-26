@@ -1,13 +1,13 @@
 #!/bin/bash
 
 pkgname=valgrind
-pkgver=3.12.0
+pkgver=3.13.0
 archive=$pkgname-$pkgver.tar.bz2
-sum=6eb03c0c10ea917013a7622e483d61bb
+sum=817dd08f1e8a66336b9ff206400a5369
 dstdir=$mkToolchainBase
 
 build() {
-  download http://valgrind.org/downloads/$archive
+  download ftp://sourceware.org/pub/valgrind/$archive
   check $archive $sum
   extract $archive
 

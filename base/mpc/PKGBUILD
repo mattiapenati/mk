@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=mpc
-pkgver=1.0.3
+pkgver=1.1.0
 archive=$pkgname-$pkgver.tar.gz
-sum=b8be66396c726fdc36ebb0f692ed8a8cca3bcc66
+sum=b019d9e1d27ec5fb99497159d43a3164995de2d0
 
 dstdir=$mkToolchainBase
 

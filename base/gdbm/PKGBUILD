@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=gdbm
-pkgver=1.12
+pkgver=1.14
 archive=$pkgname-$pkgver.tar.gz
-sum=86513e8871bb376bc014e9e5a2d18a8e0a8ea2f5
+sum=1a97314f631e1d538488ba629fa781dec7409901
 
 dstdir=$mkToolchainBase
 

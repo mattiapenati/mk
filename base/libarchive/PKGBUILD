@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=libarchive
-pkgver=3.3.1
+pkgver=3.3.2
 archive=$pkgname-$pkgver.tar.gz
-sum=d5616f81804aba92547629c08a3ccff86c2844ae
+sum=580064227105e30322caa6c67b59e8c8e6060027
 
 dstdir=$mkToolchainBase
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=openssl
-pkgver=1.1.0e
+pkgver=1.1.0g
 archive=$pkgname-$pkgver.tar.gz
-sum=8bbbaf36feffadd3cb9110912a8192e665ebca4b
+sum=e8240a8be304d4317a750753321b073c664bfdd4
 
 dstdir=$mkToolchainBase
 
