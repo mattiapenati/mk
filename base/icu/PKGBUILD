@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=icu
-pkgver=58.2
+pkgver=60.2
 archive=${pkgname}4c-${pkgver//./_}-src.tgz
-sum=fac212b32b7ec7ab007a12dff1f3aea1
+sum=7a099523fcb708b427e94f9b3c372fec3ebd1563
 
 dstdir=$mkToolchainBase
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=vim
-pkgver=8.0.0397
+pkgver=8.0.1529
 archive=v$pkgver.tar.gz
-sum=81c4f262cff4749604050e1f7fb59bc632ddb706
+sum=2bf9015abd985f8873da00961a7c1c75444ca4e6
 dstdir=$mkToolchainBase
 
 build() {

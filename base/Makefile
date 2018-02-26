@@ -22,6 +22,8 @@ install:
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) sed
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) m4
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libtool
+	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) gettext
+	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libiconv
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) flex
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) bison
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) db
@@ -52,6 +54,7 @@ install:
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) sqlite
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) openssl
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libssh2
+	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) mpdecimal
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) python
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) lua
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) tcl
@@ -62,6 +65,7 @@ install:
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libidn
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) curl
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libarchive
+	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) ninja
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) cmake
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) subversion
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) git

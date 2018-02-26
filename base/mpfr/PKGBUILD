@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=mpfr
-pkgver=3.1.5
+pkgver=4.0.1
 archive=$pkgname-$pkgver.tar.gz
-sum=2a2118179f8f3c682389dcddc800d30132e8794a
+sum=655e3cf416a0cc9530d9cb3c38dc8839504f0e98
 
 dstdir=$mkToolchainBase
 

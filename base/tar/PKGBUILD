@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=tar
-pkgver=1.29
+pkgver=1.30
 archive=$pkgname-$pkgver.tar.xz
-sum=03851c34c90f0656177f2dd375cd61bd1204c51d
+sum=0d442c4565f8131745a5dff1cd08f7eaa797f679
 
 dstdir=$mkToolchainBase
 

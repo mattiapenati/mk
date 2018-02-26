@@ -1,9 +1,9 @@
 #!/bin/bash
 
-pkgname=gawk
-pkgver=4.2.0
+pkgname=gettext
+pkgver=0.19.8.1
 archive=$pkgname-$pkgver.tar.gz
-sum=52ceefd5aa93b17df4d92174ca1df3c9ca1517fc
+sum=b5d24ba2958c91fc5cc0058165837c99a0f58784
 
 dstdir=$mkToolchainBase
 
@@ -14,8 +14,8 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
-    ./configure --build=$TARGET --prefix="$dstdir" --enable-threads=posix \
-                --without-libsigsegv --disable-nls
+    ./configure --build=$TARGET --prefix="$dstdir" --disable-nls \
+                --disable-java --enable-threads=posix
     message "Compiling $pkgname"
     make
   popd
@@ -23,5 +23,4 @@ build() {
 
 package() {
   make -C $pkgname-$pkgver install
-  rm "$dstdir"/bin/gawk; ln -s gawk-$pkgver "$dstdir"/bin/gawk
 }

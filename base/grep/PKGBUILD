@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=grep
-pkgver=3.0
+pkgver=3.1
 archive=$pkgname-$pkgver.tar.xz
-sum=7b742a6278f28ff056da799c62c1b9e417fe86ba
+sum=d1d677e959c7d874e18e7e3839f26a0f0c1733d5
 
 dstdir=$mkToolchainBase
 
