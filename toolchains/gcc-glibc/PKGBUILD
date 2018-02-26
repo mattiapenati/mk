@@ -23,31 +23,46 @@ run() {
   # getting the versions
   case $pkgver in
     4.9)
-      gccver=4.9.3
-      gccsum=2e6490a908eac8b2b56b73679bd7c2a5237df1f8
+      # GCC-4.9.4 is the last version distributed as .tar.bz2 archive
+      gccver=4.9.4
+      gccarchive=gcc-$gccver.tar.bz2
+      gccsum=5bb0b783a57a62b11f1f9bd2aa37145da221d3d0
       islver=0.12.2
       islsum=ca98a91e35fb3ded10d080342065919764d6f928
       cloog=yes
+      glibcver=2.25
+      glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
       ;;
     5)
       gccver=5.5.0
+      gccarchive=gcc-$gccver.tar.xz
       gccsum=0d985aaf6d63598916933a690cb902d47d385bea
       islver=0.14.1
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
       cloog=no
+      glibcver=2.27
+      glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
       ;;
     6)
+      # wait for 6.5.0 version to move to glic-2.27
+      # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81712
       gccver=6.4.0
+      gccarchive=gcc-$gccver.tar.xz
       gccsum=f237974b2d3af0f60936ce6a2f35b912a91e0239
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       cloog=no
+      glibcver=2.25
+      glibcsum=5fff5a94ef4470bf48fe1b79093185f19f5c827a
       ;;
     7)
       gccver=7.3.0
+      gccarchive=gcc-$gccver.tar.xz
       gccsum=9689b9cae7b2886fdaa08449a26701f095c04e48
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
+      glibcver=2.27
+      glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
       cloog=no
       ;;
     *)
@@ -119,7 +134,6 @@ run() {
   libelfsum=c1d6ac5f182d19dd685c4dfd74eedbfe3992425d
 
   gccdir=gcc-$gccver
-  gccarchive=gcc-$gccver.tar.xz
   gccurl=http://ftpmirror.gnu.org/gcc/gcc-$gccver/$gccarchive
 
   linuxver=$(uname -r)
@@ -175,11 +189,9 @@ run() {
   linuxarchive=linux-$linuxver.tar.xz
   linuxurl=$linuxurl/$linuxarchive
 
-  glibcver=2.27
   glibcdir=glibc-$glibcver
   glibcarchive=glibc-$glibcver.tar.xz
   glibcurl=http://ftpmirror.gnu.org/glibc/$glibcarchive
-  glibcsum=1f7a9c43026484943ef7cf6885f2176a2bc1e093
 
   # cleaning and creating the directories hierarchy
   dstdir=$PREFIX/pkgs/toolchains/$pkgname/$pkgver
