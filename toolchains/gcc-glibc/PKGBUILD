@@ -22,42 +22,27 @@ run() {
 
   # getting the versions
   case $pkgver in
-    4.9)
-      # GCC-4.9.4 is the last version distributed as .tar.bz2 archive
-      gccver=4.9.4
-      gccarchive=gcc-$gccver.tar.bz2
-      gccsum=5bb0b783a57a62b11f1f9bd2aa37145da221d3d0
-      islver=0.12.2
-      islsum=ca98a91e35fb3ded10d080342065919764d6f928
-      cloog=yes
-      ;;
     5)
       gccver=5.5.0
-      gccarchive=gcc-$gccver.tar.xz
       gccsum=0d985aaf6d63598916933a690cb902d47d385bea
       islver=0.14.1
       islsum=b653327b20e807d1df3a7e2f546ea924f1e030c0
-      cloog=no
       ;;
     6)
       gccver=6.4.0
-      gccarchive=gcc-$gccver.tar.xz
       gccsum=f237974b2d3af0f60936ce6a2f35b912a91e0239
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
-      cloog=no
       ;;
     7)
       gccver=7.3.0
-      gccarchive=gcc-$gccver.tar.xz
       gccsum=9689b9cae7b2886fdaa08449a26701f095c04e48
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
-      cloog=no
       ;;
     *)
       if [[ -z "$pkgver" ]]; then
-        error "Specify a valid version (4.9|5|6|7) for gcc"
+        error "Specify a valid version (5|6|7) for gcc"
       else
         error "Unsupported version '$pkgver'"
       fi
@@ -111,12 +96,6 @@ run() {
   islarchive=isl-$islver.tar.bz2
   islurl=http://isl.gforge.inria.fr/$islarchive
 
-  cloogver=0.18.4
-  cloogdir=cloog-$cloogver
-  cloogarchive=cloog-$cloogver.tar.gz
-  cloogurl=http://www.bastoul.net/cloog/pages/download/$cloogarchive
-  cloogsum=8f7568ca1873f8d55bb694c8b9b83f7f4c6c1aa5
-
   libelfver=0.8.13
   libelfdir=libelf-$libelfver
   libelfarchive=libelf-$libelfver.tar.gz
@@ -124,6 +103,7 @@ run() {
   libelfsum=c1d6ac5f182d19dd685c4dfd74eedbfe3992425d
 
   gccdir=gcc-$gccver
+  gccarchive=gcc-$gccver.tar.xz
   gccurl=http://ftpmirror.gnu.org/gcc/gcc-$gccver/$gccarchive
 
   linuxver=$(uname -r)
@@ -225,9 +205,6 @@ run() {
   download $islurl
   check $islarchive $islsum
 
-  [[ "$cloog" == "yes" ]] && download $cloogurl
-  [[ "$cloog" == "yes" ]] && check $cloogarchive $cloogsum
-
   download $libelfurl
   check $libelfarchive $libelfsum
 
@@ -249,7 +226,6 @@ run() {
   extract $mpfrarchive
   extract $mpcarchive
   extract $islarchive
-  [[ "$cloog" == "yes" ]] && extract $cloogarchive
   extract $libelfarchive
   extract $gccarchive
   extract $linuxarchive
@@ -272,7 +248,6 @@ run() {
   [[ -d $mpfrdir ]] && ln -vs ../$mpfrdir $gccdir/mpfr
   [[ -d $mpcdir ]] && ln -vs ../$mpcdir $gccdir/mpc
   [[ -d $isldir ]] && ln -vs ../$isldir $gccdir/isl
-  [[ -d $cloogdir ]] && ln -vs ../$cloogdir $gccdir/cloog
   [[ -d $libelfdir ]] && ln -vs ../$libelfdir $gccdir/libelf
   case $ARCH in
     x86_64)  sed -i "/m64=/s/lib64/lib/" \
@@ -294,7 +269,7 @@ run() {
               >> $gccdir/gcc/config/rs6000/linux64.h
             ;;
   esac
-  # glibc-2.25 must be fixed to bu compiled in alpine linux
+  # glibc-2.27 must be fixed to bu compiled in alpine linux
   # https://sourceware.org/bugzilla/show_bug.cgi?id=21604
   if [[ -e /etc/alpine-release ]]; then
     pushd $glibcdir
@@ -383,20 +358,19 @@ run() {
     # --disable-libssp --disable-libvtv --disable-libstdc__-v3
     # --disable-libmpx [from GCC6 MPX support is enabled by default]
     #   Disable support for unused libraries for the bootstrap.
-    case $pkgver in
-      5 | 6 | 7) disabled_libraries="--disable-libmpx" ;;
-    esac
     ../$gccdir/configure --build=$BUILD --host=$BUILD --target=$TARGET \
                          --prefix="$tmpdir/tools" \
                          --with-native-system-header-dir="$prefix/include" \
                          --disable-nls --disable-multilib --disable-shared \
                          --with-newlib --without-headers \
                          --enable-languages=c,c++ --disable-bootstrap \
-                         --disable-threads --disable-decimal-float --disable-libatomic \
-                         --disable-libcilkrts --disable-libgomp --disable-libitm \
-                         --disable-libmudflap --disable-libquadmath --disable-libsanitizer \
-                         --disable-libssp --disable-libvtv --disable-libstdc__-v3 \
-                         ${disabled_libraries}
+                         --disable-threads --disable-decimal-float \
+                         --disable-libatomic --disable-libcilkrts \
+                         --disable-libgomp --disable-libitm \
+                         --disable-libmudflap --disable-libquadmath \
+                         --disable-libsanitizer --disable-libssp \
+                         --disable-libvtv --disable-libstdc__-v3 \
+                         --disable-libmpx
     make
     make install
   popd
@@ -567,7 +541,7 @@ run() {
   popd
   rm -rf gcc-build
   rm -rf $gccdir
-  rm -rf $libelfdir $cloogdir $isldir $mpcdir $mpfrdir $gmpdir
+  rm -rf $libelfdir $isldir $mpcdir $mpfrdir $gmpdir
 
   # this last step is required to install properly gold linker, with the
   # previous version ld.gold is bugged
@@ -699,10 +673,6 @@ EOF
   compress_doc $prefix/share/{man,info}
 
   case $pkgver in
-    4.9) for lib in asan cilkrts gfortran lsan tsan ubsan; do
-           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
-         done
-         ;;
     5)   for lib in asan cc1 cilkrts gfortran gomp-plugin-host_nonshm lsan tsan ubsan; do
            reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
          done
