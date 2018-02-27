@@ -6,7 +6,7 @@ diff -Naur a/libgcc/config/aarch64/linux-unwind.h b/libgcc/config/aarch64/linux-
    {
      siginfo_t info;
 -    struct ucontext uc;
-+    ucontext uc;
++    ucontext_t uc;
    };
  
    struct rt_sigframe *rt_;
@@ -18,7 +18,7 @@ diff -Naur a/libgcc/config/alpha/linux-unwind.h b/libgcc/config/alpha/linux-unwi
        struct rt_sigframe {
  	siginfo_t info;
 -	struct ucontext uc;
-+	ucontext uc;
++	ucontext_t uc;
        } *rt_ = context->cfa;
        sc = &rt_->uc.uc_mcontext;
      }
@@ -30,7 +30,7 @@ diff -Naur a/libgcc/config/bfin/linux-unwind.h b/libgcc/config/bfin/linux-unwind
  	char retcode[8];
  	siginfo_t info;
 -	struct ucontext uc;
-+	ucontext uc;
++	ucontext_t uc;
        } *rt_ = context->cfa;
  
        /* The void * cast is necessary to avoid an aliasing warning.
@@ -42,7 +42,7 @@ diff -Naur a/libgcc/config/i386/linux-unwind.h b/libgcc/config/i386/linux-unwind
        && *(unsigned long long *)(pc+1) == RT_SIGRETURN_SYSCALL)
      {
 -      struct ucontext *uc_ = context->cfa;
-+      ucontext *uc_ = context->cfa;
++      ucontext_t *uc_ = context->cfa;
        /* The void * cast is necessary to avoid an aliasing warning.
           The aliasing warning is correct, but should not be a problem
           because it does not alias anything.  */
@@ -51,7 +51,7 @@ diff -Naur a/libgcc/config/i386/linux-unwind.h b/libgcc/config/i386/linux-unwind
  	void *puc;
  	siginfo_t info;
 -	struct ucontext uc;
-+	ucontext uc;
++	ucontext_t uc;
        } *rt_ = context->cfa;
        /* The void * cast is necessary to avoid an aliasing warning.
           The aliasing warning is correct, but should not be a problem
@@ -63,7 +63,7 @@ diff -Naur a/libgcc/config/m68k/linux-unwind.h b/libgcc/config/m68k/linux-unwind
  struct uw_ucontext {
  	unsigned long	  uc_flags;
 -	struct ucontext  *uc_link;
-+	ucontext  *uc_link;
++	ucontext_t  *uc_link;
  	stack_t		  uc_stack;
  	mcontext_t	  uc_mcontext;
  	unsigned long	  uc_filler[80];
@@ -75,7 +75,7 @@ diff -Naur a/libgcc/config/nios2/linux-unwind.h b/libgcc/config/nios2/linux-unwi
  struct nios2_ucontext {
    unsigned long uc_flags;
 -  struct ucontext *uc_link;
-+  ucontext *uc_link;
++  ucontext_t *uc_link;
    stack_t uc_stack;
    struct nios2_mcontext uc_mcontext;
    sigset_t uc_sigmask;	/* mask last for extensibility */
@@ -87,7 +87,7 @@ diff -Naur a/libgcc/config/pa/linux-unwind.h b/libgcc/config/pa/linux-unwind.h
    struct rt_sigframe {
      siginfo_t info;
 -    struct ucontext uc;
-+    ucontext uc;
++    ucontext_t uc;
    } *frame;
  
    /* rt_sigreturn trampoline:
@@ -99,7 +99,7 @@ diff -Naur a/libgcc/config/sh/linux-unwind.h b/libgcc/config/sh/linux-unwind.h
        struct rt_sigframe {
  	siginfo_t info;
 -	struct ucontext uc;
-+	ucontext uc;
++	ucontext_t uc;
        } *rt_ = context->cfa;
        /* The void * cast is necessary to avoid an aliasing warning.
           The aliasing warning is correct, but should not be a problem
@@ -111,7 +111,7 @@ diff -Naur a/libgcc/config/tilepro/linux-unwind.h b/libgcc/config/tilepro/linux-
      unsigned char save_area[C_ABI_SAVE_AREA_SIZE];
      siginfo_t info;
 -    struct ucontext uc;
-+    ucontext uc;
++    ucontext_t uc;
    } *rt_;
  
    /* Return if this is not a signal handler.  */
@@ -123,7 +123,7 @@ diff -Naur a/libgcc/config/xtensa/linux-unwind.h b/libgcc/config/xtensa/linux-un
    struct rt_sigframe {
      siginfo_t info;
 -    struct ucontext uc;
-+    ucontext uc;
++    ucontext_t uc;
    } *rt_;
  
    /* movi a2, __NR_rt_sigreturn; syscall */
