@@ -240,6 +240,7 @@ run() {
   pushd $gccdir
     # (5.4) https://www.mail-archive.com/gcc-patches@gcc.gnu.org/msg159613.html
     # (6.4.0) https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81712
+    # (6.4.0) https://github.com/voidlinux/void-packages/issues/7284
     [[ -r $srcdir/gcc-$gccver.patch ]] && \
       patch -p1 -i $srcdir/gcc-$gccver.patch
   popd
