@@ -13,6 +13,10 @@ build() {
   extract $archive
 
   pushd $pkgname-$pkgver
+    # (4.2.1) https://lists.nongnu.org/archive/html/bug-make/2017-11/msg00001.html
+    [[ -e "$srcdir"/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
+
     message "Configuring $pkgname"
     # --without-guile
     #   This ensures that Make won't link against Guile libraries.
