@@ -1,6 +1,6 @@
 diff -Naur a/libgcc/config/aarch64/linux-unwind.h b/libgcc/config/aarch64/linux-unwind.h
 --- a/libgcc/config/aarch64/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/aarch64/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/aarch64/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -52,7 +52,7 @@
    struct rt_sigframe
    {
@@ -12,7 +12,7 @@ diff -Naur a/libgcc/config/aarch64/linux-unwind.h b/libgcc/config/aarch64/linux-
    struct rt_sigframe *rt_;
 diff -Naur a/libgcc/config/alpha/linux-unwind.h b/libgcc/config/alpha/linux-unwind.h
 --- a/libgcc/config/alpha/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/alpha/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/alpha/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -51,7 +51,7 @@
      {
        struct rt_sigframe {
@@ -24,7 +24,7 @@ diff -Naur a/libgcc/config/alpha/linux-unwind.h b/libgcc/config/alpha/linux-unwi
      }
 diff -Naur a/libgcc/config/bfin/linux-unwind.h b/libgcc/config/bfin/linux-unwind.h
 --- a/libgcc/config/bfin/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/bfin/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/bfin/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -52,7 +52,7 @@
  	void *puc;
  	char retcode[8];
@@ -36,7 +36,7 @@ diff -Naur a/libgcc/config/bfin/linux-unwind.h b/libgcc/config/bfin/linux-unwind
        /* The void * cast is necessary to avoid an aliasing warning.
 diff -Naur a/libgcc/config/i386/linux-unwind.h b/libgcc/config/i386/linux-unwind.h
 --- a/libgcc/config/i386/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/i386/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/i386/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -58,7 +58,7 @@
    if (*(unsigned char *)(pc+0) == 0x48
        && *(unsigned long long *)(pc+1) == RT_SIGRETURN_SYSCALL)
@@ -57,7 +57,7 @@ diff -Naur a/libgcc/config/i386/linux-unwind.h b/libgcc/config/i386/linux-unwind
           The aliasing warning is correct, but should not be a problem
 diff -Naur a/libgcc/config/m68k/linux-unwind.h b/libgcc/config/m68k/linux-unwind.h
 --- a/libgcc/config/m68k/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/m68k/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/m68k/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -33,7 +33,7 @@
  /* <sys/ucontext.h> is unfortunately broken right now.  */
  struct uw_ucontext {
@@ -69,7 +69,7 @@ diff -Naur a/libgcc/config/m68k/linux-unwind.h b/libgcc/config/m68k/linux-unwind
  	unsigned long	  uc_filler[80];
 diff -Naur a/libgcc/config/nios2/linux-unwind.h b/libgcc/config/nios2/linux-unwind.h
 --- a/libgcc/config/nios2/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/nios2/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/nios2/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -38,7 +38,7 @@
  
  struct nios2_ucontext {
@@ -81,7 +81,7 @@ diff -Naur a/libgcc/config/nios2/linux-unwind.h b/libgcc/config/nios2/linux-unwi
    sigset_t uc_sigmask;	/* mask last for extensibility */
 diff -Naur a/libgcc/config/pa/linux-unwind.h b/libgcc/config/pa/linux-unwind.h
 --- a/libgcc/config/pa/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/pa/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/pa/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -80,7 +80,7 @@
    struct sigcontext *sc;
    struct rt_sigframe {
@@ -93,7 +93,7 @@ diff -Naur a/libgcc/config/pa/linux-unwind.h b/libgcc/config/pa/linux-unwind.h
    /* rt_sigreturn trampoline:
 diff -Naur a/libgcc/config/sh/linux-unwind.h b/libgcc/config/sh/linux-unwind.h
 --- a/libgcc/config/sh/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/sh/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/sh/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -180,7 +180,7 @@
      {
        struct rt_sigframe {
@@ -105,7 +105,7 @@ diff -Naur a/libgcc/config/sh/linux-unwind.h b/libgcc/config/sh/linux-unwind.h
           The aliasing warning is correct, but should not be a problem
 diff -Naur a/libgcc/config/tilepro/linux-unwind.h b/libgcc/config/tilepro/linux-unwind.h
 --- a/libgcc/config/tilepro/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/tilepro/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/tilepro/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -61,7 +61,7 @@
    struct rt_sigframe {
      unsigned char save_area[C_ABI_SAVE_AREA_SIZE];
@@ -117,7 +117,7 @@ diff -Naur a/libgcc/config/tilepro/linux-unwind.h b/libgcc/config/tilepro/linux-
    /* Return if this is not a signal handler.  */
 diff -Naur a/libgcc/config/xtensa/linux-unwind.h b/libgcc/config/xtensa/linux-unwind.h
 --- a/libgcc/config/xtensa/linux-unwind.h	2016-01-04 15:30:50.000000000 +0100
-+++ b/libgcc/config/xtensa/linux-unwind.h	2018-02-28 12:25:58.000000000 +0100
++++ b/libgcc/config/xtensa/linux-unwind.h	2018-03-01 14:46:34.000000000 +0100
 @@ -67,7 +67,7 @@
  
    struct rt_sigframe {
@@ -129,7 +129,7 @@ diff -Naur a/libgcc/config/xtensa/linux-unwind.h b/libgcc/config/xtensa/linux-un
    /* movi a2, __NR_rt_sigreturn; syscall */
 diff -Naur a/libsanitizer/sanitizer_common/sanitizer_linux.cc b/libsanitizer/sanitizer_common/sanitizer_linux.cc
 --- a/libsanitizer/sanitizer_common/sanitizer_linux.cc	2015-11-23 10:07:18.000000000 +0100
-+++ b/libsanitizer/sanitizer_common/sanitizer_linux.cc	2018-02-28 12:32:57.000000000 +0100
++++ b/libsanitizer/sanitizer_common/sanitizer_linux.cc	2018-03-01 14:46:34.000000000 +0100
 @@ -546,8 +546,7 @@
  }
  #endif
@@ -142,7 +142,7 @@ diff -Naur a/libsanitizer/sanitizer_common/sanitizer_linux.cc b/libsanitizer/san
  
 diff -Naur a/libsanitizer/sanitizer_common/sanitizer_linux.h b/libsanitizer/sanitizer_common/sanitizer_linux.h
 --- a/libsanitizer/sanitizer_common/sanitizer_linux.h	2015-10-21 09:32:45.000000000 +0200
-+++ b/libsanitizer/sanitizer_common/sanitizer_linux.h	2018-02-28 12:29:03.000000000 +0100
++++ b/libsanitizer/sanitizer_common/sanitizer_linux.h	2018-03-01 14:46:34.000000000 +0100
 @@ -19,7 +19,6 @@
  #include "sanitizer_platform_limits_posix.h"
  
@@ -163,7 +163,7 @@ diff -Naur a/libsanitizer/sanitizer_common/sanitizer_linux.h b/libsanitizer/sani
  void internal_sigfillset(__sanitizer_sigset_t *set);
 diff -Naur a/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc b/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc
 --- a/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc	2015-10-21 09:32:45.000000000 +0200
-+++ b/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc	2018-02-28 12:27:38.000000000 +0100
++++ b/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc	2018-03-01 14:46:34.000000000 +0100
 @@ -267,7 +267,7 @@
  
    // Alternate stack for signal handling.
@@ -173,3 +173,15 @@ diff -Naur a/libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.
    internal_memset(&handler_stack, 0, sizeof(handler_stack));
    handler_stack.ss_sp = handler_stack_memory.data();
    handler_stack.ss_size = kHandlerStackSize;
+diff -Naur a/libsanitizer/tsan/tsan_platform_linux.cc b/libsanitizer/tsan/tsan_platform_linux.cc
+--- a/libsanitizer/tsan/tsan_platform_linux.cc	2016-08-12 10:53:46.000000000 +0200
++++ b/libsanitizer/tsan/tsan_platform_linux.cc	2018-03-01 14:47:47.000000000 +0100
+@@ -291,7 +291,7 @@
+ int ExtractResolvFDs(void *state, int *fds, int nfd) {
+ #if SANITIZER_LINUX
+   int cnt = 0;
+-  __res_state *statp = (__res_state*)state;
++  struct __res_state *statp = (struct __res_state*)state;
+   for (int i = 0; i < MAXNS && cnt < nfd; i++) {
+     if (statp->_u._ext.nsaddrs[i] && statp->_u._ext.nssocks[i] != -1)
+       fds[cnt++] = statp->_u._ext.nssocks[i];
