@@ -3,7 +3,7 @@
 pkgname=xz
 pkgver=5.2.3
 archive=$pkgname-$pkgver.tar.xz
-sum=24c6e9477a83f2e67e3ac6fcd6fec6fbb393b289
+sum=a2975d12e0905daec48ec87c0098602e0669d195
 
 dstdir=$mkToolchainBase
 
