@@ -7,7 +7,7 @@ sum=0d014d97ca38534d4be1dfc6c563a7a3a6aa737f
 dstdir=$mkToolchainBase
 
 build() {
-  download http://prdownloads.sourceforge.net/tcl/$archive
+  download https://sourceforge.mirrorservice.org/t/tc/tcl/Tcl/$pkgver/$archive
   check $archive $sum
   extract $archive
 
