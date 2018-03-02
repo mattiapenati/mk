@@ -2,13 +2,13 @@
 
 pkgname=xz
 pkgver=5.2.3
-archive=$pkgname-$pkgver.tar.gz
-sum=529638eec3597e429cc54c74551ac0a89169e841
+archive=$pkgname-$pkgver.tar.xz
+sum=24c6e9477a83f2e67e3ac6fcd6fec6fbb393b289
 
 dstdir=$mkToolchainBase
 
 build() {
-  download http://tukaani.org/xz/$archive
+  download https://tukaani.org/xz/$archive
   check $archive $sum
   extract $archive
 
