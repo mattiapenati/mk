@@ -14,6 +14,7 @@ WORKDIR /home/swadmin
 RUN hg clone https://mattiapenati@bitbucket.org/mattiapenati/mk && \
     cd mk/bootstrap && \
     CC=clang ./bootstrap /u/sw
+COPY mk.config /u/sw/etc/mk.config
 
 # Copying the mk tree
 FROM alpine:latest

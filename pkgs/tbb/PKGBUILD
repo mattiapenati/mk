@@ -1,10 +1,10 @@
 #!/bin/bash
 
 pkgname=tbb
-pkgver=2017
-_pkgver=2017_U5
+pkgver=2018
+_pkgver=2018_U2
 archive=${_pkgver}.tar.gz
-sum=1fd776afdf7dd89fcf38565938060ea0fb91ef6f
+sum=1d3e011649dbe9259156b6cb0fe15f375abd8f9c
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 url=https://github.com/01org/tbb/archive/
 

@@ -32,17 +32,6 @@ diff -Naur a/cmake/TPLs/FindTPLCholmod.cmake b/cmake/TPLs/FindTPLCholmod.cmake
    )
  
  
-diff -Naur a/cmake/TPLs/FindTPLUMFPACK.cmake b/cmake/TPLs/FindTPLUMFPACK.cmake
---- a/cmake/TPLs/FindTPLUMFPACK.cmake	2016-04-27 19:41:32.000000000 +0000
-+++ b/cmake/TPLs/FindTPLUMFPACK.cmake	2016-08-04 13:45:18.308811000 +0000
-@@ -55,6 +55,6 @@
- 
- 
- TRIBITS_TPL_FIND_INCLUDE_DIRS_AND_LIBRARIES( UMFPACK
--  REQUIRED_HEADERS umfpack.h amd.h UFconfig.h
-+  REQUIRED_HEADERS umfpack.h amd.h
-   REQUIRED_LIBS_NAMES umfpack amd
-   )
 diff -Naur a/packages/stk/stk_doc_tests/CMakeLists.txt b/packages/stk/stk_doc_tests/CMakeLists.txt
 --- a/packages/stk/stk_doc_tests/CMakeLists.txt	2016-04-27 19:41:35.000000000 +0000
 +++ b/packages/stk/stk_doc_tests/CMakeLists.txt	2016-08-04 13:45:18.310024000 +0000

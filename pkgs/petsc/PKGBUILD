@@ -1,18 +1,19 @@
 #!/bin/bash
 
 pkgname=petsc
-pkgver=3.6.3
+pkgver=3.8.3
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 petscver=$pkgver
 petscarchive=$pkgname-$petscver.tar.gz
-petscsum=d10e2705ae2a7d095c8a9ba7d82993d0a303b077
+petscsum=babcb1bd3222113e28ce1f01bff5535fd0db84c6
 
-slepcver=$pkgver
+slepcver=3.8.2
 slepcarchive=slepc-$slepcver.tar.gz
-slepcsum=e7ad595fb0494e01b2cece9fb6111bc31b0a5207
+slepcsum=7f54f456f84dafb4623b54c1289a830c22680869
 
-petsc4pyver=3.6.0
+petsc4pyver=3.8.1
+slepc4pyver=3.8.0
 
 package() {
   download http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/$petscarchive
@@ -43,6 +44,7 @@ package() {
   # petsc
   pushd $pkgname-$petscver
     message "Configuring PETSc"
+    python2 \
     ./configure --prefix="$dstdir" \
                 --with-petsc-arch=arch-linux-opt \
                 --with-fortran=1 \
@@ -85,6 +87,7 @@ package() {
   # slepc
   pushd slepc-$slepcver
     message "Configuring SLEPc"
+    python2 \
     ./configure --prefix="$dstdir" \
                 --with-arpack=1 \
                 --with-arpack-dir="$mkArpackPrefix" \
@@ -99,9 +102,9 @@ package() {
   message "Installing Python bindings"
   PETSC_DIR="$dstdir" \
     pip install --verbose --install-option="--prefix=$dstdir" petsc4py==$petsc4pyver
-  PYTHONPATH=$dstdir/lib/python2.7/site-packages:$PYTHONPATH \
+  PYTHONPATH=$dstdir/lib/python3.6/site-packages:$PYTHONPATH \
   PETSC_DIR="$dstdir" SLEPC_DIR="$dstdir" \
-    pip install --verbose --install-option="--prefix=$dstdir" slepc4py==$petsc4pyver
+    pip install --verbose --install-option="--prefix=$dstdir" slepc4py==$slepc4pyver
 
   # cleaning
   find "$dstdir"/include -name \*html -exec rm {} \;
@@ -154,7 +157,7 @@ setenv("SLEPC_DIR", "$dstdir")
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
 prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
-prepend_path("PYTHONPATH", "$dstdir/lib/python2.7/site-packages")
+prepend_path("PYTHONPATH", "$dstdir/lib/python3.6/site-packages")
 EOF
   fi
 }

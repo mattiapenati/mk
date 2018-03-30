@@ -4,13 +4,14 @@ mkFlags?=
 help:
 	@echo "Help:"
 	@echo "  clean    remove the downloaded files and eventualy the logs"
-	@echo "  install  install the packages for the loaded toolchain"
+	@echo "  libs     install the libraries for the loaded toolchain"
+	@echo "  install  install the libraries and other packages for the loaded toolchain"
 
 clean:
 	@rm -vf */*.{tar.{bz2,gz,xz},zip,tgz}
 	@find . -name \*.log -exec rm -v '{}' \;
 
-install:
+libs:
 	test -n "${mkToolchainBase}" && test -d "${mkToolchainBase}"
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) boost
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) tbb
@@ -38,7 +39,11 @@ install:
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) matio
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) petsc
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) trilinos
+
+install: libs
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) octave
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) R
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) dealii
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) fenics
+
+.PHONY: help clean libs install

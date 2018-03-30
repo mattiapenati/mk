@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=trilinos
-pkgver=12.6.3
+pkgver=12.10.1
 archive=$pkgname-$pkgver-Source.tar.bz2
-sum=ce12da91d80a3120ee9b233938da6eb93fb125b7
+sum=0625b6994b42e8ab3ae608afbf1032ce97f9493c
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -36,19 +36,39 @@ build() {
   mkdir build
   pushd build
     message "Configuring $pkgname"
+    # NOX_ENABLE_PETSC=OFF
+    #  See: https://github.com/trilinos/Trilinos/issues/1773
     cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
           -D CMAKE_SKIP_INSTALL_RPATH=ON \
           -D CMAKE_SKIP_RPATH=ON \
           -D BUILD_SHARED_LIBS=ON \
-          -D Trilinos_ENABLE_ALL_PACKAGES=ON \
-          -D Trilinos_ENABLE_Piro=OFF \
-          -D Trilinos_ENABLE_PyTrilinos=OFF \
-          -D Trilinos_ENABLE_STK=OFF \
-          -D Trilinos_ENABLE_Stratimikos=OFF \
-          -D Trilinos_ENABLE_Zoltan2=OFF \
-          -D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES=ON \
+          -D Trilinos_ENABLE_ALL_PACKAGES=OFF \
+          -D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES=OFF \
           -D Trilinos_ENABLE_TESTS=OFF \
           -D Trilinos_ENABLE_EXAMPLES=OFF \
+          -D Trilinos_ENABLE_Amesos=ON \
+          -D Trilinos_ENABLE_Amesos2=ON \
+          -D Trilinos_ENABLE_Anasazi=ON \
+          -D Trilinos_ENABLE_AztecOO=ON \
+          -D Trilinos_ENABLE_Belos=ON \
+          -D Trilinos_ENABLE_Epetra=ON \
+          -D Trilinos_ENABLE_EpetraExt=ON \
+          -D Trilinos_ENABLE_Ifpack=ON \
+          -D Trilinos_ENABLE_Ifpack2=ON \
+          -D Trilinos_ENABLE_Isorropia=ON \
+          -D Trilinos_ENABLE_ML=ON \
+          -D Trilinos_ENABLE_MueLu=ON \
+          -D Trilinos_ENABLE_NOX=ON \
+          -D Trilinos_ENABLE_Rythmos=ON \
+          -D Trilinos_ENABLE_Sacado=ON \
+          -D Trilinos_ENABLE_ShyLU=ON \
+          -D Trilinos_ENABLE_Stokhos=ON \
+          -D Trilinos_ENABLE_Stratimikos=ON \
+          -D Trilinos_ENABLE_Teko=ON \
+          -D Trilinos_ENABLE_Teuchos=ON \
+          -D Trilinos_ENABLE_Thyra=ON \
+          -D Trilinos_ENABLE_Tpetra=ON \
+          -D Trilinos_ENABLE_Zoltan=ON \
           -D TPL_ENABLE_AMD=ON \
             -D AMD_INCLUDE_DIRS="$mkSuitesparseInc" \
             -D AMD_LIBRARY_DIRS="$mkSuitesparseLib" \

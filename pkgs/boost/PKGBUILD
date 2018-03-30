@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=boost
-pkgver=1.63.0
+pkgver=1.66.0
 archive=${pkgname}_${pkgver//./_}.tar.bz2
-sum=9f1dd4fa364a3e3156a77dc17aa562ef06404ff6
+sum=b6b284acde2ad7ed49b44e856955d7b1ea4e9459
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -11,9 +11,15 @@ build() {
   check $archive $sum
   extract $archive
 
+
   pushd ${pkgname}_${pkgver//./_}
+    [[ -r $srcdir/$pkgname-$pkgver.patch ]] && \
+      patch -p1 -i $srcdir/$pkgname-$pkgver.patch
+
     message "Configuring $pkgname"
     ./bootstrap.sh --prefix="$dstdir" \
+                   --with-python=$(which python3) \
+                   --with-python-root="$mkToolchainBase" \
                    --show-libraries
     echo "using mpi ;" > user-config.jam
   popd

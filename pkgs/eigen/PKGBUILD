@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=eigen
-pkgver=3.3.3
+pkgver=3.3.4
 archive=$pkgver.tar.bz2
-sum=b676f3f58549104e4f233e1b21354d8be435d8fd
+sum=e52d7d7a8c81f5ee0699e63ae3b78fe8214380a5
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -19,7 +19,8 @@ build() {
   mkdir build
   pushd build
     message "Configuring $pkgname"
-    cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
+    cmake -GNinja \
+          -D CMAKE_INSTALL_PREFIX="$dstdir" \
           -D FFTW_INCLUDES="$mkFftwInc" \
           -D FFTWF_LIB="$mkFftwLib"/libfftw3f.so \
           -D FFTW_LIB="$mkFftwLib"/libfftw3.so \
@@ -32,13 +33,13 @@ build() {
           -D UMFPACK_LIBRARIES="$mkSuitesparseLib"/libumfpack.so \
           -D SUPERLU_INCLUDES="$mkSuperluInc" \
           -D SUPERLU_LIBRARIES="$mkSuperluLib"/libsuperlu.so \
-          ../eigen-eigen-67e894c6cd8f
+          ../eigen-eigen-5a0156e40feb
     # make check || true
   popd
 }
 
 package() {
-  make -C build install
+  ninja -C build install
 
   if [[ "$mkTest" = "no" ]]; then
     install -vd $mkToolchainModules/$pkgname
