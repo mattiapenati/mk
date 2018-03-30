@@ -4,17 +4,17 @@ pkgname=superlu
 pkgver=5
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
-sluver=5.1.1
+sluver=5.2.1
 sluarchive=${pkgname}_${sluver}.tar.gz
-slusum=a7401124fcc53c7f320fe2ed6f8f5b9efe1c2de0
+slusum=10ce07b87d002c86cce2f71b84cb144de3112fb4
 
 slumtver=3.1
 slumtarchive=${pkgname}_mt_${slumtver}.tar.gz
 slumtsum=29cb847d17b1b2826f9558cbfa86397898171b3c
 
-sludistver=4.3
+sludistver=5.3.0
 sludistarchive=${pkgname}_dist_${sludistver}.tar.gz
-sludistsum=bbea6ac082ce0c056a6d7d423d2bdb778211549c
+sludistsum=287cc1754cd97933d083f30f0ddb05c5a1b7344b
 
 build() {
   download http://crd-legacy.lbl.gov/~xiaoye/SuperLU/$sluarchive
@@ -106,6 +106,7 @@ EOF
     [[ -r $srcdir/$pkgname-dist-$sludistver.patch ]] && \
       patch -p1 -i $srcdir/$pkgname-dist-$sludistver.patch
     message "Compiling ${pkgname}-dist"
+    mkdir -v lib
     make superlulib
   popd
 }

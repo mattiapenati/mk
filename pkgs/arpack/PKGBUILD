@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=arpack
-pkgver=3.4.0
+pkgver=3.5.0
 archive=$pkgver.tar.gz
-sum=c6ea9ea1712c27ec45fbf33c3f064fdba7e9c89b
+sum=acbbe14b03b323f84236553872396345204dea1e
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

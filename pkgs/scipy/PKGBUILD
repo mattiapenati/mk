@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=scipy
-pkgver=1.12.1
+pkgver=1.14.2
 archive=v$pkgver.tar.gz
-sum=d7664803ffcbb07db9275d08cf9e0a55dad327d3
+sum=c00e70468703830a26ee9173ba1cf4aedf08718f
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 
@@ -19,7 +19,9 @@ package() {
   message "Compiling cython"
   pip install --verbose --install-option="--prefix=$dstdir" cython
   export PATH="$dstdir"/bin:$PATH
-  export PYTHONPATH="$dstdir"/lib/python2.7/site-packages:$PYTHONPATH
+  export PYTHONPATH="$dstdir"/lib/python3.6/site-packages:$PYTHONPATH
+
+  pip list
 
   message "Compiling numpy"
   pushd numpy-$pkgver
@@ -82,7 +84,7 @@ load("suitesparse")
 
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("MANPATH", "$dstdir/share/man")
-prepend_path("PYTHONPATH", "$dstdir/lib/python2.7/site-packages")
+prepend_path("PYTHONPATH", "$dstdir/lib/python3.6/site-packages")
 EOF
   fi
 }

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=glpk
-pkgver=4.61
+pkgver=4.65
 archive=$pkgname-$pkgver.tar.gz
-sum=5d260d2dd3143f7b8446fb007c6ce8c4272cafa2
+sum=d9b607a9cf3a25b754a0cd9a842ea5043f8604db
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {

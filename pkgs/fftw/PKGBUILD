@@ -1,10 +1,9 @@
 #!/bin/bash
 
 pkgname=fftw
-pkgver=3.3.6
-_pkgver=$pkgver-pl1
-archive=$pkgname-$_pkgver.tar.gz
-sum=682a0e78d6966ca37c7446d4ab4cc2a1
+pkgver=3.3.7
+archive=$pkgname-$pkgver.tar.gz
+sum=0d5915d7d39b3253c1cc05030d79ac47
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -21,7 +20,7 @@ build() {
   install -vd dstdir
   local prefix=$(pwd)/dstdir
 
-  pushd $pkgname-$_pkgver
+  pushd $pkgname-$pkgver
     message "Configuring single precision $pkgname"
     ./configure $conflags $sseflags --enable-single
     message "Compiling single precision $pkgname"

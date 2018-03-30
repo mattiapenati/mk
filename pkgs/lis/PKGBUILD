@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pkgname=lis
-pkgver=1.7.28
-archive=$pkgname-$pkgver.tar.gz
-sum=f929c4a1734fb0894ba47bc03b47a9244136814b
+pkgver=2.0.8
+archive=$pkgname-$pkgver.zip
+sum=c929e79d94b83497da2e05b9024dc989a3a104d7
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
 build() {
@@ -13,6 +13,8 @@ build() {
 
   pushd $pkgname-$pkgver
     message "Configuring $pkgname"
+    # Fix permission (wrong permission from unzip)
+    chmod 755 configure config/install-sh
     ./configure --prefix="$dstdir" \
                 --enable-mpi \
                 --enable-shared \

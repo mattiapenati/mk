@@ -14,18 +14,19 @@ build() {
   mkdir build
   pushd build
     message "Configuring $pkgname"
-    cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
+    cmake -GNinja \
+          -D CMAKE_INSTALL_PREFIX="$dstdir" \
           -D CMAKE_SKIP_INSTALL_RPATH=ON \
           -D CMAKE_SKIP_RPATH=ON \
           -D CMAKE_BUILD_TYPE=Release \
           ../$pkgname-$pkgver
     message "Compiling $pkgname"
-    make
+    ninja
   popd
 }
 
 package() {
-  make -C build install
+  ninja -C build install
 
   rm "$dstdir"/lib/*.a
   rm -rf "$dstdir"/share/doc
