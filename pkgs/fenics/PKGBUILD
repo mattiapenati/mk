@@ -1,46 +1,53 @@
 #!/bin/bash
 
 pkgname=fenics
-pkgver=1.6.0
+pkgver=2017.2
+_pkgver=$pkgver.0
 dstdir=$mkToolchainPkgs/$pkgname/$pkgver
 
-uflarchive=ufl-$pkgver.tar.gz
-uflsum=799883baf7da1d1528712e7d2efbfe40a0afe99d
+fiatarchive=fiat-$_pkgver.tar.gz
+fiatsum=e3347c56b2b9e1902600e0afa1b64b8993589295
 
-fiatarchive=fiat-$pkgver.tar.gz
-fiatsum=7e0dc10a16b0015d8986cff8690ad8bb1e253179
+instantarchive=instant-$_pkgver.tar.gz
+instantsum=5ecaa92c20e627acfbee1e5a311df598a307a74e
 
-ffcarchive=ffc-$pkgver.tar.gz
-ffcsum=cecfa76a7a6477ee79b754fefac264be89957c38
+dijitsoarchive=dijitso-$_pkgver.tar.gz
+dijitsosum=18da4a9ce3a87582cd8b4a41564c35087b788acd
 
-instantarchive=instant-$pkgver.tar.gz
-instantsum=308953204a284875ff686ae5250004d11c07c3a1
+uflarchive=ufl-$_pkgver.tar.gz
+uflsum=bee036c4317d53748bbd55cb9dd4caf1424beffd
 
-dolfinarchive=dolfin-$pkgver.tar.gz
-dolfinsum=b8c7c27b65d54b367bd2ca1f9725f32ef7dbe363
+ffcarchive=ffc-$_pkgver.tar.gz
+ffcsum=276057fb819ea5285804b63536fc6d0b2165907e
 
-mshrarchive=mshr-$pkgver.tar.gz
-mshrsum=d2c559ba4996cf91cc9979f6b9fbb1b03a86008e
+dolfinarchive=dolfin-$_pkgver.tar.gz
+dolfinsum=438f57e8aaf54adc39f63aac9a6c9c7f8725f665
+
+mshrarchive=mshr-$_pkgver.tar.gz
+mshrsum=94c21abefeccdb8cfbcf80c0336768e04ebff743
 
 package() {
-  download https://bitbucket.org/fenics-project/ufl/downloads/$uflarchive
   download https://bitbucket.org/fenics-project/fiat/downloads/$fiatarchive
-  download https://bitbucket.org/fenics-project/ffc/downloads/$ffcarchive
   download https://bitbucket.org/fenics-project/instant/downloads/$instantarchive
+  download https://bitbucket.org/fenics-project/dijitso/downloads/$dijitsoarchive
+  download https://bitbucket.org/fenics-project/ufl/downloads/$uflarchive
+  download https://bitbucket.org/fenics-project/ffc/downloads/$ffcarchive
   download https://bitbucket.org/fenics-project/dolfin/downloads/$dolfinarchive
   download https://bitbucket.org/fenics-project/mshr/downloads/$mshrarchive
 
-  check $uflarchive $uflsum
   check $fiatarchive $fiatsum
-  check $ffcarchive $ffcsum
   check $instantarchive $instantsum
+  check $dijitsoarchive $dijitsosum
+  check $uflarchive $uflsum
+  check $ffcarchive $ffcsum
   check $dolfinarchive $dolfinsum
   check $mshrarchive $mshrsum
 
-  extract $uflarchive
   extract $fiatarchive
-  extract $ffcarchive
   extract $instantarchive
+  extract $dijitsoarchive
+  extract $uflarchive
+  extract $ffcarchive
   extract $dolfinarchive
   extract $mshrarchive
 
@@ -56,67 +63,69 @@ package() {
   module load trilinos
 
   # required python packages
-  pip install ply
+  pip3 install ply --install-option="--prefix=$dstdir"
 
   # make python happy
   export PATH="$dstdir/bin:$PATH"
-  export PYTHONPATH="$dstdir/lib/python2.7/site-packages:$PYTHONPATH"
-
-  # installing UFL
-  pushd ufl-$pkgver
-    message "Installing UFL"
-    python setup.py build
-    python setup.py install --prefix="$dstdir" --optimize=1
-  popd
+  export PYTHONPATH="$dstdir/lib/python3.6/site-packages:$PYTHONPATH"
 
   # installing FIAT
-  pushd fiat-$pkgver
+  pushd fiat-$_pkgver
     message "Installing FIAT"
-    python setup.py build
-    python setup.py install --prefix="$dstdir" --optimize=1
-  popd
-
-  # installing FFC
-  pushd ffc-$pkgver
-    message "Installing FFC"
-    python setup.py build
-    python setup.py install --prefix="$dstdir" --optimize=1
+    python3 setup.py install --prefix="$dstdir" --optimize=1
   popd
 
   # installing instant
-  pushd instant-$pkgver
+  pushd instant-$_pkgver
     message "Installing instant"
-    python setup.py build
-    python setup.py install --prefix="$dstdir" --optimize=1
+    python3 setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing dijitso
+  pushd dijitso-$_pkgver
+    message "Installing dijitso"
+    python3 setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing UFL
+  pushd ufl-$_pkgver
+    message "Installing UFL"
+    python3 setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
+  # installing FFC
+  pushd ffc-$_pkgver
+    message "Installing FFC"
+    python3 setup.py install --prefix="$dstdir" --optimize=1
   popd
 
   # installing dolfin
   mkdir build
   pushd build
     message "Configuring dolfin"
-    HDF5_ROOT="$mkHdf5Prefix" \
+    HDF5_DIR="$mkHdf5Prefix" \
+    PETSC_DIR="$mkPetscPrefix" \
+    SLEPC_DIR="$mkPetscPrefix" \
     cmake -D CMAKE_INSTALL_PREFIX="$dstdir" \
           -D CMAKE_SKIP_INSTALL_RPATH=ON \
           -D CMAKE_SKIP_RPATH=ON \
           -D BUILD_SHARED_LIBS=ON \
           -D CMAKE_BUILD_TYPE=Release \
+          -D DOLFIN_ENABLE_BENCHMARKS=OFF \
+          -D DOLFIN_ENABLE_CODE_COVERAGE=OFF \
+          -D DOLFIN_ENABLE_DOCS=OFF \
+          -D DOLFIN_ENABLE_TESTING=OFF \
           -D BLAS_LIBRARIES="$mkOpenblasLib/libopenblas.so" \
           -D LAPACK_LIBRARIES="$mkOpenblasLib/libopenblas.so" \
-          -D UFC_DIR="$dstdir" \
           -D AMD_DIR="$mkSuitesparsePrefix" \
           -D BOOST_ROOT="$mkBoostPrefix" \
           -D CHOLMOD_DIR="$mkSuitesparsePrefix" \
-          -D DOLFIN_ENABLE_PASTIX=OFF \
-          -D DOLFIN_ENABLE_QT=OFF \
-          -D DOLFIN_ENABLE_UNIT_TESTS=OFF \
-          -D DOLFIN_ENABLE_VTK=OFF \
           -D EIGEN3_INCLUDE_DIR="$mkEigenInc" \
-          -D PETSC_DIR="$mkPetscPrefix" \
           -D PARMETIS_DIR="$mkMetisPrefix" \
           -D SCOTCH_DIR="$mkScotchPrefix" \
           -D TRILINOS_DIR="$mkTrilinosPrefix" \
           -D UMFPACK_DIR="$mkSuitesparsePrefix" \
-          ../dolfin-$pkgver
+          ../dolfin-$_pkgver
     message "Compiling dolfin"
     make VERBOSE=1
     message "Installing dolfin"
@@ -124,7 +133,7 @@ package() {
   popd
 
   # installing mshr
-  pushd mshr-$pkgver
+  pushd mshr-$_pkgver
     [[ -r "$srcdir/mshr-$pkgver.patch" ]] && \
       patch -p1 -i "$srcdir/mshr-$pkgver.patch"
   popd
@@ -138,7 +147,8 @@ package() {
           -D CMAKE_BUILD_TYPE=Release \
           -D BOOST_ROOT="$mkBoostPrefix" \
           -D DOLFIN_DIR="$dstdir" \
-          ../mshr-$pkgver
+          -D EIGEN3_INCLUDE_DIR="$mkEigenInc" \
+          ../mshr-$_pkgver
     message "Compiling mshr"
     command make VERBOSE=1
     message "Installing mshr"
@@ -182,7 +192,7 @@ setenv("mkFenicsInc", "$dstdir/include")
 
 prepend_path("PATH", "$dstdir/bin")
 prepend_path("MANPATH", "$dstdir/share/man")
-prepend_path("PYTHONPATH", "$dstdir/lib/python2.7/site-packages")
+prepend_path("PYTHONPATH", "$dstdir/lib/python3.6/site-packages")
 prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
 prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
 EOF
