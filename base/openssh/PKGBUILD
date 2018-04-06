@@ -13,6 +13,10 @@ build() {
   extract $archive
 
   pushd $pkgname-$pkgver
+    if [[ -e "$srcdir"/$pkgname-$pkgver.patch ]]; then
+      message "Applying patch to $pkgname"
+      patch -p1 -i "$srcdir"/$pkgname-$pkgver.patch
+    fi
     message "Configuring $pkgname"
     ./configure --prefix="$dstdir" \
                 --with-default-path="$dstdir/bin:$mkToolchainPrefix/bin"
