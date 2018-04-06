@@ -54,6 +54,7 @@ install:
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) sqlite
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) openssl
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) libssh2
+	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) openssh
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) mpdecimal
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) python
 	@"${mkPrefix}"/sbin/mkpkg $(mkFlags) lua
