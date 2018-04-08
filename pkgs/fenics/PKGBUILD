@@ -155,6 +155,13 @@ package() {
     make install
   popd
 
+  # installing cbc.block
+  git clone https://bitbucket.org/fenics-apps/cbc.block.git
+  pushd cbc.block
+    message "Installing cbc.block"
+    python3 setup.py install --prefix="$dstdir" --optimize=1
+  popd
+
   strip "$dstdir/bin"
   strip "$dstdir/lib"
 
@@ -195,6 +202,8 @@ prepend_path("MANPATH", "$dstdir/share/man")
 prepend_path("PYTHONPATH", "$dstdir/lib/python3.6/site-packages")
 prepend_path("LD_LIBRARY_PATH", "$dstdir/lib")
 prepend_path("PKG_CONFIG_PATH", "$dstdir/lib/pkgconfig")
+
+setenv("BOOST_ROOT", os.getenv("mkBoostPrefix"))
 EOF
   fi
 }
