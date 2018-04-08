@@ -153,6 +153,9 @@ dependencies:
   libssh2: openssl, zlib
     libssh2 is a client-side C library implementing the SSH2 protocol.
 
+  openssh: openssl
+    Free version of the SSH connectivity tools. Used by OpenMPI.
+
   mpdecimal: no dependencies
     mpdecimal is a package for correctly-rounded arbitrary precision decimal
     floating point arithmetic.
