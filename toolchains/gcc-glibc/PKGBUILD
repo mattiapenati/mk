@@ -40,9 +40,15 @@ run() {
       islver=0.18
       islsum=bbffc5a2b05e4f0c97e882f96c448504491dc4ed
       ;;
+    8)
+      gccver=8.1.0
+      gccsum=b34031ba9ff3e248b2c62de0825e49a1e0e01998
+      islver=0.19
+      islsum=dba7264419ba995a0f6b4fde135993677f7c85fd
+      ;;
     *)
       if [[ -z "$pkgver" ]]; then
-        error "Specify a valid version (5|6|7) for gcc"
+        error "Specify a valid version (5|6|7|8) for gcc"
       else
         error "Unsupported version '$pkgver'"
       fi
@@ -674,16 +680,16 @@ EOF
   compress_doc $prefix/share/{man,info}
 
   case $pkgver in
-    5)   for lib in asan cc1 cilkrts gfortran gomp-plugin-host_nonshm lsan tsan ubsan; do
-           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
-         done
-         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?
-         ;;
-    6|7) for lib in asan cc1 cilkrts gfortran lsan tsan ubsan; do
-           reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
-         done
-         reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so
-         ;;
+    5) for lib in asan cc1 cilkrts gfortran gomp-plugin-host_nonshm lsan tsan ubsan; do
+         reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+       done
+       reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so.?.?.?
+       ;;
+    *) for lib in asan cc1 cilkrts gfortran lsan tsan ubsan; do
+         reset_rpath "$prefix"/lib/lib$lib.so.?.?.?
+       done
+       reset_rpath "$prefix"/lib/gcc/$TARGET/$gccver/plugin/libcc1plugin.so
+       ;;
   esac
 
   # Install locale
