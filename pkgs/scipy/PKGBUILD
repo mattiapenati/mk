@@ -53,14 +53,18 @@ EOF
     python setup.py config_fc --fcompiler=gfortran install --prefix=$dstdir --optimize=1
   popd
 
+  message "Compiling ipython"
+  pip install --verbose --install-option="--prefix=$dstdir" ipython==6.4.0
   message "Compiling sympy"
-  pip install --verbose --install-option="--prefix=$dstdir" sympy
+  pip install --verbose --install-option="--prefix=$dstdir" sympy==1.1.1
   message "Compiling pandas"
-  pip install --verbose --install-option="--prefix=$dstdir" pandas
+  # --no-build-isolation  fix an issue with pip>=10.0.0
+  pip install --verbose --install-option="--prefix=$dstdir" pandas==0.22.0 \
+    --no-build-isolation
   message "Compiling scipy"
-  pip install --verbose --install-option="--prefix=$dstdir" scipy
+  pip install --verbose --install-option="--prefix=$dstdir" scipy==1.0.1
   message "Compiling mpi4py"
-  pip install --verbose --install-option="--prefix=$dstdir" mpi4py
+  pip install --verbose --install-option="--prefix=$dstdir" mpi4py==3.0.0
 
   # module
   if [[ "$mkTest" = "no" ]]; then
@@ -70,8 +74,8 @@ EOF
 whatis("Python-based ecosystem for mathematics, science, and engineering")
 help([[
 This package contains all the libraries that are part of Python-based ecosystem
-for scientific computing. It contains numpy, scipy, pandas, sympy, cython and
-mpi4py. It is enough to load the package for using it.
+for scientific computing. It contains numpy, scipy, pandas, sympy, cython,
+mpi4py and ipython. It is enough to load the package for using it.
 
 url: http://www.scipy.org
 ]])
